@@ -3,6 +3,7 @@ package me.arycer.leaguetracker.service
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import me.arycer.leaguetracker.config.ApiKeyLoader
 import me.arycer.leaguetracker.dto.account.SummonerDto
+import me.arycer.leaguetracker.dto.ddragon.VersionsDTO
 import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import me.arycer.leaguetracker.dto.misc.Region
 import org.springframework.http.HttpEntity
@@ -91,6 +92,22 @@ class RiotService(
             0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 13, 14, 15, 16, 17, 18
         )
         return defaultIcons.random()
+    }
+
+    fun fetchVersions(): VersionsDTO {
+        val url = "https://ddragon.leagueoflegends.com/api/versions.json"
+
+        val response = restTemplate.exchange<Array<String>>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+
+        val versions = response.body ?: arrayOf()
+        val versionsDTO = VersionsDTO()
+        versionsDTO.versions = versions
+
+        return versionsDTO
     }
 
     private fun buildAuthHeader(): HttpEntity<Void> {
