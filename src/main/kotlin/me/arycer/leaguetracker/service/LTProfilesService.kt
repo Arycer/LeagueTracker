@@ -1,9 +1,9 @@
 package me.arycer.leaguetracker.service
 
 import me.arycer.leaguetracker.client.RiotApiClient
+import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import me.arycer.leaguetracker.dto.misc.LTProfileDto
 import me.arycer.leaguetracker.dto.misc.Region
-import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import org.springframework.stereotype.Service
 
 @Service

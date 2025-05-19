@@ -3,7 +3,9 @@ package me.arycer.leaguetracker.service
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import me.arycer.leaguetracker.config.ApiKeyLoader
 import me.arycer.leaguetracker.dto.misc.Region
-import org.springframework.http.*
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
@@ -14,7 +16,9 @@ class RiotService(
 ) {
 
     fun getSummonerId(summonerName: String, tagline: String, region: Region): String {
-        val url = "https://${region.policy.toString().lowercase()}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/$summonerName/$tagline"
+        val url = "https://${
+            region.policy.toString().lowercase()
+        }.api.riotgames.com/riot/account/v1/accounts/by-riot-id/$summonerName/$tagline"
 
         val response = restTemplate.exchange<RiotAccountResponse>(
             url,

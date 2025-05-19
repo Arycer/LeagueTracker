@@ -14,12 +14,14 @@ interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
         senderId2: String, recipientId2: String
     ): List<ChatMessage>
 
-    @Query("""
+    @Query(
+        """
         SELECT m FROM ChatMessage m
         WHERE (m.senderId = :user1 AND m.recipientId = :user2)
            OR (m.senderId = :user2 AND m.recipientId = :user1)
         ORDER BY m.timestamp DESC
-    """)
+    """
+    )
     fun findConversationPaged(
         user1: String,
         user2: String,

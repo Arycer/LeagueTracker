@@ -17,9 +17,16 @@ class LolAccountService(
 ) {
     fun linkAccount(userId: String, name: String, tagline: String, region: Region): Int {
         val summonerId = riotService.getSummonerId(name, tagline, region)
-        val icon = riotService.pickRandomDefaultIcon()
 
+        if (accountRepo.existsByUserIdAndSummonerId(userId, summonerId) ||
+            pendingAccountRepo.existsByUserIdAndSummonerId(userId, summonerId)
+        ) {
+            throw IllegalArgumentException("Ya has vinculado esta cuenta o está pendiente de verificación.")
+        }
+
+        val icon = riotService.pickRandomDefaultIcon()
         val user = userRepo.findById(userId).orElseThrow()
+
         val pending = PendingLolAccount(
             summonerName = name,
             tagline = tagline,
@@ -32,6 +39,7 @@ class LolAccountService(
         pendingAccountRepo.save(pending)
         return icon
     }
+
 
     fun verifyPendingAccount(userId: String): Boolean {
         val pending = pendingAccountRepo.findFirstByUserId(userId)
@@ -62,4 +70,26 @@ class LolAccountService(
     fun getAccounts(userId: String): List<LolAccount> {
         return accountRepo.findAllByUserId(userId)
     }
+
+    fun getPendingAccounts(userId: String): List<PendingLolAccount> {
+        return pendingAccountRepo.findAllByUserId(userId)
+    }
+
+    fun deletePendingAccount(userId: String, accountId: String) {
+        val account = pendingAccountRepo.findById(accountId)
+            .filter { it.user?.id == userId }
+            .orElseThrow { IllegalAccessException("Not authorized or pending account not found") }
+
+        pendingAccountRepo.delete(account)
+    }
+
+    fun unlinkAccount(userId: String, accountId: String) {
+        val account = accountRepo.findById(accountId)
+            .filter { it.user?.id == userId }
+            .orElseThrow { IllegalAccessException("Not authorized or account not found") }
+
+        accountRepo.delete(account)
+    }
+
+
 }

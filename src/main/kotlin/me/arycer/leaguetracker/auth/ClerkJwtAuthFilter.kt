@@ -76,7 +76,10 @@ class ClerkJwtAuthFilter(
             val userId = claims.subject ?: throw JOSEException("No subject in JWT")
             val usernameClaim = claims.getStringClaim("username")
 
-            if (!userRepository.existsById(userId) && usernameClaim != null && !userRepository.existsUserByUsername(usernameClaim)) {
+            if (!userRepository.existsById(userId) && usernameClaim != null && !userRepository.existsUserByUsername(
+                    usernameClaim
+                )
+            ) {
                 createUserIfNotExists(usernameClaim, userId)
             }
 

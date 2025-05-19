@@ -14,7 +14,12 @@ class FriendRequestService(private val friendRequestRepository: FriendRequestRep
     fun sendRequest(requesterId: String, recipientId: String): FriendRequest {
         if (requesterId == recipientId) throw IllegalArgumentException("No te puedes enviar una solicitud a ti mismo")
 
-        if (friendRequestRepository.existsByRequesterIdAndRecipientIdAndStatus(requesterId, recipientId, FriendRequestStatus.PENDING)) {
+        if (friendRequestRepository.existsByRequesterIdAndRecipientIdAndStatus(
+                requesterId,
+                recipientId,
+                FriendRequestStatus.PENDING
+            )
+        ) {
             throw IllegalStateException("Ya has enviado una solicitud pendiente a este usuario")
         }
 
