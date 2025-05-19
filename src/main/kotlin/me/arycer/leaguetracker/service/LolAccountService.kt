@@ -69,17 +69,23 @@ class LolAccountService(
 
     fun getAccounts(userId: String): List<LolAccount> {
         val accounts = accountRepo.findAllByUserId(userId)
+        val now = System.currentTimeMillis()
 
         return accounts.map { account ->
             if (account.verified) {
-                val currentIcon = riotService.getCurrentProfileIconId(
-                    account.summonerName,
-                    account.tagline,
-                    account.region
-                )
+                val lastUpdate = account.lastIconUpdate ?: 0
+                val cooldownMillis = 5 * 60 * 1000L
 
-                if (account.profileIconId != currentIcon) {
-                    account.profileIconId = currentIcon
+                if (now - lastUpdate >= cooldownMillis) {
+                    val currentIcon = riotService.getCurrentProfileIconId(
+                        account.summonerName,
+                        account.tagline,
+                        account.region
+                    )
+                    if (account.profileIconId != currentIcon) {
+                        account.profileIconId = currentIcon
+                    }
+                    account.lastIconUpdate = now
                     accountRepo.save(account)
                 }
             }

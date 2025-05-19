@@ -19,6 +19,9 @@ data class LolAccount(
 
     var verified: Boolean = false,
 
+    @Column
+    var lastIconUpdate: Long? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User? = null
