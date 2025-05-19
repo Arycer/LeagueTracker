@@ -1,8 +1,8 @@
 package me.arycer.leaguetracker.service
 
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequest
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequestId
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequestStatus
+import me.arycer.leaguetracker.entity.FriendRequest
+import me.arycer.leaguetracker.entity.FriendRequestId
+import me.arycer.leaguetracker.entity.FriendRequestStatus
 import me.arycer.leaguetracker.repository.FriendRequestRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

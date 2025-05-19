@@ -1,6 +1,7 @@
-package me.arycer.leaguetracker.entity.leaguetracker
+package me.arycer.leaguetracker.entity
 
 import jakarta.persistence.*
+import java.io.Serializable
 import java.time.Instant
 
 @Entity
@@ -45,4 +46,4 @@ enum class FriendRequestStatus {
 data class FriendRequestId(
     val requesterId: String = "",
     val recipientId: String = ""
-) : java.io.Serializable
+) : Serializable

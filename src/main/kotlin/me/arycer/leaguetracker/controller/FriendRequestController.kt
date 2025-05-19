@@ -1,6 +1,6 @@
 package me.arycer.leaguetracker.controller
 
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequest
+import me.arycer.leaguetracker.entity.FriendRequest
 import me.arycer.leaguetracker.service.FriendRequestService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

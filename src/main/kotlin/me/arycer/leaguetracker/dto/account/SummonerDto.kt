@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.entity.riot.account
+package me.arycer.leaguetracker.dto.account
 
 class SummonerDto {
     var id: String? = null

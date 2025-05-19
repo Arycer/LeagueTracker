@@ -12,7 +12,11 @@ interface FriendRequest {
   createdAt: string;
 }
 
-export default function FriendManager() {
+interface FriendManagerProps {
+  onFriendsUpdate?: (friends: string[]) => void;
+}
+
+export default function FriendManager({ onFriendsUpdate }: FriendManagerProps) {
   const { userId } = useAuth();
   const fetcher = useAuthenticatedFetch();
   const [friendId, setFriendId] = useState('');
@@ -33,8 +37,13 @@ export default function FriendManager() {
       setIncomingRequests(incoming || []);
       setOutgoingRequests(outgoing || []);
       // Aseguramos que friendsList sea un array
-      setFriends(Array.isArray(friendsList) ? friendsList : []);
-      console.log('Incoming:', incoming, 'Outgoing:', outgoing, 'Friends:', friendsList);
+      const updatedFriends = Array.isArray(friendsList) ? friendsList : [];
+      setFriends(updatedFriends);
+      // Notificar al componente padre sobre la actualización de la lista de amigos
+      if (onFriendsUpdate) {
+        onFriendsUpdate(updatedFriends);
+      }
+      console.log('Incoming:', incoming, 'Outgoing:', outgoing, 'Friends:', updatedFriends);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Error loading data');
     } finally {

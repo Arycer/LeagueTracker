@@ -1,5 +1,5 @@
 // User.kt
-package me.arycer.leaguetracker.entity.leaguetracker
+package me.arycer.leaguetracker.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

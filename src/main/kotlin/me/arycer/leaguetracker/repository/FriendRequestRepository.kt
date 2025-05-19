@@ -1,8 +1,8 @@
 package me.arycer.leaguetracker.repository
 
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequest
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequestId
-import me.arycer.leaguetracker.entity.leaguetracker.FriendRequestStatus
+import me.arycer.leaguetracker.entity.FriendRequest
+import me.arycer.leaguetracker.entity.FriendRequestId
+import me.arycer.leaguetracker.entity.FriendRequestStatus
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface FriendRequestRepository : JpaRepository<FriendRequest, FriendRequestId> {

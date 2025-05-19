@@ -1,6 +1,6 @@
-package me.arycer.leaguetracker.entity.riot.misc
+package me.arycer.leaguetracker.dto.misc
 
-import me.arycer.leaguetracker.entity.riot.league.LeagueEntryDTO
+import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 
 class LTProfileDto {
     var username: String? = null
