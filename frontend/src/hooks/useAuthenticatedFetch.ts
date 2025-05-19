@@ -21,6 +21,12 @@ export default function useAuthenticatedFetch() {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
 
+        // Handle empty responses (like 204 No Content)
+        const contentType = response.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+            return null
+        }
+
         return response.json()
     }
 }

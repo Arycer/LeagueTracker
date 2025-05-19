@@ -31,7 +31,7 @@ import java.util.*
 
 @Component
 class ClerkJwtAuthFilter(
-        private val userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : OncePerRequestFilter() {
 
     private val jwkSetUrl = URL("https://assured-hermit-45.clerk.accounts.dev/.well-known/jwks.json")
@@ -68,13 +68,6 @@ class ClerkJwtAuthFilter(
             }
 
             val claims = signedJWT.jwtClaimsSet
-            val userId = claims.subject
-
-            if (userId != null && !userRepository.existsById(userId)) {
-                val user = User(userId)
-                userRepository.save(user)
-            }
-
             val now = Date.from(Instant.now())
 
             val exp = claims.expirationTime
@@ -83,14 +76,18 @@ class ClerkJwtAuthFilter(
                 return
             }
 
-            val subject = claims.subject ?: "anonymous"
-            val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
-            val authentication = UsernamePasswordAuthenticationToken(subject, null, authorities)
+            val userId = claims.subject ?: throw JOSEException("No subject in JWT")
+            if (!userRepository.existsById(userId)) {
+                val user = User(userId)
+                userRepository.save(user)
+            }
+
+            val authorities = listOf(SimpleGrantedAuthority("ROLE_USER")) // O lo que uses
+            val authentication = UsernamePasswordAuthenticationToken(userId, null, authorities)
             SecurityContextHolder.getContext().authentication = authentication
 
             filterChain.doFilter(request, response)
         } catch (e: ParseException) {
-            print("JWT parsing error: ${e.message}")
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Malformed JWT")
         } catch (e: JOSEException) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT verification failed: ${e.message}")

@@ -18,7 +18,7 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .cors { } // Solo activar CORS, no deshabilitar
+            .cors { }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/api/lol/version/**").authenticated()
                     .anyRequest().permitAll()

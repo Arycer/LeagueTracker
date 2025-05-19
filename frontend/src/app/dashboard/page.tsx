@@ -1,9 +1,9 @@
-import LolVersion from "@/components/LolVersion";
+import FriendManager from '@/components/FriendManager';
 
-export default function Home() {
+export default function Dashboard() {
   return (
-    <div>
-      <LolVersion></LolVersion>
-    </div>
+    <main className="min-h-screen p-4">
+      <FriendManager />
+    </main>
   );
 }
