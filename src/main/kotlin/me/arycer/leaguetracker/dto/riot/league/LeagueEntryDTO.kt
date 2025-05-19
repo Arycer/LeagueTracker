@@ -1,20 +1,17 @@
 package me.arycer.leaguetracker.dto.riot.league
 
-import lombok.Data
-
-@Data
 class LeagueEntryDTO {
-    private val leagueId: String? = null
-    private val summonerId: String? = null
-    private val queueType: String? = null
-    private val tier: String? = null
-    private val rank: String? = null
-    private val leaguePoints = 0
-    private val wins = 0
-    private val losses = 0
-    private val hotStreak = false
-    private val veteran = false
-    private val freshBlood = false
-    private val inactive = false
-    private val miniSeries: MiniSeriesDTO? = null
+    var leagueId: String? = null
+    var summonerId: String? = null
+    var queueType: String? = null
+    var tier: String? = null
+    var rank: String? = null
+    var leaguePoints = 0
+    var wins = 0
+    var losses = 0
+    var hotStreak = false
+    var veteran = false
+    var freshBlood = false
+    var inactive = false
+    var miniSeries: MiniSeriesDTO? = null
 }

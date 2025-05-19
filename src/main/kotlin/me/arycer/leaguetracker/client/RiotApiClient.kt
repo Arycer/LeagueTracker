@@ -10,37 +10,31 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 @Component
-class RiotApiClient(restTemplate: RestTemplate) {
-    private val restTemplate: RestTemplate
+class RiotApiClient(private val restTemplate: RestTemplate) {
 
-    init {
-        this.restTemplate = restTemplate
-    }
-
-    fun fetchSummonerByPuuid(region: Region, puuid: String?): SummonerDto {
+    fun fetchSummonerByPuuid(region: Region, puuid: String): SummonerDto {
         val url: String = "https://%s.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/%s?api_key=%s"
-            .formatted(region.getApiName(), puuid, ApiKeyLoader.getApiKey())
-        return restTemplate.getForObject(url, SummonerDto::class.java)
+            .format(region.apiName, puuid, ApiKeyLoader.apiKey)
+        return restTemplate.getForObject(url, SummonerDto::class.java) ?: SummonerDto()
     }
 
     fun fetchRiotAccount(region: Region, accountName: String?, tagline: String?): RiotAccountDto {
-        val url: String = "https://%s.api.riotgames.com/riot/account/v1/accounts/by-riot-id/%s/%s?api_key=%s".formatted(
-            region.getPolicy().toString().toLowerCase(), accountName, tagline, ApiKeyLoader.getApiKey()
-        )
-        return restTemplate.getForObject(url, RiotAccountDto::class.java)
+        val url: String = "https://%s.api.riotgames.com/riot/account/v1/accounts/by-riot-id/%s/%s?api_key=%s"
+            .format(region.policy.toString().lowercase(), accountName, tagline, ApiKeyLoader.apiKey)
+        return restTemplate.getForObject(url, RiotAccountDto::class.java) ?: RiotAccountDto()
     }
 
-    fun fetchLeagueEntries(region: Region, encryptedSummonerId: String?): Array<LeagueEntryDTO?> {
+    fun fetchLeagueEntries(region: Region, encryptedSummonerId: String?): Array<LeagueEntryDTO> {
         val url: String = "https://%s.api.riotgames.com/lol/league/v4/entries/by-summoner/%s?api_key=%s"
-            .formatted(region.getApiName(), encryptedSummonerId, ApiKeyLoader.getApiKey())
-        return restTemplate.getForObject(url, Array<LeagueEntryDTO>::class.java)
+            .format(region.apiName, encryptedSummonerId, ApiKeyLoader.apiKey)
+        return restTemplate.getForObject(url, Array<LeagueEntryDTO>::class.java) ?: arrayOf()
     }
 
     fun fetchVersions(): VersionsDTO {
         val url = "https://ddragon.leagueoflegends.com/api/versions.json"
-        val versions: Array<String?>? = restTemplate.getForObject(url, Array<String>::class.java)
-        val versionsDTO: VersionsDTO = VersionsDTO()
-        versionsDTO.setVersions(versions)
+        val versions: Array<String> = restTemplate.getForObject(url, Array<String>::class.java) ?: arrayOf()
+        val versionsDTO = VersionsDTO()
+        versionsDTO.versions = versions
         return versionsDTO
     }
 }

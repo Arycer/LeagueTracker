@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/api/profiles")
+@RequestMapping("/api/lol/profile")
 class LTProfileController(private val profilesService: LTProfilesService) {
     @GetMapping("/{region}/{accountName}/{tagline}")
     fun getSummonerByName(

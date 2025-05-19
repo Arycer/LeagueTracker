@@ -21,13 +21,13 @@ object ApiKeyLoader {
                     cachedApiKey = properties.getProperty("riot.api.key")
 
                     if (cachedApiKey == null || cachedApiKey!!.isEmpty()) {
-                        throw RuntimeException("La API Key no está configurada en el archivo: " + API_KEY_FILE)
+                        throw RuntimeException("La API Key no está configurada en el archivo: $API_KEY_FILE")
                     }
                     return cachedApiKey!!
                 }
             } catch (e: IOException) {
                 throw RuntimeException(
-                    "Error al cargar el archivo de configuración: " + API_KEY_FILE,
+                    "Error al cargar el archivo de configuración: $API_KEY_FILE",
                     e
                 )
             }
