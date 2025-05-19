@@ -1,6 +1,7 @@
 package me.arycer.leaguetracker.service
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.ObjectMapper
 import me.arycer.leaguetracker.config.ApiKeyLoader
 import me.arycer.leaguetracker.dto.account.RiotAccountDto
 import me.arycer.leaguetracker.dto.account.SummonerDto
@@ -15,7 +16,8 @@ import org.springframework.web.client.exchange
 
 @Service
 class RiotService(
-    private val restTemplate: RestTemplate = RestTemplate()
+    private val restTemplate: RestTemplate = RestTemplate(),
+    val objectMapper: ObjectMapper
 ) {
 
     fun getSummonerId(summonerName: String, tagline: String, region: Region): String {
@@ -72,6 +74,19 @@ class RiotService(
 
         return response.body ?: arrayOf()
     }
+
+    fun getSummonerByRiotIdByEncryptedId(region: Region, encryptedSummonerId: String): SummonerDto {
+        val url = "https://${region.apiName}.api.riotgames.com/lol/summoner/v4/summoners/$encryptedSummonerId"
+
+        val response = restTemplate.exchange<SummonerDto>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+
+        return response.body ?: throw RuntimeException("Summoner not found")
+    }
+
 
     // 3. Elegir un icono predeterminado aleatorio
     fun pickRandomDefaultIcon(): Int {

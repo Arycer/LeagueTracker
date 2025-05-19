@@ -2,14 +2,14 @@ package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.dto.misc.Region
 import me.arycer.leaguetracker.dto.misc.SummonerProfileDTO
-import me.arycer.leaguetracker.service.RiotService
+import me.arycer.leaguetracker.service.LolProfileCacheService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/profiles")
 class ProfileController(
-    private val riotService: RiotService
+    private val lolProfileCacheService: LolProfileCacheService
 ) {
 
     @GetMapping("/{region}/{name}/{tagline}")
@@ -18,17 +18,21 @@ class ProfileController(
         @PathVariable name: String,
         @PathVariable tagline: String
     ): ResponseEntity<SummonerProfileDTO> {
-        val summoner = riotService.getSummonerByRiotId(name, tagline, region)
-        val entries = riotService.fetchLeagueEntries(region, summoner.id)
-
-        val profile = SummonerProfileDTO(
-            name = summoner.name ?: "$name#$tagline",
-            summonerLevel = summoner.summonerLevel,
-            profileIconId = summoner.profileIconId,
-            leagueEntries = entries.toList(),
-            region = region
-        )
-
+        val profile = lolProfileCacheService.getProfile(region, name, tagline)
         return ResponseEntity.ok(profile)
+    }
+
+    @PostMapping("/{region}/{name}/{tagline}/refresh")
+    fun refreshProfile(
+        @PathVariable region: Region,
+        @PathVariable name: String,
+        @PathVariable tagline: String
+    ): ResponseEntity<SummonerProfileDTO> {
+       try {
+            val profile =  lolProfileCacheService.refreshProfile(region, name, tagline)
+           return ResponseEntity.ok(profile)
+        } catch (_: RuntimeException) {
+            return ResponseEntity.badRequest().body(null)
+        }
     }
 }
