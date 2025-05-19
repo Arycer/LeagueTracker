@@ -68,7 +68,24 @@ class LolAccountService(
     }
 
     fun getAccounts(userId: String): List<LolAccount> {
-        return accountRepo.findAllByUserId(userId)
+        val accounts = accountRepo.findAllByUserId(userId)
+
+        return accounts.map { account ->
+            if (account.verified) {
+                val currentIcon = riotService.getCurrentProfileIconId(
+                    account.summonerName,
+                    account.tagline,
+                    account.region
+                )
+
+                if (account.profileIconId != currentIcon) {
+                    account.profileIconId = currentIcon
+                    accountRepo.save(account)
+                }
+            }
+
+            account
+        }
     }
 
     fun getPendingAccounts(userId: String): List<PendingLolAccount> {

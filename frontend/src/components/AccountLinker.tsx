@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import useAuthenticatedFetch from '../hooks/useAuthenticatedFetch';
-import useGameVersion from '../hooks/useGameVersion';
+import { useLolVersion } from '../context/LolVersionContext'
 
 type Region = {
   descriptor: string;
@@ -28,7 +28,7 @@ const AccountLinker: React.FC = () => {
   const [step, setStep] = useState<'form' | 'verification'>('form');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { version, loading: versionLoading } = useGameVersion();
+  const { version, loading: versionLoading } = useLolVersion();
   
   // Form state
   const [summonerName, setSummonerName] = useState('');
@@ -39,14 +39,6 @@ const AccountLinker: React.FC = () => {
   const [profileIconUrl, setProfileIconUrl] = useState<string>('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-  if (versionLoading) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
 
   const handleLinkAccount = async (e: React.FormEvent) => {
     e.preventDefault();

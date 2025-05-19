@@ -13,7 +13,7 @@ interface LolAccount {
   verified: boolean;
 }
 
-import useGameVersion from '../hooks/useGameVersion';
+import { useLolVersion } from '../context/LolVersionContext'
 
 interface PendingLolAccount {
   id: string;
@@ -33,7 +33,7 @@ type PendingActionState = {
 };
 
 const LinkedAccounts: React.FC = () => {
-  const { version: gameVersion, loading: loadingVersion } = useGameVersion();
+  const { version: gameVersion, loading: loadingVersion } = useLolVersion();
   const fetcher = useAuthenticatedFetch();
   const [accounts, setAccounts] = useState<LolAccount[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<PendingLolAccount[]>([]);

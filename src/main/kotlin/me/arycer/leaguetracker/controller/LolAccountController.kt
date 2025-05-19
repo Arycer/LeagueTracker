@@ -20,9 +20,13 @@ class LolAccountController(
         principal: Principal,
         @RequestBody body: LinkRequest
     ): ResponseEntity<Map<String, Any>> {
-        val userId = principal.name
-        val icon = service.linkAccount(userId, body.summonerName, body.tagline, body.region)
-        return ResponseEntity.ok(mapOf("requiredIcon" to icon))
+        try {
+            val userId = principal.name
+            val icon = service.linkAccount(userId, body.summonerName, body.tagline, body.region)
+            return ResponseEntity.ok(mapOf("requiredIcon" to icon))
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.badRequest().body(mapOf("error" to e.message.toString()))
+        }
     }
 
     @PostMapping("/verify")
