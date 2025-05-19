@@ -1,9 +1,7 @@
 package me.arycer.leaguetracker.service
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.ObjectMapper
 import me.arycer.leaguetracker.config.ApiKeyLoader
-import me.arycer.leaguetracker.dto.account.RiotAccountDto
 import me.arycer.leaguetracker.dto.account.SummonerDto
 import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import me.arycer.leaguetracker.dto.misc.Region
@@ -16,8 +14,7 @@ import org.springframework.web.client.exchange
 
 @Service
 class RiotService(
-    private val restTemplate: RestTemplate = RestTemplate(),
-    val objectMapper: ObjectMapper
+    private val restTemplate: RestTemplate = RestTemplate()
 ) {
 
     fun getSummonerId(summonerName: String, tagline: String, region: Region): String {

@@ -1,11 +1,6 @@
 package me.arycer.leaguetracker.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
-import jakarta.persistence.Lob
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import me.arycer.leaguetracker.dto.misc.Region
 
 @Entity

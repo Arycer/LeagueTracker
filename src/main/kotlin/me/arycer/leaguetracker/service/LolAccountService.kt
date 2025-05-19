@@ -17,6 +17,7 @@ class LolAccountService(
 ) {
     fun linkAccount(userId: String, name: String, tagline: String, region: Region): Int {
         val summonerId = riotService.getSummonerId(name, tagline, region)
+        val currentProfileIconId = riotService.getCurrentProfileIconId(name, tagline, region)
 
         if (accountRepo.existsByUserIdAndSummonerId(userId, summonerId) ||
             pendingAccountRepo.existsByUserIdAndSummonerId(userId, summonerId)
@@ -24,7 +25,11 @@ class LolAccountService(
             throw IllegalArgumentException("Ya has vinculado esta cuenta o está pendiente de verificación.")
         }
 
-        val icon = riotService.pickRandomDefaultIcon()
+        var icon: Int
+        do {
+            icon = riotService.pickRandomDefaultIcon()
+        } while (icon == currentProfileIconId)
+
         val user = userRepo.findById(userId).orElseThrow()
 
         val pending = PendingLolAccount(

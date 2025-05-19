@@ -8,7 +8,6 @@ import me.arycer.leaguetracker.dto.misc.SummonerProfileDTO
 import me.arycer.leaguetracker.entity.LolProfileCache
 import me.arycer.leaguetracker.repository.LolProfileCacheRepository
 import org.springframework.stereotype.Service
-import kotlin.jvm.Throws
 
 @Service
 class LolProfileCacheService(
