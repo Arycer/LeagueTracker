@@ -50,12 +50,14 @@ class LolAccountService(
         print("Pending icon: ${pending.profileIconId}")
 
         if (currentIcon == pending.profileIconId) {
+            val isFirstAccount = accountRepo.findAllByUserId(userId).isEmpty()
             val verifiedAccount = LolAccount(
                 summonerName = pending.summonerName,
                 tagline = pending.tagline,
                 summonerId = pending.summonerId,
                 profileIconId = pending.profileIconId,
                 region = pending.region,
+                isMain = isFirstAccount,
                 verified = true,
                 user = pending.user
             )
@@ -109,9 +111,46 @@ class LolAccountService(
     fun unlinkAccount(userId: String, accountId: String) {
         val account = accountRepo.findById(accountId)
             .filter { it.user?.id == userId }
-            .orElseThrow { IllegalAccessException("Not authorized or account not found") }
+            .orElseThrow()
 
+        val wasMain = account.isMain
         accountRepo.delete(account)
+
+        if (wasMain) {
+            val remaining = accountRepo.findAllByUserId(userId)
+            if (remaining.isNotEmpty()) {
+                val first = remaining.first()
+                first.isMain = true
+                accountRepo.save(first)
+            }
+        }
+    }
+
+    fun setMainAccount(userId: String, accountId: String) {
+        val account = accountRepo.findById(accountId)
+            .filter { it.user?.id == userId }
+            .orElseThrow()
+
+        if (!account.verified) {
+            throw IllegalStateException("Solo se pueden establecer como principal cuentas verificadas.")
+        }
+
+        // Desmarcar todas las demás cuentas del usuario
+        val allAccounts = accountRepo.findAllByUserId(userId)
+        allAccounts.forEach {
+            if (it.isMain) {
+                it.isMain = false
+                accountRepo.save(it)
+            }
+        }
+
+        // Marcar la nueva como principal
+        account.isMain = true
+        accountRepo.save(account)
+    }
+
+    fun getMainAccount(userId: String): LolAccount? {
+        return accountRepo.findAllByUserId(userId).firstOrNull { it.isMain }
     }
 
 

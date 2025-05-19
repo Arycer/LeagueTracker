@@ -13,6 +13,10 @@ interface LolAccount {
   verified: boolean;
 }
 
+interface MainAccount {
+  id: string;
+} // Solo necesitamos el id para comparación visual
+
 import { useLolVersion } from '../context/LolVersionContext'
 
 interface PendingLolAccount {
@@ -37,6 +41,7 @@ const LinkedAccounts: React.FC = () => {
   const fetcher = useAuthenticatedFetch();
   const [accounts, setAccounts] = useState<LolAccount[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<PendingLolAccount[]>([]);
+  const [mainAccountId, setMainAccountId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -52,6 +57,32 @@ const LinkedAccounts: React.FC = () => {
       console.error('Error fetching accounts:', err);
     }
   };
+
+  // Cargar cuenta principal
+  const fetchMainAccount = async () => {
+    try {
+      const data = await fetcher('http://localhost:8080/lol/accounts/main');
+      setMainAccountId(data && data.id ? data.id : null);
+    } catch (err: any) {
+      setMainAccountId(null);
+    }
+  };
+
+  // Marcar cuenta como principal
+  const handleSetMain = async (id: string) => {
+    setActionLoading(id);
+    try {
+      await fetcher(`http://localhost:8080/lol/accounts/${id}/set-main`, {
+        method: 'POST',
+      });
+      await Promise.all([fetchAccounts(), fetchMainAccount()]);
+    } catch (err: any) {
+      setError('Error al marcar la cuenta como principal');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
 
   // Cargar cuentas pendientes
   const fetchPendingAccounts = async () => {
@@ -129,7 +160,11 @@ const LinkedAccounts: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([fetchAccounts(), fetchPendingAccounts()]).finally(() => setLoading(false));
+    Promise.all([
+      fetchAccounts(),
+      fetchPendingAccounts(),
+      fetchMainAccount()
+    ]).finally(() => setLoading(false));
   }, []);
 
 
@@ -225,37 +260,52 @@ const LinkedAccounts: React.FC = () => {
           <div className="text-gray-500 text-center">No hay cuentas vinculadas</div>
         ) : (
           <div className="space-y-2">
-            {accounts.map((account) => (
-              <div 
-                key={account.id} 
-                className="p-3 border rounded-lg bg-white shadow-sm flex justify-between items-center"
-              >
-                <div>
-                  <div className="font-medium">
-                    {account.summonerName}#{account.tagline}
+            {accounts.map((account) => {
+              const isMain = account.id === mainAccountId;
+              return (
+                <div 
+                  key={account.id} 
+                  className={`p-3 border rounded-lg shadow-sm flex justify-between items-center ${isMain ? 'border-blue-500 bg-blue-50' : 'bg-white'}`}
+                >
+                  <div>
+                    <div className="font-medium flex items-center gap-2">
+                      {account.summonerName}#{account.tagline}
+                      {isMain && (
+                        <span className="inline-block px-2 py-0.5 text-xs bg-blue-500 text-white rounded">Principal</span>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {account.region} • {account.verified ? 'Verificada' : 'Pendiente de verificación'}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {account.region} • {account.verified ? 'Verificada' : 'Pendiente de verificación'}
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                      <img 
+                        src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/profileicon/${account.profileIconId}.png`} 
+                        alt="Profile icon"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {account.verified && !isMain && (
+                      <button
+                        onClick={() => handleSetMain(account.id)}
+                        disabled={actionLoading === account.id}
+                        className="ml-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 disabled:opacity-50"
+                      >
+                        {actionLoading === account.id ? 'Cambiando...' : 'Marcar como principal'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleUnlink(account.id)}
+                      disabled={actionLoading === account.id}
+                      className="ml-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 disabled:opacity-50"
+                    >
+                      {actionLoading === account.id ? 'Eliminando...' : 'Desvincular'}
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <img 
-                      src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/profileicon/${account.profileIconId}.png`} 
-                      alt="Profile icon"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <button
-                    onClick={() => handleUnlink(account.id)}
-                    disabled={actionLoading === account.id}
-                    className="ml-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 disabled:opacity-50"
-                  >
-                    {actionLoading === account.id ? 'Eliminando...' : 'Desvincular'}
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

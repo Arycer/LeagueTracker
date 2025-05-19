@@ -17,7 +17,11 @@ data class LolAccount(
     @Enumerated(EnumType.STRING)
     var region: Region = Region.EUW,
 
+    @Column
     var verified: Boolean = false,
+
+    @Column
+    var isMain: Boolean = false,
 
     @Column
     var lastIconUpdate: Long? = null,

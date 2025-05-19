@@ -1,6 +1,7 @@
 package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.dto.misc.Region
+import me.arycer.leaguetracker.entity.LolAccount
 import me.arycer.leaguetracker.entity.PendingLolAccount
 import me.arycer.leaguetracker.service.LolAccountService
 import org.springframework.http.ResponseEntity
@@ -72,4 +73,22 @@ class LolAccountController(
         service.unlinkAccount(userId, id)
         return ResponseEntity.noContent().build()
     }
+
+    @PostMapping("/{accountId}/set-main")
+    fun setMainAccount(
+        principal: Principal,
+        @PathVariable accountId: String
+    ): ResponseEntity<Void> {
+        val userId = principal.name
+        service.setMainAccount(userId, accountId)
+        return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/main")
+    fun getMainAccount(principal: Principal): ResponseEntity<LolAccount?> {
+        val userId = principal.name
+        val main = service.getMainAccount(userId)
+        return ResponseEntity.ok(main)
+    }
+
 }
