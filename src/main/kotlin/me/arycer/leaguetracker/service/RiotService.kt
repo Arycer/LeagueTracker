@@ -2,6 +2,9 @@ package me.arycer.leaguetracker.service
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import me.arycer.leaguetracker.config.ApiKeyLoader
+import me.arycer.leaguetracker.dto.account.RiotAccountDto
+import me.arycer.leaguetracker.dto.account.SummonerDto
+import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import me.arycer.leaguetracker.dto.misc.Region
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -41,6 +44,33 @@ class RiotService(
         )
 
         return response.body?.profileIconId ?: throw RuntimeException("Profile icon not found")
+    }
+
+    fun getSummonerByRiotId(name: String, tagline: String, region: Region): SummonerDto {
+        val puuid = getSummonerId(name, tagline, region)
+        val url = "https://${region.apiName}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/$puuid"
+
+        val response = restTemplate.exchange<SummonerDto>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+
+        println("Riot API response: $response")
+
+        return response.body ?: throw RuntimeException("Summoner not found")
+    }
+
+    fun fetchLeagueEntries(region: Region, encryptedSummonerId: String?): Array<LeagueEntryDTO> {
+        val url = "https://${region.apiName}.api.riotgames.com/lol/league/v4/entries/by-summoner/$encryptedSummonerId"
+
+        val response = restTemplate.exchange<Array<LeagueEntryDTO>>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+
+        return response.body ?: arrayOf()
     }
 
     // 3. Elegir un icono predeterminado aleatorio
