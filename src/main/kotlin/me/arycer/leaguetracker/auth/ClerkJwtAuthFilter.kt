@@ -85,7 +85,7 @@ class ClerkJwtAuthFilter(
             SecurityContextHolder.getContext().authentication = authentication
 
             filterChain.doFilter(request, response)
-        } catch (e: ParseException) {
+        } catch (_: ParseException) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Malformed JWT")
         } catch (e: JOSEException) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT verification failed: ${e.message}")
