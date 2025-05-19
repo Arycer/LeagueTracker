@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.entity.leaguetracker
+package me.arycer.leaguetracker.entity.riot.misc
 
 import me.arycer.leaguetracker.entity.riot.league.LeagueEntryDTO
 

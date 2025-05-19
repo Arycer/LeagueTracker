@@ -1,7 +1,7 @@
 package me.arycer.leaguetracker.controller
 
-import me.arycer.leaguetracker.dto.leaguetracker.LTProfileDto
-import me.arycer.leaguetracker.dto.leaguetracker.Region
+import me.arycer.leaguetracker.entity.riot.misc.LTProfileDto
+import me.arycer.leaguetracker.entity.riot.misc.Region
 import me.arycer.leaguetracker.service.LTProfilesService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

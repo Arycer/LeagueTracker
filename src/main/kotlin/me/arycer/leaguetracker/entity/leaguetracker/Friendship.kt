@@ -1,5 +1,5 @@
 // Friendship.kt
-package me.arycer.leaguetracker.repository
+package me.arycer.leaguetracker.entity.leaguetracker
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

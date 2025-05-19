@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.dto.riot.ddragon
+package me.arycer.leaguetracker.entity.riot.ddragon
 
 class VersionsDTO() {
     var versions: Array<String>? = null

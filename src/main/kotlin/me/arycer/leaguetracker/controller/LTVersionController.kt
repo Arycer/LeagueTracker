@@ -1,6 +1,6 @@
 package me.arycer.leaguetracker.controller
 
-import me.arycer.leaguetracker.dto.riot.ddragon.VersionsDTO
+import me.arycer.leaguetracker.entity.riot.ddragon.VersionsDTO
 import me.arycer.leaguetracker.service.LTVersionService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

@@ -43,6 +43,8 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:9.31")
     implementation("org.bouncycastle:bcprov-jdk15on:1.70")
     implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.postgresql:postgresql")
 }
 
 kotlin {

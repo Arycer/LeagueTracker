@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.dto.riot.league
+package me.arycer.leaguetracker.entity.riot.league
 
 class MiniSeriesDTO {
     var losses = 0

@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.dto.riot.league
+package me.arycer.leaguetracker.entity.riot.league
 
 class LeagueEntryDTO {
     var leagueId: String? = null

@@ -1,11 +1,11 @@
 package me.arycer.leaguetracker.client
 
 import me.arycer.leaguetracker.config.ApiKeyLoader
-import me.arycer.leaguetracker.dto.leaguetracker.Region
-import me.arycer.leaguetracker.dto.riot.account.RiotAccountDto
-import me.arycer.leaguetracker.dto.riot.account.SummonerDto
-import me.arycer.leaguetracker.dto.riot.ddragon.VersionsDTO
-import me.arycer.leaguetracker.dto.riot.league.LeagueEntryDTO
+import me.arycer.leaguetracker.entity.riot.misc.Region
+import me.arycer.leaguetracker.entity.riot.account.RiotAccountDto
+import me.arycer.leaguetracker.entity.riot.account.SummonerDto
+import me.arycer.leaguetracker.entity.riot.ddragon.VersionsDTO
+import me.arycer.leaguetracker.entity.riot.league.LeagueEntryDTO
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 

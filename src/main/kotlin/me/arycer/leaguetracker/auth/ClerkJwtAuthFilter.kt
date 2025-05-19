@@ -16,6 +16,8 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import me.arycer.leaguetracker.entity.leaguetracker.User
+import me.arycer.leaguetracker.repository.UserRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,7 +30,9 @@ import java.time.Instant
 import java.util.*
 
 @Component
-class ClerkJwtAuthFilter : OncePerRequestFilter() {
+class ClerkJwtAuthFilter(
+        private val userRepository: UserRepository
+) : OncePerRequestFilter() {
 
     private val jwkSetUrl = URL("https://assured-hermit-45.clerk.accounts.dev/.well-known/jwks.json")
     private val jwkSet = RemoteJWKSet<SecurityContext>(jwkSetUrl)
@@ -64,6 +68,13 @@ class ClerkJwtAuthFilter : OncePerRequestFilter() {
             }
 
             val claims = signedJWT.jwtClaimsSet
+            val userId = claims.subject
+
+            if (userId != null && !userRepository.existsById(userId)) {
+                val user = User(userId)
+                userRepository.save(user)
+            }
+
             val now = Date.from(Instant.now())
 
             val exp = claims.expirationTime
