@@ -1,4 +1,4 @@
-package me.arycer.leaguetracker.dto.leaguetracker
+package me.arycer.leaguetracker.entity.leaguetracker
 
 enum class Region(var descriptor: String, var policy: Policy, var apiName: String) {
     NA("North America", Policy.AMERICAS, "na1"),
