@@ -1,6 +1,6 @@
-// User.kt
 package me.arycer.leaguetracker.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
@@ -9,5 +9,8 @@ import jakarta.persistence.Table
 @Table(name = "users")
 data class User(
     @Id
-    val id: String = ""
+    val id: String = "",
+
+    @Column(unique = true, nullable = false)
+    val username: String = ""
 )

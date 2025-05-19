@@ -74,9 +74,10 @@ class ClerkJwtAuthFilter(
             }
 
             val userId = claims.subject ?: throw JOSEException("No subject in JWT")
-            if (!userRepository.existsById(userId)) {
-                val user = User(userId)
-                userRepository.save(user)
+            val usernameClaim = claims.getStringClaim("username")
+
+            if (!userRepository.existsById(userId) && usernameClaim != null && !userRepository.existsUserByUsername(usernameClaim)) {
+                createUserIfNotExists(usernameClaim, userId)
             }
 
             val authorities = listOf(SimpleGrantedAuthority("ROLE_USER")) // O lo que uses
@@ -89,6 +90,13 @@ class ClerkJwtAuthFilter(
         } catch (e: JOSEException) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT verification failed: ${e.message}")
         }
+    }
+
+    @Synchronized
+    private fun createUserIfNotExists(usernameClaim: String, userId: String) {
+        val username = usernameClaim
+        val user = User(userId, username)
+        userRepository.save(user)
     }
 
     private fun getTokenFromRequest(request: HttpServletRequest): String? {
