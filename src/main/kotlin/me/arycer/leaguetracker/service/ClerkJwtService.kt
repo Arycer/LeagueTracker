@@ -12,7 +12,7 @@ import me.arycer.leaguetracker.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.net.URL
 import java.time.Instant
-import java.util.Date
+import java.util.*
 
 @Service
 class ClerkJwtService(

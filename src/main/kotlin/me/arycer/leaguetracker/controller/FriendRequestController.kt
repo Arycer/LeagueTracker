@@ -1,6 +1,7 @@
 package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.entity.FriendRequest
+import me.arycer.leaguetracker.entity.FriendRequestDto
 import me.arycer.leaguetracker.service.FriendRequestService
 import me.arycer.leaguetracker.service.UserService
 import org.springframework.http.ResponseEntity
@@ -34,7 +35,11 @@ class FriendRequestController(
     ): ResponseEntity<FriendRequest> {
         val requesterId = principal.name
         val requester = userService.getUsernameById(requesterId)
-        if (requester == null || !userService.existsByUsername(recipientUsername)) {
+        if (requester == null || !userService.existsByUsername(recipientUsername) || friendRequestService.existingRequest(
+                requester,
+                recipientUsername
+            ) || friendRequestService.isFriends(requester, recipientUsername)
+        ) {
             return ResponseEntity.badRequest().build()
         }
 
@@ -43,7 +48,7 @@ class FriendRequestController(
     }
 
     @GetMapping("/requests/incoming")
-    fun incomingRequests(principal: Principal): ResponseEntity<List<FriendRequest>> {
+    fun incomingRequests(principal: Principal): ResponseEntity<List<FriendRequestDto>> {
         val requesterId = principal.name
         val username = userService.getUsernameById(requesterId)
 
@@ -56,7 +61,7 @@ class FriendRequestController(
     }
 
     @GetMapping("/requests/outgoing")
-    fun outgoingRequests(principal: Principal): ResponseEntity<List<FriendRequest>> {
+    fun outgoingRequests(principal: Principal): ResponseEntity<List<FriendRequestDto>> {
         val requesterId = principal.name
         val username = userService.getUsernameById(requesterId)
 
@@ -93,7 +98,11 @@ class FriendRequestController(
             return ResponseEntity.badRequest().build()
         }
 
-        if (!userService.existsByUsername(friendUsername) || !friendRequestService.isFriends(username, friendUsername)) {
+        if (!userService.existsByUsername(friendUsername) || !friendRequestService.isFriends(
+                username,
+                friendUsername
+            )
+        ) {
             return ResponseEntity.badRequest().build()
         }
 

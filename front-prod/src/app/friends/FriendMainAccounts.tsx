@@ -53,8 +53,8 @@ const FriendMainAccounts: React.FC<FriendMainAccountsProps> = ({ friends }) => {
       <h2 className="text-lg font-bold text-blue-200 mb-4 flex items-center gap-2">
         <span className="text-blue-400">🔎</span> Cuentas principales de tus amigos
       </h2>
-      {loading && <div className="text-gray-400">Cargando cuentas principales...</div>}
-      {error && <div className="text-red-400">{error}</div>}
+      {loading && <div key="loading-indicator" className="text-gray-400">Cargando cuentas principales...</div>}
+      {error && <div key="error-message" className="text-red-400">{error}</div>}
       <ul className="space-y-3">
         {friends.map(friendUsername => {
           const acc = accounts[friendUsername];

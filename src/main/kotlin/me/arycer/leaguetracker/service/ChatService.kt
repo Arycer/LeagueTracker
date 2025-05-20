@@ -7,16 +7,26 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
-class ChatService(private val chatMessageRepository: ChatMessageRepository) {
+class ChatService(
+    private val chatMessageRepository: ChatMessageRepository,
+    private val userService: UserService,
+) {
 
     @Transactional
     fun saveMessage(senderId: String, recipientId: String, content: String): ChatMessage {
+        val sender = userService.getUserByUsername(senderId)
+            ?: throw IllegalArgumentException("Sender not found")
+
+        val recipient = userService.getUserByUsername(recipientId)
+            ?: throw IllegalArgumentException("Recipient not found")
+
         val message = ChatMessage(
-            senderUsername = senderId,
-            recipientUsername = recipientId,
+            sender = sender,
+            recipient = recipient,
             content = content,
             timestamp = Instant.now()
         )
+
         return chatMessageRepository.save(message)
     }
 

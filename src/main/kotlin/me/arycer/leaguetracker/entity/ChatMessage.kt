@@ -11,11 +11,13 @@ data class ChatMessage(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "sender_username", nullable = false)
-    var senderUsername: String = "",
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", referencedColumnName = "id", nullable = false)
+    var sender: User = User(),
 
-    @Column(name = "recipient_username", nullable = false)
-    var recipientUsername: String = "",
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id", nullable = false)
+    var recipient: User = User(),
 
     @Column(nullable = false)
     var content: String = "",
@@ -23,6 +25,5 @@ data class ChatMessage(
     @Column(nullable = false)
     var timestamp: Instant = Instant.now()
 ) {
-    // Constructor vacío para JPA
-    constructor() : this(null, "", "", "", Instant.now())
+    constructor() : this(null, User(), User(), "", Instant.now())
 }

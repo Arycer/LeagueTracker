@@ -12,8 +12,8 @@ interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
     @Query(
         """
         SELECT m FROM ChatMessage m
-        WHERE (m.senderUsername = :user1 AND m.recipientUsername = :user2)
-           OR (m.senderUsername = :user2 AND m.recipientUsername = :user1)
+        WHERE (m.sender.username = :user1 AND m.recipient.username = :user2)
+           OR (m.sender.username = :user2 AND m.recipient.username = :user1)
         ORDER BY m.timestamp DESC
     """
     )

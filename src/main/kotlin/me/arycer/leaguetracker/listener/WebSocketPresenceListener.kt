@@ -3,12 +3,12 @@ package me.arycer.leaguetracker.listener
 import me.arycer.leaguetracker.service.ClerkJwtService
 import me.arycer.leaguetracker.service.PresenceService
 import org.springframework.context.event.EventListener
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.SessionConnectEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
 import java.util.concurrent.ConcurrentHashMap
-import org.springframework.messaging.simp.SimpMessagingTemplate
 
 @Component
 class WebSocketPresenceListener(
@@ -31,7 +31,10 @@ class WebSocketPresenceListener(
         sessionIdToUsername[sessionId] = username
         presenceService.markOnline(username)
 
-        messagingTemplate.convertAndSend("/topic/presence-updates", mapOf("event" to "connected", "username" to username))
+        messagingTemplate.convertAndSend(
+            "/topic/presence-updates",
+            mapOf("event" to "connected", "username" to username)
+        )
     }
 
     @EventListener
@@ -42,7 +45,10 @@ class WebSocketPresenceListener(
 
         if (username != null) {
             presenceService.markOffline(username)
-            messagingTemplate.convertAndSend("/topic/presence-updates", mapOf("event" to "disconnected", "username" to username))
+            messagingTemplate.convertAndSend(
+                "/topic/presence-updates",
+                mapOf("event" to "disconnected", "username" to username)
+            )
         }
     }
 }

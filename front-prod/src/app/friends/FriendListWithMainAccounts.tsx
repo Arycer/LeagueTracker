@@ -56,8 +56,8 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
 
   return (
     <ul className="flex flex-col gap-2 w-full">
-      {loading && <li className="text-gray-400">Cargando cuentas principales...</li>}
-      {error && <li className="text-red-400">{error}</li>}
+      {loading && <li key="loading-message" className="text-gray-400">Cargando cuentas principales...</li>}
+      {error && <li key="error-message" className="text-red-400">{error}</li>}
       {friends.map((username) => {
         const acc = accounts[username];
         return (

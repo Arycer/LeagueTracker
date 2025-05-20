@@ -136,11 +136,11 @@ export default function FriendManager() {
             <FaUserCheck className="text-blue-400" /> Solicitudes recibidas
           </h2>
           {incomingRequests.length === 0 ? (
-            <span className="text-gray-400">No tienes solicitudes pendientes.</span>
+            <span key="no-incoming-requests" className="text-gray-400">No tienes solicitudes pendientes.</span>
           ) : (
             <ul className="flex flex-col gap-2">
-              {incomingRequests.map((req) => (
-                <li key={req.id} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
+              {incomingRequests.map((req, index) => (
+                <li key={req.id || `incoming-${req.requesterUsername}-${index}`} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
                   <span className="flex-1 text-gray-200 truncate">{req.requesterUsername}</span>
                   <button
                     className="p-1 text-green-400 hover:text-green-600"
@@ -169,11 +169,11 @@ export default function FriendManager() {
             <FaUserPlus className="text-blue-400" /> Solicitudes enviadas
           </h2>
           {outgoingRequests.length === 0 ? (
-            <span className="text-gray-400">No has enviado solicitudes.</span>
+            <span key="no-outgoing-requests" className="text-gray-400">No has enviado solicitudes.</span>
           ) : (
             <ul className="flex flex-col gap-2">
-              {outgoingRequests.map((req) => (
-                <li key={req.id} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
+              {outgoingRequests.map((req, index) => (
+                <li key={req.id || `outgoing-${req.recipientUsername}-${index}`} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
                   <span className="flex-1 text-gray-200 truncate">{req.recipientUsername}</span>
                   <span className="text-yellow-400 text-xs font-semibold">Pendiente</span>
                 </li>
@@ -188,7 +188,7 @@ export default function FriendManager() {
           <FaUserCheck className="text-blue-400" /> Tus amigos
         </h2>
         {friends.length === 0 ? (
-          <span className="text-gray-400">Todavía no tienes amigos añadidos.</span>
+          <span key="no-friends" className="text-gray-400">Todavía no tienes amigos añadidos.</span>
         ) : (
           <FriendListWithMainAccounts
             friends={friends}
@@ -221,7 +221,7 @@ export default function FriendManager() {
           </button>
         </form>
         {message && (
-          <div className="mt-2 p-2 bg-blue-100 text-blue-800 rounded text-xs">{message}</div>
+          <div key="message-notification" className="mt-2 p-2 bg-blue-100 text-blue-800 rounded text-xs">{message}</div>
         )}
       </section>
     </div>

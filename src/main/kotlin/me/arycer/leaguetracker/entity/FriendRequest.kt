@@ -7,15 +7,17 @@ import java.time.Instant
 @Entity
 @Table(name = "friend_requests")
 @IdClass(FriendRequestId::class)
-class FriendRequest() {  // Constructor vacío para JPA
+class FriendRequest() {
 
     @Id
-    @Column(name = "requester_username")
-    lateinit var requesterUsername: String
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
+    lateinit var requester: User
 
     @Id
-    @Column(name = "recipient_username")
-    lateinit var recipientUsername: String
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
+    lateinit var recipient: User
 
     @Enumerated(EnumType.STRING)
     var status: FriendRequestStatus = FriendRequestStatus.PENDING
@@ -23,13 +25,13 @@ class FriendRequest() {  // Constructor vacío para JPA
     var createdAt: Instant = Instant.now()
 
     constructor(
-        requesterUsername: String,
-        recipientUsername: String,
+        requester: User,
+        recipient: User,
         status: FriendRequestStatus = FriendRequestStatus.PENDING,
         createdAt: Instant = Instant.now()
     ) : this() {
-        this.requesterUsername = requesterUsername
-        this.recipientUsername = recipientUsername
+        this.requester = requester
+        this.recipient = recipient
         this.status = status
         this.createdAt = createdAt
     }
@@ -41,8 +43,26 @@ enum class FriendRequestStatus {
     REJECTED
 }
 
-// Id compuesto actualizado
 data class FriendRequestId(
-    val requesterUsername: String = "",
-    val recipientUsername: String = ""
+    val requester: String = "",
+    val recipient: String = ""
 ) : Serializable
+
+
+data class FriendRequestDto(
+    val requesterUsername: String,
+    val recipientUsername: String,
+    val status: FriendRequestStatus,
+    val createdAt: Instant
+) {
+    companion object {
+        fun fromEntity(friendRequest: FriendRequest): FriendRequestDto {
+            return FriendRequestDto(
+                requesterUsername = friendRequest.requester.username,
+                recipientUsername = friendRequest.recipient.username,
+                status = friendRequest.status,
+                createdAt = friendRequest.createdAt
+            )
+        }
+    }
+}

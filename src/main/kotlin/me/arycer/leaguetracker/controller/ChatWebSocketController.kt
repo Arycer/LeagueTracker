@@ -25,14 +25,14 @@ class ChatWebSocketController(
             chatMessageDTO.content
         )
 
-        println("Sending to /queue/messages-${savedMessage.recipientUsername}")
+        println("Sending to /queue/messages-${savedMessage.recipient.username}")
 
         // Enviar mensaje al destinatario suscrito a /queue/messages-{recipientId}
         messagingTemplate.convertAndSend(
-            "/queue/messages-${savedMessage.recipientUsername}",
+            "/queue/messages-${savedMessage.recipient.username}",
             ChatMessageDTO(
-                senderUsername = savedMessage.senderUsername,
-                recipientUsername = savedMessage.recipientUsername,
+                senderUsername = savedMessage.sender.username,
+                recipientUsername = savedMessage.sender.username,
                 content = savedMessage.content,
                 timestamp = savedMessage.timestamp.toEpochMilli()
             )

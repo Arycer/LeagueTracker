@@ -75,11 +75,13 @@ class ClerkJwtAuthFilter(
             val userId = claims.subject ?: throw JOSEException("No subject in JWT")
             val usernameClaim = claims.getStringClaim("username")
 
-            if (!userRepository.existsById(userId) && usernameClaim != null && !userRepository.existsUserByUsername(
-                    usernameClaim
-                )
-            ) {
-                createUserIfNotExists(usernameClaim, userId)
+            if (usernameClaim != null) {
+                val existingUser = userRepository.findById(userId).orElse(null)
+                if (existingUser == null) {
+                    createUserIfNotExists(usernameClaim, userId)
+                } else if (existingUser.username != usernameClaim) {
+                    updateUsernameEverywhere(userId, usernameClaim)
+                }
             }
 
             val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
@@ -100,6 +102,14 @@ class ClerkJwtAuthFilter(
         val user = User(userId, username)
         userRepository.save(user)
     }
+
+    @Synchronized
+    private fun updateUsernameEverywhere(userId: String, newUsername: String) {
+        val user = userRepository.findById(userId).orElseThrow()
+        user.username = newUsername
+        userRepository.save(user)
+    }
+
 
     private fun getTokenFromRequest(request: HttpServletRequest): String? {
         request.cookies?.firstOrNull { it.name == "__session" }?.value?.let { return it }

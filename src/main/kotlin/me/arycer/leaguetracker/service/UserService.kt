@@ -20,4 +20,8 @@ class UserService(private val userRepository: UserRepository) {
     fun getUserByUsername(username: String): User? {
         return userRepository.findByUsername(username)
     }
+
+    fun existsById(recipientUsername: String): Boolean {
+        return userRepository.existsById(recipientUsername)
+    }
 }

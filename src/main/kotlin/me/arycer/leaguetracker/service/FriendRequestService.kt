@@ -1,11 +1,10 @@
 package me.arycer.leaguetracker.service
 
 import me.arycer.leaguetracker.entity.FriendRequest
-import me.arycer.leaguetracker.entity.FriendRequestId
+import me.arycer.leaguetracker.entity.FriendRequestDto
 import me.arycer.leaguetracker.entity.FriendRequestStatus
 import me.arycer.leaguetracker.repository.FriendRequestRepository
 import me.arycer.leaguetracker.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,9 +23,9 @@ class FriendRequestService(
         val recipient = userRepository.findByUsername(recipientUsername)
             ?: throw IllegalArgumentException("Usuario destinatario no encontrado")
 
-        if (friendRequestRepository.existsByRequesterUsernameAndRecipientUsernameAndStatus(
-                requester.username,
-                recipient.username,
+        if (friendRequestRepository.existsByRequesterAndRecipientAndStatus(
+                requester,
+                recipient,
                 FriendRequestStatus.PENDING
             )
         ) {
@@ -34,34 +33,63 @@ class FriendRequestService(
         }
 
         val request = FriendRequest(
-            requesterUsername = requesterUsername,
-            recipientUsername = recipientUsername,
+            requester = requester,
+            recipient = recipient,
             status = FriendRequestStatus.PENDING
         )
         return friendRequestRepository.save(request)
     }
 
-    fun getIncomingRequests(username: String): List<FriendRequest> {
-        return friendRequestRepository.findAllByRecipientUsernameAndStatus(username, FriendRequestStatus.PENDING)
+    fun getIncomingRequests(username: String): List<FriendRequestDto> {
+        val user = userRepository.findByUsername(username)
+            ?: throw IllegalArgumentException("Usuario no encontrado")
+
+        val findAllByRecipientAndStatus =
+            friendRequestRepository.findAllByRecipientAndStatus(user, FriendRequestStatus.PENDING)
+        val incomingRequests = findAllByRecipientAndStatus.map { request ->
+            FriendRequestDto(
+                requesterUsername = request.requester.username,
+                recipientUsername = request.recipient.username,
+                status = request.status,
+                createdAt = request.createdAt
+            )
+        }
+
+        return incomingRequests
     }
 
-    fun getOutgoingRequests(username: String): List<FriendRequest> {
-        return friendRequestRepository.findAllByRequesterUsernameAndStatus(username, FriendRequestStatus.PENDING)
+    fun getOutgoingRequests(username: String): List<FriendRequestDto> {
+        val user = userRepository.findByUsername(username)
+            ?: throw IllegalArgumentException("Usuario no encontrado")
+
+        val findAllByRequesterAndStatus =
+            friendRequestRepository.findAllByRequesterAndStatus(user, FriendRequestStatus.PENDING)
+        val outgoingRequests = findAllByRequesterAndStatus.map { request ->
+            FriendRequestDto(
+                requesterUsername = request.requester.username,
+                recipientUsername = request.recipient.username,
+                status = request.status,
+                createdAt = request.createdAt
+            )
+        }
+
+        return outgoingRequests
     }
 
     @Transactional
     fun respondRequest(requesterUsername: String, recipientUsername: String, accept: Boolean): FriendRequest {
+        println("Responder solicitud de amistad: $requesterUsername a $recipientUsername, aceptar: $accept")
         val requester = userRepository.findByUsername(requesterUsername)
             ?: throw IllegalArgumentException("Usuario solicitante no encontrado")
         val recipient = userRepository.findByUsername(recipientUsername)
             ?: throw IllegalArgumentException("Usuario destinatario no encontrado")
 
-        val request = friendRequestRepository.findByIdOrNull(FriendRequestId(requester.username, recipient.username))
-            ?: throw IllegalArgumentException("Solicitud no encontrada")
-
-        if (request.status != FriendRequestStatus.PENDING) {
-            throw IllegalStateException("Esta solicitud ya fue respondida")
-        }
+        val request = friendRequestRepository.findByRequesterAndRecipientAndStatus(
+            requester,
+            recipient,
+            FriendRequestStatus.PENDING
+        )
+            ?: throw IllegalArgumentException("No se encontró la solicitud de amistad entre $requesterUsername y $recipientUsername")
 
         request.status = if (accept) FriendRequestStatus.ACCEPTED else FriendRequestStatus.REJECTED
         if (accept) {
@@ -75,16 +103,16 @@ class FriendRequestService(
     fun getFriends(username: String): List<String> {
         val user = userRepository.findByUsername(username) ?: throw IllegalArgumentException("Usuario no encontrado")
 
-        val acceptedRequests = friendRequestRepository.findByRequesterUsernameAndStatus(
-            user.username,
+        val acceptedRequests = friendRequestRepository.findByRequesterAndStatus(
+            user,
             FriendRequestStatus.ACCEPTED
-        ) + friendRequestRepository.findByRecipientUsernameAndStatus(user.username, FriendRequestStatus.ACCEPTED)
+        ) + friendRequestRepository.findByRecipientAndStatus(user, FriendRequestStatus.ACCEPTED)
 
         val friendUsernames = acceptedRequests.map { request ->
-            if (request.requesterUsername == user.username) {
-                request.recipientUsername
+            if (request.requester.username == user.username) {
+                request.recipient.username
             } else {
-                request.requesterUsername
+                request.requester.username
             }
         }
 
@@ -99,14 +127,14 @@ class FriendRequestService(
         val friend = userRepository.findByUsername(friendUsername)
             ?: throw IllegalArgumentException("Amigo no encontrado")
 
-        val friendship = friendRequestRepository.findByRequesterUsernameAndRecipientUsernameAndStatus(
-            user.username,
-            friend.username,
+        val friendship = friendRequestRepository.findByRequesterAndRecipientAndStatus(
+            user,
+            friend,
             FriendRequestStatus.ACCEPTED
         )
-            ?: friendRequestRepository.findByRequesterUsernameAndRecipientUsernameAndStatus(
-                friend.username,
-                user.username,
+            ?: friendRequestRepository.findByRequesterAndRecipientAndStatus(
+                friend,
+                user,
                 FriendRequestStatus.ACCEPTED
             )
             ?: throw IllegalArgumentException("No friendship found between $username and $friendUsername")
@@ -120,14 +148,27 @@ class FriendRequestService(
         val user2 = userRepository.findByUsername(username2)
             ?: throw IllegalArgumentException("Amigo no encontrado")
 
-        return friendRequestRepository.existsByRequesterUsernameAndRecipientUsernameAndStatus(
-            user1.username,
-            user2.username,
+        return friendRequestRepository.existsByRequesterAndRecipientAndStatus(
+            user1,
+            user2,
             FriendRequestStatus.ACCEPTED
-        ) || friendRequestRepository.existsByRequesterUsernameAndRecipientUsernameAndStatus(
-            user2.username,
-            user1.username,
+        ) || friendRequestRepository.existsByRequesterAndRecipientAndStatus(
+            user2,
+            user1,
             FriendRequestStatus.ACCEPTED
+        )
+    }
+
+    fun existingRequest(requester: String, recipientUsername: String): Boolean {
+        val requesterUser = userRepository.findByUsername(requester)
+            ?: throw IllegalArgumentException("Usuario solicitante no encontrado")
+        val recipientUser = userRepository.findByUsername(recipientUsername)
+            ?: throw IllegalArgumentException("Usuario destinatario no encontrado")
+
+        return friendRequestRepository.existsByRequesterAndRecipientAndStatus(
+            requesterUser,
+            recipientUser,
+            FriendRequestStatus.PENDING
         )
     }
 

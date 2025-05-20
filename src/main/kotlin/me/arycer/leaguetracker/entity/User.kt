@@ -12,5 +12,5 @@ data class User(
     val id: String = "",
 
     @Column(unique = true, nullable = false)
-    val username: String = ""
+    var username: String = ""
 )
