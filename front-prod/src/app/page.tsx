@@ -18,11 +18,13 @@ export default function Home() {
       </div>
       <div className="relative z-10 flex flex-col items-center w-full">
         <section className="w-full max-w-2xl flex flex-col items-center mb-10">
+          <div className="w-full flex flex-col items-center mb-6">
+            <h1 className="text-5xl md:text-6xl font-extrabold text-center mb-2 drop-shadow-lg">
+              <span className="text-sky-400">League</span>
+              <span className="text-white">Tracker</span>
+            </h1>
+          </div>
           <div className="backdrop-blur-sm bg-white/40 rounded-2xl px-8 py-6 shadow-xl flex flex-col items-center">
-            <div className="w-24 h-24 bg-blue-200 rounded-full flex items-center justify-center mb-4 shadow-lg">
-              <span className="text-4xl text-blue-700 font-extrabold">LT</span>
-            </div>
-            <h2 className="text-3xl font-extrabold mb-2 text-blue-900 drop-shadow-lg">LeagueTracker</h2>
             <p className="text-gray-900 text-center mb-2 font-semibold drop-shadow">
               Información acerca de tus partidas de League of Legends y las de tus amigos y oponentes en un solo lugar.
             </p>

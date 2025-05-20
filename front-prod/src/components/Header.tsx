@@ -42,7 +42,7 @@ export const Header: React.FC = () => {
         }}
         aria-label="Ir a inicio"
       >
-        <span className="text-blue-200">League</span>
+        <span className="text-sky-400">League</span>
         <span className="text-white">Tracker</span>
       </Link>
       <div className="flex items-center gap-3 justify-self-end">

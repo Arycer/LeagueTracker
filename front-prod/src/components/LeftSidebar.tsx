@@ -39,7 +39,7 @@ export const LeftSidebar: React.FC = () => {
             <button
               type="button"
               onClick={clearRecentProfiles}
-              className="w-full text-xs text-red-400 hover:text-red-600 transition-colors text-left mt-2"
+              className="w-full text-xs text-red-400 hover:text-red-600 transition-colors text-left"
             >
               Borrar historial
             </button>
