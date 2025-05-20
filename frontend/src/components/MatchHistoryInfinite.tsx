@@ -26,7 +26,7 @@ const MatchHistoryInfinite: React.FC<MatchHistoryInfiniteProps> = ({
         setIsLoading(true);
         try {
             const res = await fetch(
-                `http://localhost:8080/api/lol/match/matches?puuid=${encodeURIComponent(puuid)}&region=${encodeURIComponent(region)}&page=${pageNum}&pageSize=20`
+                `http://localhost:8080/api/lol/match/matches?puuid=${encodeURIComponent(puuid)}&region=${encodeURIComponent(region)}&page=${pageNum}&pageSize=100`
             );
             if (!res.ok) throw new Error('Error al cargar historial');
             const data: string[] = await res.json();

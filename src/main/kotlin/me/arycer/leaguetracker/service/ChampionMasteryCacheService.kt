@@ -32,8 +32,10 @@ class ChampionMasteryCacheService(
         }
 
         // Cache no válido o no existe: pedir a Riot y guardar
-        val url = "https://${region.apiName}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/$puuid/top"
-        val response = restTemplate.exchange<Array<ChampionMasteryDto>>(url, HttpMethod.GET, riotService.buildAuthHeader())
+        val url =
+            "https://${region.apiName}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/$puuid/top"
+        val response =
+            restTemplate.exchange<Array<ChampionMasteryDto>>(url, HttpMethod.GET, riotService.buildAuthHeader())
         if (response.statusCode.isError) {
             throw RuntimeException("Error fetching mastery data: ${response.statusCode}")
         }
