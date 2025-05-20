@@ -101,7 +101,6 @@ class LolAccountController(
         principal: Principal,
         @PathVariable friendUsername: String
     ): ResponseEntity<MainLolAccountDto?> {
-        println("Requesting main account for friend: $friendUsername")
         val userId = principal.name
         val username = userService.getUsernameById(userId)
             ?: return ResponseEntity.badRequest().build()
