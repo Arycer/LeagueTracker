@@ -1,0 +1,8 @@
+:root {
+    --color-primary: #2563eb;
+    --color-primary-dark: #1e40af;
+    --color-primary-light: #60a5fa;
+    --color-bg-gradient: linear-gradient(90deg, #1e40af 0%, #60a5fa 100%);
+    --color-white: #fff;
+    --color-shadow: rgba(30, 64, 175, 0.15);
+}
