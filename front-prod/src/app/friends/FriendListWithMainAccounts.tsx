@@ -4,6 +4,8 @@ import { useApi } from "@/hooks/useApi";
 import { useUserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { FaCircle, FaTrash } from "react-icons/fa";
+import ChatButton from "@/components/chat/ChatButton";
+import { useAuth } from "@clerk/nextjs";
 
 interface MainLolAccountDto {
   region: string;
@@ -22,35 +24,52 @@ interface FriendListWithMainAccountsProps {
 
 const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({ friends, online, isLoading, handleDeleteFriend }) => {
   const { callApi } = useApi();
-  const { jwt } = useUserContext();
   const router = useRouter();
   const [accounts, setAccounts] = useState<Record<string, MainLolAccountDto | null>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!friends || friends.length === 0 || !jwt) {
+  const fetchData = async () => {
+    if (!friends || friends.length === 0) {
       setAccounts({});
       return;
     }
+    
+    console.log('Fetching main accounts for friends:', friends);
     setLoading(true);
     setError(null);
-    Promise.all(
-      friends.map(friendUsername =>
-        callApi(`/lol/accounts/main/${friendUsername}`)
-          .then((data: MainLolAccountDto | null) => [friendUsername, data] as const)
-          .catch(() => [friendUsername, null] as const)
-      )
-    ).then(results => {
+    
+    try {
+      const promises = friends.map(async (friendUsername) => {
+        try {
+          const data = await callApi(`/lol/accounts/main/${friendUsername}`);
+          return [friendUsername, data] as const;
+        } catch (err) {
+          console.error(`Error fetching account for ${friendUsername}:`, err);
+          return [friendUsername, null] as const;
+        }
+      });
+      
+      const results = await Promise.all(promises);
+      
       const accs: Record<string, MainLolAccountDto | null> = {};
       results.forEach(([username, data]) => {
         accs[username] = data;
       });
+      
+      console.log('Loaded accounts:', accs);
       setAccounts(accs);
-    }).catch(() => {
+    } catch (err) {
+      console.error('Error loading main accounts:', err);
       setError('Error loading main accounts.');
-    }).finally(() => setLoading(false));
-  }, [friends, jwt]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [friends, callApi]);
 
   if (!friends || friends.length === 0) return null;
 
@@ -83,14 +102,17 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
             ) : (
               <span className="text-gray-400 text-xs">No se encontró cuenta principal</span>
             )}
-            <button
-              title="Eliminar amigo"
-              className="ml-auto p-1 text-red-400 hover:text-red-600"
-              onClick={() => handleDeleteFriend(username)}
-              disabled={isLoading}
-            >
-              <FaTrash />
-            </button>
+            <div className="ml-auto flex items-center gap-2">
+              <ChatButton username={username} />
+              <button
+                title="Eliminar amigo"
+                className="p-1 text-red-400 hover:text-red-600"
+                onClick={() => handleDeleteFriend(username)}
+                disabled={isLoading}
+              >
+                <FaTrash />
+              </button>
+            </div>
           </li>
         );
       })}

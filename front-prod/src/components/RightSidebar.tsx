@@ -12,29 +12,40 @@ import { useApi } from "../hooks/useApi";
 import { FaCircle } from "react-icons/fa";
 import { useWebSocket } from "../context/WebSocketContext";
 import { useUserContext } from "../context/UserContext";
+import { useChat } from "./chat/ChatContext";
+import { MessageSquare } from "lucide-react";
 
 export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   const { callApi } = useApi();
   const [friends, setFriends] = useState<string[]>([]);
   const [online, setOnline] = useState<Record<string, boolean>>({});
-  const { jwt } = useUserContext();
   const { subscribe } = useWebSocket();
+  const { openChat, unreadMessages } = useChat();
 
   // Solo cargar amigos al montar
   useEffect(() => {
-    if (!jwt) return;
-
     let mounted = true;
-    callApi("/api/friends")
-      .then((data: string[]) => {
-        if (mounted) setFriends(data);
-      });
+    
+    const loadFriends = async () => {
+      try {
+        console.log('RightSidebar: Cargando lista de amigos...');
+        const data = await callApi("/api/friends");
+        
+        if (mounted) {
+          console.log('RightSidebar: Amigos cargados:', data);
+          setFriends(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
+        console.error("RightSidebar: Error loading friends:", err);
+      }
+    };
+    
+    loadFriends();
+    
     return () => {
       mounted = false;
     };
-    // callApi no debe ir en dependencias para evitar loops infinitos
-    // eslint-disable-next-line
-  }, [jwt]);
+  }, [callApi]);
 
   // Consultar presencia solo cuando cambia la lista de amigos
   useEffect(() => {
@@ -42,26 +53,48 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
       setOnline({});
       return;
     }
+    
     let mounted = true;
-    Promise.all(
-      friends.map((username) =>
-        callApi(`/api/presence/is-online/${username}`).then((res: any) => ({
-          username,
-          online: !!res.online,
-        }))
-      )
-    ).then((results) => {
-      if (!mounted) return;
-      const presence: Record<string, boolean> = {};
-      results.forEach(({ username, online }) => {
-        presence[username] = online;
-      });
-      setOnline(presence);
-    });
+    
+    const checkPresence = async () => {
+      try {
+        console.log('Verificando presencia para:', friends);
+        
+        const presencePromises = friends.map(async (username) => {
+          try {
+            const res = await callApi(`/api/presence/is-online/${username}`);
+            return {
+              username,
+              online: !!res?.online
+            };
+          } catch (err) {
+            console.error(`Error checking presence for ${username}:`, err);
+            return { username, online: false };
+          }
+        });
+        
+        const results = await Promise.all(presencePromises);
+        
+        if (!mounted) return;
+        
+        const presence: Record<string, boolean> = {};
+        results.forEach(({ username, online }) => {
+          presence[username] = online;
+        });
+        
+        console.log('Estado de presencia actualizado:', presence);
+        setOnline(presence);
+      } catch (err) {
+        console.error('Error al verificar presencia:', err);
+      }
+    };
+    
+    checkPresence();
+    
     return () => {
       mounted = false;
     };
-  }, [friends]);
+  }, [friends, callApi]);
 
   // Suscribirse a presence-updates para actualizar en tiempo real
   const handlePresenceUpdate = useCallback((msg: any) => {
@@ -103,9 +136,25 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
         <div className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-0">
           {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
           {friends.map((username) => (
-            <div key={username} className="flex items-center gap-2">
-              <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
-              <span className="text-gray-200">{username}</span>
+            <div key={username} className="flex items-center justify-between gap-2 p-1 hover:bg-[#232b3a] rounded group">
+              <div className="flex items-center gap-2">
+                <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-200">{username}</span>
+                  {unreadMessages[username] > 0 && (
+                    <span className="bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                      {unreadMessages[username] > 99 ? '99+' : unreadMessages[username]}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button 
+                onClick={() => openChat(username)}
+                className="chat-trigger text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                title={`Chatear con ${username}`}
+              >
+                <MessageSquare size={16} />
+              </button>
             </div>
           ))}
         </div>

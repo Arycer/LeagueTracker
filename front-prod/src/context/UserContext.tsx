@@ -5,14 +5,12 @@ import {useAuth,useUser} from "@clerk/nextjs";
 interface UserContextType {
     userId: string | null;
     username: string | null;
-    jwt: string | null;
     lolVersion: string | null;
 }
 
 const UserContext = createContext<UserContextType>({
     userId: null,
     username: null,
-    jwt: null,
     lolVersion: null,
 });
 
@@ -30,10 +28,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }
 
     useEffect(() => {
+        console.log("Updating user context");
         setUserId(user?.id || null);
         setUsername(user?.username || user?.primaryEmailAddress?.emailAddress || null);
         fetchToken();
-    }, [user]);
+    }, [user, getToken]);
 
     // Obtener la versión de LoL solo una vez
     useEffect(() => {
@@ -48,7 +47,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }, []);
 
     return (
-        <UserContext.Provider value={{userId, username, jwt, lolVersion}}>
+        <UserContext.Provider value={{userId, username, lolVersion}}>
             {children}
         </UserContext.Provider>
     );

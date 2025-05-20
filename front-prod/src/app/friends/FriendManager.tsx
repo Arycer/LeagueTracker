@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useUserContext } from "@/context/UserContext";
 import { useApi } from "@/hooks/useApi";
 
 interface FriendRequest {
@@ -11,14 +10,11 @@ interface FriendRequest {
   createdAt: string;
 }
 
-import { FaCircle, FaTrash, FaUserPlus, FaUserCheck, FaUserTimes } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { FaUserPlus, FaUserCheck, FaUserTimes } from "react-icons/fa";
 import FriendListWithMainAccounts from "./FriendListWithMainAccounts";
-import FriendMainAccounts from "./FriendMainAccounts";
 
 
 export default function FriendManager() {
-  const { username, jwt } = useUserContext();
   const { callApi } = useApi();
   const [friendUsername, setFriendUsername] = useState("");
   const [incomingRequests, setIncomingRequests] = useState<FriendRequest[]>([]);
@@ -30,57 +26,81 @@ export default function FriendManager() {
 
   // Consultar presencia solo cuando cambia la lista de amigos
   useEffect(() => {
-    if (!jwt) return;
     if (friends.length === 0) {
       setOnline({});
       return;
     }
+    
     let mounted = true;
-    Promise.all(
-      friends.map((username) =>
-        callApi(`/api/presence/is-online/${username}`).then((res: any) => ({
-          username,
-          online: !!res.online,
-        }))
-      )
-    ).then((results) => {
-      if (!mounted) return;
-      const presence: Record<string, boolean> = {};
-      results.forEach(({ username, online }) => {
-        presence[username] = online;
-      });
-      setOnline(presence);
-    });
+    
+    const checkPresence = async () => {
+      try {
+        console.log('FriendManager: Verificando presencia para:', friends);
+        
+        const presencePromises = friends.map(async (username) => {
+          try {
+            const res = await callApi(`/api/presence/is-online/${username}`);
+            return {
+              username,
+              online: !!res?.online
+            };
+          } catch (err) {
+            console.error(`Error checking presence for ${username}:`, err);
+            return { username, online: false };
+          }
+        });
+        
+        const results = await Promise.all(presencePromises);
+        
+        if (!mounted) return;
+        
+        const presence: Record<string, boolean> = {};
+        results.forEach(({ username, online }) => {
+          presence[username] = online;
+        });
+        
+        console.log('FriendManager: Estado de presencia actualizado:', presence);
+        setOnline(presence);
+      } catch (err) {
+        console.error('Error al verificar presencia:', err);
+      }
+    };
+    
+    checkPresence();
+    
     return () => {
       mounted = false;
     };
-  }, [friends, jwt]);
+  }, [friends, callApi]);
 
   const loadData = async () => {
-    if (!jwt) return;
     try {
+      console.log('Loading friend data...');
       setIsLoading(true);
+      
       const [incoming, outgoing, friendsList] = await Promise.all([
         callApi("/api/friends/requests/incoming"),
         callApi("/api/friends/requests/outgoing"),
-        callApi("/api/friends"),
+        callApi("/api/friends")
       ]);
-      setIncomingRequests(incoming || []);
-      setOutgoingRequests(outgoing || []);
+      
+      console.log('Friend data loaded:', { incoming, outgoing, friendsList });
+      
+      setIncomingRequests(Array.isArray(incoming) ? incoming : []);
+      setOutgoingRequests(Array.isArray(outgoing) ? outgoing : []);
       setFriends(Array.isArray(friendsList) ? friendsList : []);
     } catch (error: any) {
-      setMessage(error.message || "Error loading data");
+      console.error("Error loading friend data:", error);
+      setMessage(error.message || "Error loading friend data. Please try again later.");
     } finally {
       setIsLoading(false);
     }
   };
 
-
   useEffect(() => {
-    if (!jwt) return;
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jwt]);
+  }, []);
 
   const handleSendRequest = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/lol/match")
-class RiotController(
+class MatchController(
     private val riotService: RiotService
 ) {
 
@@ -19,11 +19,10 @@ class RiotController(
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "20") pageSize: Int
     ): List<String> {
-        val ps = pageSize.coerceIn(1, 20) // limitar a max 20 por página para evitar abuse
+        val ps = pageSize.coerceIn(1, 20)
         return riotService.getMatchIdsByPuuid(puuid, region, page, ps)
     }
 
-    // Endpoint para obtener información detallada de una partida
     @GetMapping("/match/{matchId}")
     fun getMatchInfo(
         @PathVariable matchId: String,

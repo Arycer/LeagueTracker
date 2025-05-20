@@ -1,5 +1,6 @@
 package me.arycer.leaguetracker.repository
 
+import me.arycer.leaguetracker.dto.chat.ChatMessageDTO
 import me.arycer.leaguetracker.entity.ChatMessage
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

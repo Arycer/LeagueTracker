@@ -1,5 +1,6 @@
 package me.arycer.leaguetracker.controller
 
+import me.arycer.leaguetracker.dto.chat.ChatMessageDTO
 import me.arycer.leaguetracker.entity.ChatMessage
 import me.arycer.leaguetracker.repository.ChatMessageRepository
 import me.arycer.leaguetracker.service.UserService
@@ -20,7 +21,7 @@ class ChatHistoryController(
         @PathVariable otherUsername: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "50") size: Int
-    ): ResponseEntity<List<ChatMessage>> {
+    ): ResponseEntity<List<ChatMessageDTO>> {
         val userId = principal.name
         val username = userService.getUsernameById(userId)
             ?: return ResponseEntity.badRequest().body(emptyList())
@@ -29,9 +30,18 @@ class ChatHistoryController(
         }
 
         val pageable = PageRequest.of(page, size)
-        val messages = chatMessageRepository.findConversationPaged(username, otherUsername, pageable)
+        val findConversationPaged = chatMessageRepository.findConversationPaged(username, otherUsername, pageable)
 
-        val ordered = messages.content.sortedBy { it.timestamp }
+        val messages = findConversationPaged.content.map { message ->
+            ChatMessageDTO(
+                senderUsername = message.sender.username,
+                recipientUsername = message.recipient.username,
+                content = message.content,
+                timestamp = message.timestamp.toEpochMilli()
+            )
+        }
+
+        val ordered = messages.sortedBy { it.timestamp }
         return ResponseEntity.ok(ordered)
     }
 }

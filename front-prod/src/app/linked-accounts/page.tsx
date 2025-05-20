@@ -38,7 +38,7 @@ type PendingActionState = {
 };
 
 const LinkedAccounts: React.FC = () => {
-  const { lolVersion, jwt } = useUserContext();
+  const { lolVersion } = useUserContext();
   const { callApi } = useApi();
   const [accounts, setAccounts] = useState<LolAccount[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<PendingLolAccount[]>([]);
@@ -51,23 +51,25 @@ const LinkedAccounts: React.FC = () => {
   // Fetch linked accounts
   const fetchAccounts = async () => {
     try {
-      if (!jwt) return;
+      console.log('Fetching linked accounts...');
       const data = await callApi("/lol/accounts/accounts");
+      console.log('Linked accounts data:', data);
       setAccounts(Array.isArray(data) ? data : []);
     } catch (err: any) {
-      setError("Error al cargar las cuentas");
-      console.error("Error fetching accounts:", err);
+      console.error('Error fetching linked accounts:', err);
+      setError(err.message || "Failed to load accounts");
     }
   };
 
   // Fetch main account
   const fetchMainAccount = async () => {
     try {
-      if (!jwt) return;
+      console.log('Fetching main account...');
       const data = await callApi("/lol/accounts/main");
+      console.log('Main account data:', data);
       setMainAccountId(data && data.id ? data.id : null);
     } catch (err: any) {
-      setMainAccountId(null);
+      console.error("Error fetching main account:", err);
     }
   };
 
@@ -75,24 +77,26 @@ const LinkedAccounts: React.FC = () => {
   const handleSetMain = async (id: string) => {
     setActionLoading(id);
     try {
-      if (!jwt) return;
+      console.log(`Setting account ${id} as main...`);
       await callApi(`/lol/accounts/${id}/set-main`, "POST");
+      console.log('Main account updated successfully');
       await Promise.all([fetchAccounts(), fetchMainAccount()]);
     } catch (err: any) {
-      setError("Error al marcar la cuenta como principal");
+      console.error('Error setting main account:', err);
+      setError(err.message || "Failed to set main account");
     } finally {
-      setActionLoading(null);
+      setActionLoading("");
     }
   };
 
   // Fetch pending accounts
   const fetchPendingAccounts = async () => {
     try {
-      if (!jwt) return;
+      console.log('Fetching pending accounts...');
       const data = await callApi("/lol/accounts/pending");
+      console.log('Pending accounts data:', data);
       setPendingAccounts(Array.isArray(data) ? data : []);
     } catch (err: any) {
-      setError("Error al cargar cuentas pendientes");
       console.error("Error fetching pending accounts:", err);
     }
   };
@@ -101,14 +105,15 @@ const LinkedAccounts: React.FC = () => {
   const handleUnlink = async (id: string) => {
     setActionLoading(id);
     try {
-      if (!jwt) return;
+      console.log(`Unlinking account ${id}...`);
       await callApi(`/lol/accounts/${id}`, "DELETE");
+      console.log('Account unlinked successfully');
       await fetchAccounts();
     } catch (err: any) {
-      setError("Error al desvincular la cuenta");
-      console.error("Error unlinking account:", err);
+      console.error('Error unlinking account:', err);
+      setError(err.message || "Failed to unlink account");
     } finally {
-      setActionLoading(null);
+      setActionLoading("");
     }
   };
 
@@ -116,68 +121,66 @@ const LinkedAccounts: React.FC = () => {
   const handleCancelPending = async (id: string) => {
     setActionLoading(id);
     try {
-      if (!jwt) return;
+      console.log(`Canceling pending account ${id}...`);
       await callApi(`/lol/accounts/pending/${id}`, "DELETE");
+      console.log('Pending account canceled successfully');
       await fetchPendingAccounts();
     } catch (err: any) {
-      setError("Error al cancelar la cuenta pendiente");
-      console.error("Error deleting pending account:", err);
+      console.error('Error canceling pending account:', err);
+      setError(err.message || "Failed to cancel pending account");
     } finally {
-      setActionLoading(null);
+      setActionLoading("");
     }
   };
 
   // Verify pending account
   const handleVerifyPending = async (id: string) => {
-    if (!jwt) return;
     setPendingActionState((prev) => ({
       ...prev,
       [id]: { verifying: true, verificationResult: "idle" },
     }));
     try {
-      const response = await callApi("/lol/accounts/verify", "POST");
-      if (response.verified) {
-        setPendingActionState((prev) => ({
-          ...prev,
-          [id]: { verifying: false, verificationResult: "success" },
-        }));
-        await Promise.all([fetchAccounts(), fetchPendingAccounts()]);
-      } else {
-        setPendingActionState((prev) => ({
-          ...prev,
-          [id]: {
-            verifying: false,
-            verificationResult: "error",
-            errorMsg: "No se pudo verificar la cuenta. Asegúrate de tener el icono correcto.",
-          },
-        }));
-      }
-    } catch (err: any) {
+      console.log(`Verifying pending account ${id}...`);
+      await callApi(`/lol/accounts/pending/${id}/verify`, "POST");
+      console.log('Account verified successfully');
       setPendingActionState((prev) => ({
         ...prev,
-        [id]: {
-          verifying: false,
+        [id]: { verifying: false, verificationResult: "success" },
+      }));
+      await Promise.all([fetchPendingAccounts(), fetchAccounts()]);
+    } catch (err: any) {
+      console.error('Error verifying account:', err);
+      setPendingActionState((prev) => ({
+        ...prev,
+        [id]: { 
+          verifying: false, 
           verificationResult: "error",
-          errorMsg: err.message || "Error al verificar la cuenta",
+          errorMsg: err.message || "No se pudo verificar la cuenta. Asegúrate de tener el icono correcto."
         },
       }));
     }
   };
 
   useEffect(() => {
-    if (!jwt) return;
-    setLoading(true);
-    Promise.all([
-      fetchAccounts(),
-      fetchPendingAccounts(),
-      fetchMainAccount(),
-    ]).finally(() => setLoading(false));
-  }, [jwt]);
-
-  useEffect(() => {
-    if (!jwt) return;
-    fetchAccounts();
-  }, []);
+    const loadInitialData = async () => {
+      console.log('Cargando datos iniciales de cuentas vinculadas...');
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchAccounts(),
+          fetchPendingAccounts(),
+          fetchMainAccount(),
+        ]);
+        console.log('Datos iniciales cargados correctamente');
+      } catch (err) {
+        console.error('Error cargando datos iniciales:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadInitialData();
+  }, [callApi]); // Incluir callApi como dependencia para que se actualice si cambia
 
   return (
     <div className="w-full h-full flex flex-col items-center pt-8 pb-8 px-2 md:px-0 bg-[#232b3a]">

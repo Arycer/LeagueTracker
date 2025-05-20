@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
 @RestController
-@RequestMapping("/lol/accounts")
+@RequestMapping("/api/lol/accounts")
 class LolAccountController(
     private val service: LolAccountService,
     private val friendRequestService: FriendRequestService,

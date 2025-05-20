@@ -8,6 +8,7 @@ import { RightSidebar } from "@/components/RightSidebar";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { Header } from "@/components/Header";
 import { WebSocketProvider } from "@/context/WebSocketContext";
+import { ChatProvider } from "@/components/chat/ChatContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,12 +30,13 @@ export default function RootLayout({
     <ClerkProvider>
       <UserProvider>
         <WebSocketProvider>
-          <html lang="es">
-            <body className={`${inter.variable} antialiased`}>
-              <div className="w-screen h-screen overflow-hidden">
-                <header className="fixed top-0 left-0 w-full h-20 z-50">
-                  <Header />
-                </header>
+          <ChatProvider>
+            <html lang="es">
+              <body className={`${inter.variable} antialiased`}>
+                <div className="w-screen h-screen overflow-hidden">
+                  <header className="fixed top-0 left-0 w-full h-20 z-50">
+                    <Header />
+                  </header>
 
                 <div className="flex h-full w-full pt-20">
                   <aside className="w-64 h-full">
@@ -48,8 +50,9 @@ export default function RootLayout({
                   </aside>
                 </div>
               </div>
-            </body>
-          </html>
+              </body>
+            </html>
+          </ChatProvider>
         </WebSocketProvider>
       </UserProvider>
     </ClerkProvider>
