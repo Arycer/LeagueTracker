@@ -116,7 +116,7 @@ export default function ProfilePage() {
         setMatchesError(null);
 
         fetch(
-            `http://localhost:8080/api/lol/match/matches?puuid=${encodeURIComponent(profile.puuid)}&region=${encodeURIComponent(profile.region)}&page=0&pageSize=20`
+            `http://localhost:8080/api/lol/match/matches?puuid=${encodeURIComponent(profile.puuid)}&region=${encodeURIComponent(profile.region)}&page=0&pageSize=100`
         )
             .then(res => {
                 if (!res.ok) throw new Error('Error al cargar historial');
