@@ -1,6 +1,7 @@
 "use client";
 import React, {useState} from "react";
 import { Button } from "./Button";
+import { useRouter } from "next/navigation";
 
 import type { Region } from "@/types";
 
@@ -18,9 +19,16 @@ export const PlayerSearch: React.FC = () => {
     const [region, setRegion] = useState<keyof typeof REGIONS>('EUW');
     const [username, setUsername] = useState('');
     const [tagline, setTagline] = useState('');
+    const router = useRouter();
+
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        if (!region || !username || !tagline) return;
+        router.push(`/profiles/${region}/${encodeURIComponent(username)}/${encodeURIComponent(tagline)}`);
+    }
 
     return (
-        <form className="backdrop-blur-sm bg-white/40 rounded-2xl shadow-xl p-6 flex flex-col gap-4 w-full max-w-xl mx-auto">
+        <form onSubmit={handleSubmit} className="backdrop-blur-sm bg-white/40 rounded-2xl shadow-xl p-6 flex flex-col gap-4 w-full max-w-xl mx-auto">
             <div className="flex flex-col md:flex-row gap-3">
                 <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Región</label>

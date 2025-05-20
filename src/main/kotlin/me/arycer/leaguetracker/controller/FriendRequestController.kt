@@ -35,7 +35,6 @@ class FriendRequestController(
         val requesterId = principal.name
         val requester = userService.getUsernameById(requesterId)
         if (requester == null || !userService.existsByUsername(recipientUsername)) {
-            println("Requester or recipient not found")
             return ResponseEntity.badRequest().build()
         }
 
@@ -78,7 +77,6 @@ class FriendRequestController(
         val recipientId = principal.name
         val recipientUsername = userService.getUsernameById(recipientId)
         if (recipientUsername == null || !userService.existsByUsername(requesterUsername)) {
-            println("Recipient or requester not found")
             return ResponseEntity.badRequest().build()
         }
         val response = friendRequestService.respondRequest(requesterUsername, recipientUsername, accept)
@@ -95,12 +93,11 @@ class FriendRequestController(
             return ResponseEntity.badRequest().build()
         }
 
-        val friend = userService.getUsernameById(friendUsername)
-        if (friend == null) {
+        if (!userService.existsByUsername(friendUsername) || !friendRequestService.isFriends(username, friendUsername)) {
             return ResponseEntity.badRequest().build()
         }
 
-        friendRequestService.removeFriend(username, friend)
+        friendRequestService.removeFriend(username, friendUsername)
         return ResponseEntity.noContent().build()
     }
 }

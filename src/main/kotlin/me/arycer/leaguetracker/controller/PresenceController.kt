@@ -22,10 +22,7 @@ class PresenceController(
         val userId = principal.name
         val requesterUsername = userService.getUsernameById(userId)
 
-        println("Requester: $requesterUsername, Target: $username")
-
         if (requesterUsername == null || !friendsService.isFriends(requesterUsername, username)) {
-            println("User $requesterUsername is not friends with $username")
             return mapOf(
                 "username" to username,
                 "online" to false
@@ -33,9 +30,6 @@ class PresenceController(
         }
 
         val online = presenceService.isOnline(username)
-
-        println("User $username is online: $online")
-
         return mapOf(
             "username" to username,
             "online" to online
