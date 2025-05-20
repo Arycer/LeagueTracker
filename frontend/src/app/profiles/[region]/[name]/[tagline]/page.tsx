@@ -129,7 +129,15 @@ export default function ProfilePage() {
         matchIds.forEach(matchId => {
             if (matchDetails[matchId]) return; // Ya está cargada
             fetch(`http://localhost:8080/api/lol/match/match/${matchId}?region=${encodeURIComponent(profile.region)}`, {signal: controller.signal})
-                .then(res => res.ok ? res.json() : null)
+                .then(res => {
+                    if (res.status === 403) {
+                        // Eliminar el matchId de la lista
+                        setMatchIds(prev => prev.filter(id => id !== matchId));
+                        return null;
+                    }
+                    if (!res.ok) return null;
+                    return res.json();
+                })
                 .then(data => {
                     if (data) setMatchDetails(prev => ({...prev, [matchId]: data}));
                 })

@@ -3,6 +3,7 @@
 import {useState} from 'react';
 import Chat from "@/components/Chat";
 import FriendManager from "@/components/FriendManager";
+import FriendMainAccounts from "@/components/FriendMainAccounts";
 
 export default function Dashboard() {
     const [friends, setFriends] = useState<string[]>([]);
@@ -26,6 +27,7 @@ export default function Dashboard() {
                 <div>
                     <h1 className="text-2xl font-bold mb-6">Gestión de Amigos</h1>
                     <FriendManager onFriendsUpdate={handleFriendsUpdate}/>
+                    <FriendMainAccounts friends={friends} />
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold mb-6">Chat con Amigos</h1>

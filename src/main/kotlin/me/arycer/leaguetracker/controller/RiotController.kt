@@ -1,8 +1,10 @@
 package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.dto.match.MatchDto
+import me.arycer.leaguetracker.dto.misc.MainLolAccountDto
 import me.arycer.leaguetracker.dto.misc.Region
 import me.arycer.leaguetracker.service.RiotService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -27,7 +29,11 @@ class RiotController(
     fun getMatchInfo(
         @PathVariable matchId: String,
         @RequestParam region: Region
-    ): MatchDto {
-        return riotService.getMatchInfoByMatchId(matchId, region)
+    ): ResponseEntity<MatchDto?> {
+        return try {
+            ResponseEntity.ok(riotService.getMatchInfoByMatchId(matchId, region))
+        } catch (_: Exception) {
+            ResponseEntity.status(403).body(null)
+        }
     }
 }

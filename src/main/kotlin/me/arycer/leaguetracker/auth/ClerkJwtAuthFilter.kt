@@ -41,7 +41,6 @@ class ClerkJwtAuthFilter(
         filterChain: FilterChain
     ) {
         val token = getTokenFromRequest(request)
-
         if (token == null) {
             filterChain.doFilter(request, response)
             return
