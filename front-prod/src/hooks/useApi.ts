@@ -12,6 +12,7 @@ export function useApi() {
     const url = `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
     const headers: Record<string, string> = {};
     if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+    if (body) headers['Content-Type'] = 'application/json';
     const response = await fetch(url, {
       method,
       headers,

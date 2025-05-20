@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useApi } from "@/hooks/useApi";
+import { useUserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { FaCircle, FaTrash } from "react-icons/fa";
 
@@ -21,13 +22,14 @@ interface FriendListWithMainAccountsProps {
 
 const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({ friends, online, isLoading, handleDeleteFriend }) => {
   const { callApi } = useApi();
+  const { jwt } = useUserContext();
   const router = useRouter();
   const [accounts, setAccounts] = useState<Record<string, MainLolAccountDto | null>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!friends || friends.length === 0) {
+    if (!friends || friends.length === 0 || !jwt) {
       setAccounts({});
       return;
     }
@@ -48,7 +50,7 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
     }).catch(() => {
       setError('Error loading main accounts.');
     }).finally(() => setLoading(false));
-  }, [friends]);
+  }, [friends, jwt]);
 
   if (!friends || friends.length === 0) return null;
 

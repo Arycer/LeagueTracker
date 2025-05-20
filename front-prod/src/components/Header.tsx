@@ -19,16 +19,16 @@ export const Header: React.FC = () => {
         <SignedIn>
           <nav className="flex gap-4 items-center">
             <Link
-              href="/profiles"
-              className="text-blue-200 hover:text-white font-medium transition-colors"
-            >
-              Perfiles vinculados
-            </Link>
-            <Link
               href="/friends"
               className="text-blue-200 hover:text-white font-medium transition-colors"
             >
               Amigos
+            </Link>
+            <Link
+              href="/linked-accounts"
+              className="text-blue-200 hover:text-white font-medium transition-colors"
+            >
+              Perfiles vinculados
             </Link>
           </nav>
         </SignedIn>
@@ -48,10 +48,20 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-3 justify-self-end">
         <SignedOut>
           <SignInButton>
-            <Button variant="outline" className="border-blue-200 text-blue-200 hover:bg-blue-200 hover:text-[#232946]">Iniciar sesión</Button>
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-200 hover:bg-blue-200 hover:text-[#232946]"
+            >
+              Iniciar sesión
+            </Button>
           </SignInButton>
           <SignUpButton>
-            <Button variant="primary" className="bg-blue-500 text-white hover:bg-blue-400">Registrarse</Button>
+            <Button
+              variant="primary"
+              className="bg-blue-500 text-white hover:bg-blue-400"
+            >
+              Registrarse
+            </Button>
           </SignUpButton>
         </SignedOut>
         <SignedIn>

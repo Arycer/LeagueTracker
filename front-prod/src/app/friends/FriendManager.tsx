@@ -12,15 +12,9 @@ interface FriendRequest {
 }
 
 import { FaCircle, FaTrash, FaUserPlus, FaUserCheck, FaUserTimes } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import FriendListWithMainAccounts from "./FriendListWithMainAccounts";
-
-interface MainLolAccountDto {
-  region: string;
-  summonerName: string;
-  tagline: string;
-  profileIconId: number;
-  summonerLevel: number;
-}
+import FriendMainAccounts from "./FriendMainAccounts";
 
 
 export default function FriendManager() {
@@ -37,7 +31,6 @@ export default function FriendManager() {
   // Consultar presencia solo cuando cambia la lista de amigos
   useEffect(() => {
     if (!jwt) return;
-
     if (friends.length === 0) {
       setOnline({});
       return;
@@ -64,6 +57,7 @@ export default function FriendManager() {
   }, [friends, jwt]);
 
   const loadData = async () => {
+    if (!jwt) return;
     try {
       setIsLoading(true);
       const [incoming, outgoing, friendsList] = await Promise.all([
@@ -80,6 +74,7 @@ export default function FriendManager() {
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (!jwt) return;
@@ -203,7 +198,6 @@ export default function FriendManager() {
           />
         )}
       </section>
-      {/* Formulario de añadir amigo */}
       <section className="w-full bg-[#26324d]/90 rounded-xl shadow p-4">
         <h2 className="text-base font-bold text-blue-200 mb-2 flex items-center gap-2">
           <FaUserPlus className="text-blue-400" /> Añadir amigo
