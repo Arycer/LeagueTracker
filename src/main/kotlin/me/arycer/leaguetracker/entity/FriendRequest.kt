@@ -7,30 +7,29 @@ import java.time.Instant
 @Entity
 @Table(name = "friend_requests")
 @IdClass(FriendRequestId::class)
-class FriendRequest() {  // constructor vacío para JPA
+class FriendRequest() {  // Constructor vacío para JPA
 
     @Id
-    @Column(name = "requester_id")
-    lateinit var requesterId: String
+    @Column(name = "requester_username")
+    lateinit var requesterUsername: String
 
     @Id
-    @Column(name = "recipient_id")
-    lateinit var recipientId: String
+    @Column(name = "recipient_username")
+    lateinit var recipientUsername: String
 
     @Enumerated(EnumType.STRING)
     var status: FriendRequestStatus = FriendRequestStatus.PENDING
 
     var createdAt: Instant = Instant.now()
 
-    // Constructor secundario para inicialización fácil
     constructor(
-        requesterId: String,
-        recipientId: String,
+        requesterUsername: String,
+        recipientUsername: String,
         status: FriendRequestStatus = FriendRequestStatus.PENDING,
         createdAt: Instant = Instant.now()
     ) : this() {
-        this.requesterId = requesterId
-        this.recipientId = recipientId
+        this.requesterUsername = requesterUsername
+        this.recipientUsername = recipientUsername
         this.status = status
         this.createdAt = createdAt
     }
@@ -42,8 +41,8 @@ enum class FriendRequestStatus {
     REJECTED
 }
 
-// Id compuesto para FriendRequest
+// Id compuesto actualizado
 data class FriendRequestId(
-    val requesterId: String = "",
-    val recipientId: String = ""
+    val requesterUsername: String = "",
+    val recipientUsername: String = ""
 ) : Serializable

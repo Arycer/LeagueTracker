@@ -1,5 +1,6 @@
 package me.arycer.leaguetracker.service
 
+import me.arycer.leaguetracker.dto.misc.MainLolAccountDto
 import me.arycer.leaguetracker.dto.misc.Region
 import me.arycer.leaguetracker.entity.LolAccount
 import me.arycer.leaguetracker.entity.PendingLolAccount
@@ -156,6 +157,17 @@ class LolAccountService(
 
     fun getMainAccount(userId: String): LolAccount? {
         return accountRepo.findAllByUserId(userId).firstOrNull { it.isMain }
+    }
+
+    fun getMainAccountOfUser(userId: String): MainLolAccountDto? {
+        return getMainAccount(userId)?.let {
+            MainLolAccountDto(
+                summonerName = it.summonerName,
+                tagline = it.tagline,
+                region = it.region,
+                profileIconId = it.profileIconId
+            )
+        }
     }
 
 

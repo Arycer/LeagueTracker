@@ -2,60 +2,105 @@ package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.entity.FriendRequest
 import me.arycer.leaguetracker.service.FriendRequestService
+import me.arycer.leaguetracker.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
 @RestController
 @RequestMapping("/api/friends")
-class FriendRequestController(private val friendRequestService: FriendRequestService) {
+class FriendRequestController(
+    private val friendRequestService: FriendRequestService,
+    private val userService: UserService
+) {
 
     @GetMapping
     fun getFriends(principal: Principal): ResponseEntity<List<String>> {
         val userId = principal.name
-        val friends = friendRequestService.getFriends(userId)
+        val username = userService.getUsernameById(userId)
+
+        if (username == null) {
+            return ResponseEntity.badRequest().body(emptyList())
+        }
+
+        val friends = friendRequestService.getFriends(username)
         return ResponseEntity.ok(friends)
     }
 
-    @PostMapping("/requests/{recipientId}")
+    @PostMapping("/requests/{recipientUsername}")
     fun sendRequest(
         principal: Principal,
-        @PathVariable recipientId: String
+        @PathVariable recipientUsername: String
     ): ResponseEntity<FriendRequest> {
         val requesterId = principal.name
-        val request = friendRequestService.sendRequest(requesterId, recipientId)
+        val requester = userService.getUsernameById(requesterId)
+        if (requester == null || !userService.existsByUsername(recipientUsername)) {
+            println("Requester or recipient not found")
+            return ResponseEntity.badRequest().build()
+        }
+
+        val request = friendRequestService.sendRequest(requester, recipientUsername)
         return ResponseEntity.ok(request)
     }
 
     @GetMapping("/requests/incoming")
     fun incomingRequests(principal: Principal): ResponseEntity<List<FriendRequest>> {
-        val userId = principal.name
-        val requests = friendRequestService.getIncomingRequests(userId)
+        val requesterId = principal.name
+        val username = userService.getUsernameById(requesterId)
+
+        if (username == null) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        val requests = friendRequestService.getIncomingRequests(username)
         return ResponseEntity.ok(requests)
     }
 
     @GetMapping("/requests/outgoing")
     fun outgoingRequests(principal: Principal): ResponseEntity<List<FriendRequest>> {
-        val userId = principal.name
-        val requests = friendRequestService.getOutgoingRequests(userId)
+        val requesterId = principal.name
+        val username = userService.getUsernameById(requesterId)
+
+        if (username == null) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        val requests = friendRequestService.getOutgoingRequests(username)
         return ResponseEntity.ok(requests)
     }
 
-    @PostMapping("/requests/{requesterId}/respond")
+    @PostMapping("/requests/{requesterUsername}/respond")
     fun respondRequest(
         principal: Principal,
-        @PathVariable requesterId: String,
+        @PathVariable requesterUsername: String,
         @RequestParam accept: Boolean
     ): ResponseEntity<FriendRequest> {
         val recipientId = principal.name
-        val response = friendRequestService.respondRequest(requesterId, recipientId, accept)
+        val recipientUsername = userService.getUsernameById(recipientId)
+        if (recipientUsername == null || !userService.existsByUsername(requesterUsername)) {
+            println("Recipient or requester not found")
+            return ResponseEntity.badRequest().build()
+        }
+        val response = friendRequestService.respondRequest(requesterUsername, recipientUsername, accept)
         return ResponseEntity.ok(response)
     }
 
-    @DeleteMapping("/delete/{friendId}")
-    fun removeFriend(principal: Principal, @PathVariable friendId: String): ResponseEntity<Void> {
-        val userId = principal.name
-        friendRequestService.removeFriend(userId, friendId)
+
+    @DeleteMapping("/delete/{friendUsername}")
+    fun removeFriend(principal: Principal, @PathVariable friendUsername: String): ResponseEntity<Void> {
+        val id = principal.name
+        val username = userService.getUsernameById(id)
+
+        if (username == null) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        val friend = userService.getUsernameById(friendUsername)
+        if (friend == null) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        friendRequestService.removeFriend(username, friend)
         return ResponseEntity.noContent().build()
     }
 }

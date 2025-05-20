@@ -11,11 +11,11 @@ data class ChatMessage(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "sender_id", nullable = false)
-    var senderId: String = "",
+    @Column(name = "sender_username", nullable = false)
+    var senderUsername: String = "",
 
-    @Column(name = "recipient_id", nullable = false)
-    var recipientId: String = "",
+    @Column(name = "recipient_username", nullable = false)
+    var recipientUsername: String = "",
 
     @Column(nullable = false)
     var content: String = "",

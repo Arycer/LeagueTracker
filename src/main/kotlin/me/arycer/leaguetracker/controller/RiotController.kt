@@ -1,8 +1,8 @@
 package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.dto.match.MatchDto
-import me.arycer.leaguetracker.service.RiotService
 import me.arycer.leaguetracker.dto.misc.Region
+import me.arycer.leaguetracker.service.RiotService
 import org.springframework.web.bind.annotation.*
 
 @RestController

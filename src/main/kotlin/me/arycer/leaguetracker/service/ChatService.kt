@@ -12,8 +12,8 @@ class ChatService(private val chatMessageRepository: ChatMessageRepository) {
     @Transactional
     fun saveMessage(senderId: String, recipientId: String, content: String): ChatMessage {
         val message = ChatMessage(
-            senderId = senderId,
-            recipientId = recipientId,
+            senderUsername = senderId,
+            recipientUsername = recipientId,
             content = content,
             timestamp = Instant.now()
         )
@@ -21,7 +21,7 @@ class ChatService(private val chatMessageRepository: ChatMessageRepository) {
     }
 
     fun getMessagesBetweenUsers(user1: String, user2: String): List<ChatMessage> {
-        return chatMessageRepository.findBySenderIdAndRecipientIdOrRecipientIdAndSenderIdOrderByTimestampAsc(
+        return chatMessageRepository.findBySenderUsernameAndRecipientUsernameOrRecipientUsernameAndSenderUsernameOrderByTimestampAsc(
             user1, user2,
             user1, user2
         )

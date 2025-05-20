@@ -9,16 +9,11 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
-    fun findBySenderIdAndRecipientIdOrRecipientIdAndSenderIdOrderByTimestampAsc(
-        senderId1: String, recipientId1: String,
-        senderId2: String, recipientId2: String
-    ): List<ChatMessage>
-
     @Query(
         """
         SELECT m FROM ChatMessage m
-        WHERE (m.senderId = :user1 AND m.recipientId = :user2)
-           OR (m.senderId = :user2 AND m.recipientId = :user1)
+        WHERE (m.senderUsername = :user1 AND m.recipientUsername = :user2)
+           OR (m.senderUsername = :user2 AND m.recipientUsername = :user1)
         ORDER BY m.timestamp DESC
     """
     )
@@ -27,4 +22,11 @@ interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
         user2: String,
         pageable: Pageable
     ): Page<ChatMessage>
+
+    fun findBySenderUsernameAndRecipientUsernameOrRecipientUsernameAndSenderUsernameOrderByTimestampAsc(
+        senderId1: String,
+        recipientId1: String,
+        senderId2: String,
+        recipientId2: String
+    ): List<ChatMessage>
 }

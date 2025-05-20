@@ -4,7 +4,7 @@ export default function useAuthenticatedFetch() {
     const {getToken} = useAuth()
 
     return async (input: RequestInfo, init?: RequestInit) => {
-        const token = await getToken({ template: 'DefaultJWT' })
+        const token = await getToken({template: 'DefaultJWT'})
         if (!token) {
             throw new Error('Not signed in')
         }

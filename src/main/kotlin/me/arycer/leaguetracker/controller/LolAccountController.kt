@@ -1,8 +1,10 @@
 package me.arycer.leaguetracker.controller
 
+import me.arycer.leaguetracker.dto.misc.MainLolAccountDto
 import me.arycer.leaguetracker.dto.misc.Region
 import me.arycer.leaguetracker.entity.LolAccount
 import me.arycer.leaguetracker.entity.PendingLolAccount
+import me.arycer.leaguetracker.service.FriendRequestService
 import me.arycer.leaguetracker.service.LolAccountService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,7 +13,8 @@ import java.security.Principal
 @RestController
 @RequestMapping("/lol/accounts")
 class LolAccountController(
-    private val service: LolAccountService
+    private val service: LolAccountService,
+    private val friendRequestService: FriendRequestService
 ) {
 
     data class LinkRequest(val summonerName: String, val tagline: String, val region: Region)
@@ -89,6 +92,20 @@ class LolAccountController(
         val userId = principal.name
         val main = service.getMainAccount(userId)
         return ResponseEntity.ok(main)
+    }
+
+    @GetMapping("/friends/main")
+    fun getFriendsMainAccounts(
+        principal: Principal,
+    ): ResponseEntity<Map<String, MainLolAccountDto?>> {
+        val userId = principal.name
+        val friends = friendRequestService.getFriends(userId)
+
+        val result = friends.associateWith { friendId ->
+            service.getMainAccountOfUser(friendId)
+        }
+
+        return ResponseEntity.ok(result)
     }
 
 }

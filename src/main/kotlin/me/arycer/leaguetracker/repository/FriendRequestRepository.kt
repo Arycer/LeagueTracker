@@ -6,17 +6,20 @@ import me.arycer.leaguetracker.entity.FriendRequestStatus
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface FriendRequestRepository : JpaRepository<FriendRequest, FriendRequestId> {
-    fun findByRecipientIdAndStatus(recipientId: String, status: FriendRequestStatus): List<FriendRequest>
-    fun findByRequesterIdAndStatus(requesterId: String, status: FriendRequestStatus): List<FriendRequest>
-    fun existsByRequesterIdAndRecipientIdAndStatus(
-        requesterId: String,
-        recipientId: String,
+    fun findByRecipientUsernameAndStatus(recipientUsername: String, status: FriendRequestStatus): List<FriendRequest>
+    fun findByRequesterUsernameAndStatus(requesterUsername: String, status: FriendRequestStatus): List<FriendRequest>
+    fun existsByRequesterUsernameAndRecipientUsernameAndStatus(
+        requesterUsername: String,
+        recipientUsername: String,
         status: FriendRequestStatus
     ): Boolean
 
-    fun findByRequesterIdAndRecipientIdAndStatus(
-        requesterId: String,
-        recipientId: String,
+    fun findByRequesterUsernameAndRecipientUsernameAndStatus(
+        requesterUsername: String,
+        recipientUsername: String,
         status: FriendRequestStatus
     ): FriendRequest?
+
+    fun findAllByRecipientUsernameAndStatus(username: String, pending: FriendRequestStatus): List<FriendRequest>
+    fun findAllByRequesterUsernameAndStatus(username: String, pending: FriendRequestStatus): List<FriendRequest>
 }

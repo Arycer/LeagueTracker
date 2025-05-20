@@ -28,9 +28,9 @@ class ProfileController(
         @PathVariable name: String,
         @PathVariable tagline: String
     ): ResponseEntity<SummonerProfileDTO> {
-       try {
-            val profile =  lolProfileCacheService.refreshProfile(region, name, tagline)
-           return ResponseEntity.ok(profile)
+        try {
+            val profile = lolProfileCacheService.refreshProfile(region, name, tagline)
+            return ResponseEntity.ok(profile)
         } catch (_: RuntimeException) {
             return ResponseEntity.badRequest().body(null)
         }
