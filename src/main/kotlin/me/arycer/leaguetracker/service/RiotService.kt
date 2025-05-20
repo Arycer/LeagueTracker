@@ -5,6 +5,7 @@ import me.arycer.leaguetracker.config.ApiKeyLoader
 import me.arycer.leaguetracker.dto.account.SummonerDto
 import me.arycer.leaguetracker.dto.ddragon.VersionsDTO
 import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
+import me.arycer.leaguetracker.dto.match.MatchDto
 import me.arycer.leaguetracker.dto.misc.Region
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -15,8 +16,13 @@ import org.springframework.web.client.exchange
 
 @Service
 class RiotService(
-    private val restTemplate: RestTemplate = RestTemplate()
+    private val restTemplate: RestTemplate = RestTemplate(),
+    private val matchCacheService: MatchCacheService
 ) {
+
+    init {
+        matchCacheService.riotService = this
+    }
 
     fun getSummonerId(summonerName: String, tagline: String, region: Region): String {
         val url = "https://${
@@ -110,7 +116,42 @@ class RiotService(
         return versionsDTO
     }
 
-    private fun buildAuthHeader(): HttpEntity<Void> {
+    fun getMatchIdsByPuuid(
+        puuid: String,
+        region: Region,
+        page: Int = 0,
+        pageSize: Int = 20
+    ): List<String> {
+        println("Fetching match IDs for puuid: $puuid, region: $region, page: $page, pageSize: $pageSize")
+
+        val start = page * pageSize
+        val count = pageSize.coerceAtMost(100 - start) // para no pasar de 100 partidas máximo
+
+        if (count <= 0) return emptyList()
+
+        val url =
+            "https://${
+                region.policy.toString().lowercase()
+            }.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=$start&count=$count"
+
+        val response = restTemplate.exchange<Array<String>>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+
+        println("Response: $response")
+
+        return response.body?.toList() ?: emptyList()
+    }
+
+
+    fun getMatchInfoByMatchId(matchId: String, region: Region): MatchDto {
+        return matchCacheService.getMatchInfoByMatchId(matchId, region)
+    }
+
+
+    fun buildAuthHeader(): HttpEntity<Void> {
         val headers = HttpHeaders()
         headers.set("X-Riot-Token", ApiKeyLoader.apiKey)
         return HttpEntity(headers)

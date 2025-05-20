@@ -22,14 +22,17 @@ class LolProfileCacheService(
     @Transactional
     fun getProfile(region: Region, summonerName: String, tagline: String): SummonerProfileDTO {
         val key = buildKey(region, summonerName, tagline)
+        val puuid = riotService.getSummonerId(summonerName, tagline, region)
         val now = System.currentTimeMillis()
         val cached = lolProfileCacheRepository.findByKey(key)
 
         if (cached != null && (now - cached.lastUpdated) < cacheCooldownMillis) {
             // Cache válido, devolver desde BD
-            val leagueEntries = objectMapper.readValue(cached.leagueEntriesJson, Array<LeagueEntryDTO>::class.java).toList()
+            val leagueEntries =
+                objectMapper.readValue(cached.leagueEntriesJson, Array<LeagueEntryDTO>::class.java).toList()
             return SummonerProfileDTO(
                 name = cached.summonerName,
+                puuid = puuid,
                 summonerLevel = cached.summonerLevel,
                 profileIconId = cached.profileIconId,
                 leagueEntries = leagueEntries,
@@ -43,7 +46,12 @@ class LolProfileCacheService(
     }
 
     @Transactional
-    fun refreshProfile(region: Region, summonerName: String, tagline: String, force: Boolean = false): SummonerProfileDTO {
+    fun refreshProfile(
+        region: Region,
+        summonerName: String,
+        tagline: String,
+        force: Boolean = false
+    ): SummonerProfileDTO {
         val key = buildKey(region, summonerName, tagline)
         val now = System.currentTimeMillis()
         val cached = lolProfileCacheRepository.findByKey(key)
@@ -53,6 +61,7 @@ class LolProfileCacheService(
         }
 
         val summoner = riotService.getSummonerByRiotId(summonerName, tagline, region)
+        val puuid = riotService.getSummonerId(summonerName, tagline, region)
         val entries = riotService.fetchLeagueEntries(region, summoner.id)
 
         val cacheEntity = LolProfileCache(
@@ -68,6 +77,7 @@ class LolProfileCacheService(
 
         return SummonerProfileDTO(
             name = summoner.name ?: "$summonerName#$tagline",
+            puuid = puuid,
             summonerLevel = summoner.summonerLevel,
             profileIconId = summoner.profileIconId,
             leagueEntries = entries.toList(),
