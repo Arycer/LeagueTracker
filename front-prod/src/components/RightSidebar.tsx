@@ -2,7 +2,6 @@
 import React from "react";
 import { BaseSidebar } from "./BaseSidebar";
 import Link from "next/link";
-import { useUserContext } from "../context/UserContext";
 
 interface SidebarProps {
   className?: string;
@@ -12,6 +11,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useApi } from "../hooks/useApi";
 import { FaCircle } from "react-icons/fa";
 import { useWebSocket } from "../context/WebSocketContext";
+import { useUserContext } from "../context/UserContext";
 
 export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   const { callApi } = useApi();
@@ -89,22 +89,29 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
 
   const onlineCount = friends.filter((u) => online[u]).length;
 
+  const { lolVersion } = useUserContext();
+
   return (
-    <BaseSidebar className={className}>
-      <Link href="/friends" className="text-blue-200 font-bold text-lg mb-4">
-        Amigos
-      </Link>
-      <div className="text-gray-300 text-sm mb-2">
-        {onlineCount} conectados
+    <BaseSidebar className={className + " flex flex-col h-full min-h-0"}>
+      <div className="flex-1 flex flex-col min-h-0">
+        <Link href="/friends" className="text-blue-200 font-bold text-lg mb-4">
+          Amigos
+        </Link>
+        <div className="text-gray-300 text-sm mb-2">
+          {onlineCount} conectados
+        </div>
+        <div className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-0">
+          {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
+          {friends.map((username) => (
+            <div key={username} className="flex items-center gap-2">
+              <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
+              <span className="text-gray-200">{username}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="flex flex-col gap-2">
-        {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
-        {friends.map((username) => (
-          <div key={username} className="flex items-center gap-2">
-            <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
-            <span className="text-gray-200">{username}</span>
-          </div>
-        ))}
+      <div className="sticky bottom-0 w-full text-center text-[11px] text-gray-400 pt-2 pb-1 select-none border-t border-gray-700 bg-transparent z-10">
+        Versión de LoL: {lolVersion || '...'}
       </div>
     </BaseSidebar>
   );
