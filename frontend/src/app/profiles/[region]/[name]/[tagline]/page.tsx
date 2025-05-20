@@ -38,6 +38,7 @@ const QUEUE_LABELS: Record<string, string> = {
 
 import { useLolVersion } from '@/context/LolVersionContext';
 import MatchHistoryInfinite from '@/components/MatchHistoryInfinite';
+import ChampionMasteryTop3 from '@/components/ChampionMasteryTop3';
 
 export default function ProfilePage() {
     const [matchIds, setMatchIds] = React.useState<string[]>([]);
@@ -184,38 +185,45 @@ export default function ProfilePage() {
                     </div>
                 )}
             </div>
-            {/* HISTORIAL ANTIGUO */}
+            {/* CABECERA PERFIL */}
             <div className="max-w-2xl mx-auto p-4">
-                <div className="flex items-center gap-4 mb-6">
+                {/* Arriba: icono, nombre, nivel (centrado) */}
+                <div className="flex flex-col items-center mb-6">
                     <img
                         src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/profileicon/${profile.profileIconId}.png`}
                         alt="Profile Icon"
-                        className="w-20 h-20 rounded-full border-2 border-blue-400"
+                        className="w-24 h-24 rounded-full border-2 border-blue-400 mb-2"
                     />
-                    <div>
-                        <h1 className="text-2xl font-bold">{profile.name} <span
-                            className="text-gray-500">({profile.region})</span></h1>
-                        <div className="text-gray-700">Nivel {profile.summonerLevel}</div>
+                    <h1 className="text-2xl font-bold text-center">{profile.name} <span className="text-gray-500">({profile.region})</span></h1>
+                    <div className="text-gray-700 text-center">Nivel {profile.summonerLevel}</div>
+                </div>
+                {/* Debajo: fila con maestría y ranked */}
+                <div className="flex flex-row gap-8 justify-center items-start mb-8">
+                    <div className="flex-shrink-0">
+                        <h2 className="text-xl font-semibold mb-2">Top 3 Maestría</h2>
+                        <ChampionMasteryTop3 region={region} name={name} tagline={tagline} />
+                    </div>
+                    <div className="flex-1 min-w-[220px]">
+                        <h2 className="text-xl font-semibold mb-2">Clasificatorias</h2>
+                        {profile.leagueEntries.length === 0 ? (
+                            <div className="text-gray-500">Sin partidas clasificatorias.</div>
+                        ) : (
+                            <div className="grid gap-4">
+                                {profile.leagueEntries.map(entry => (
+                                    <div key={entry.queueType} className="border rounded p-4 bg-gray-50">
+                                        <div className="font-bold mb-1">{QUEUE_LABELS[entry.queueType] || entry.queueType}</div>
+                                        <div className="flex gap-4 items-center">
+                                            <span className="text-lg font-semibold">{entry.tier} {entry.rank}</span>
+                                            <span>{entry.leaguePoints} LP</span>
+                                            <span>Victorias: {entry.wins} / Derrotas: {entry.losses}</span>
+                                            {entry.hotStreak && <span className="text-red-500 ml-2">🔥 Racha</span>}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
-                <h2 className="text-xl font-semibold mb-2">Clasificatorias</h2>
-                {profile.leagueEntries.length === 0 ? (
-                    <div className="text-gray-500">Sin partidas clasificatorias.</div>
-                ) : (
-                    <div className="grid gap-4">
-                        {profile.leagueEntries.map(entry => (
-                            <div key={entry.queueType} className="border rounded p-4 bg-gray-50">
-                                <div className="font-bold mb-1">{QUEUE_LABELS[entry.queueType] || entry.queueType}</div>
-                                <div className="flex gap-4 items-center">
-                                    <span className="text-lg font-semibold">{entry.tier} {entry.rank}</span>
-                                    <span>{entry.leaguePoints} LP</span>
-                                    <span>Victorias: {entry.wins} / Derrotas: {entry.losses}</span>
-                                    {entry.hotStreak && <span className="text-red-500 ml-2">🔥 Racha</span>}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </div>
             {/* Historial con scroll infinito */}
             <div className="max-w-2xl mx-auto p-4">
@@ -308,3 +316,4 @@ export default function ProfilePage() {
         </div>
     );
 }
+

@@ -17,7 +17,7 @@ import org.springframework.web.client.exchange
 @Service
 class RiotService(
     private val restTemplate: RestTemplate = RestTemplate(),
-    private val matchCacheService: MatchCacheService
+    private val matchCacheService: MatchCacheService,
 ) {
 
     init {
