@@ -114,4 +114,21 @@ class FriendRequestService(
         friendRequestRepository.delete(friendship)
     }
 
+    fun isFriends(username1: String, username2: String): Boolean {
+        val user1 = userRepository.findByUsername(username1)
+            ?: throw IllegalArgumentException("Usuario no encontrado")
+        val user2 = userRepository.findByUsername(username2)
+            ?: throw IllegalArgumentException("Amigo no encontrado")
+
+        return friendRequestRepository.existsByRequesterUsernameAndRecipientUsernameAndStatus(
+            user1.username,
+            user2.username,
+            FriendRequestStatus.ACCEPTED
+        ) || friendRequestRepository.existsByRequesterUsernameAndRecipientUsernameAndStatus(
+            user2.username,
+            user1.username,
+            FriendRequestStatus.ACCEPTED
+        )
+    }
+
 }

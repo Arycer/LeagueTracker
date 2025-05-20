@@ -82,7 +82,7 @@ class ClerkJwtAuthFilter(
                 createUserIfNotExists(usernameClaim, userId)
             }
 
-            val authorities = listOf(SimpleGrantedAuthority("ROLE_USER")) // O lo que uses
+            val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
             val authentication = UsernamePasswordAuthenticationToken(userId, null, authorities)
             SecurityContextHolder.getContext().authentication = authentication
 
