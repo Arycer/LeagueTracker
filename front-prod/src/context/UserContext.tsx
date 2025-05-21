@@ -39,7 +39,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}
     // Obtener la versión de LoL solo una vez
     useEffect(() => {
         let mounted = true;
-        fetch( BASE_URL + '/api/lol/version/latest')
+        fetch(BASE_URL + '/api/lol/version/latest')
             .then(res => res.json())
             .then((data) => {
                 if (mounted) setLolVersion(typeof data === 'string' ? data : data.version || null);
