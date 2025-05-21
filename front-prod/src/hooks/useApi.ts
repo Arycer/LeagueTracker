@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useAuth } from '@clerk/nextjs';
 export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-export const BASE_URL = 'https://holyhosting.arycer.me:19308';
+export const BASE_URL = 'https://leaguetracker-thrumming-snow-6701.fly.dev';
 
 export function useApi() {
   const { getToken } = useAuth();

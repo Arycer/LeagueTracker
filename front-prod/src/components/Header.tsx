@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext";
 export const Header: React.FC = () => {
   const { username } = useUserContext();
   return (
-    <header className="bg-gradient-to-r from-[#232946] to-[#393e6e] border-b border-[#232946]/40 shadow-md h-20 grid grid-cols-[1fr_auto_1fr] items-center px-8">
+    <header className="bg-[#13101d] border-b border-[#2a1845] shadow-md h-20 grid grid-cols-[1fr_auto_1fr] items-center px-8">
       <div className="justify-self-start">
         <SignedIn>
           <nav className="flex gap-4 items-center">

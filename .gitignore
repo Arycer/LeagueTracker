@@ -41,3 +41,4 @@ out/
 /application-secrets.properties
 /src/main/resources/application.properties
 /src/main/resources/keystore.p12
+/src/main/resources/holyhosting.p12
