@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { X, Send } from "lucide-react";
 import { useWebSocket } from "@/context/WebSocketContext";
 import { useUserContext } from "@/context/UserContext";
@@ -91,7 +91,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ friendUsername, onClose }) => {
     if (!loading && messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     }
-  }, [loading]);
+  }, [loading, messages.length]);
   
   useEffect(() => {
     if (!loading) {
@@ -113,18 +113,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ friendUsername, onClose }) => {
     }
   };
   
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
       setPosition({
         x: e.clientX - dragOffset.x,
         y: e.clientY - dragOffset.y
       });
     }
-  };
+  }, [isDragging, dragOffset, setPosition]);
   
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setIsDragging(false);
-  };
+  }, [setIsDragging]);
   
   useEffect(() => {
     if (isDragging) {
@@ -139,7 +139,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ friendUsername, onClose }) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragOffset]);
+  }, [isDragging, dragOffset, handleMouseMove, handleMouseUp]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();

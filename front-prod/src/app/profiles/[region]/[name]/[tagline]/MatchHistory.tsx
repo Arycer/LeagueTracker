@@ -1,9 +1,10 @@
 "use client";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MatchDto, ParticipantDto } from "@/types";
 import { useUserContext } from "@/context/UserContext";
 import { useApi } from "@/hooks/useApi";
 import MatchDetailsModal from "@/components/MatchDetailsModal";
+import Image from "next/image";
 
 interface MatchHistoryProps {
   puuid: string;
@@ -11,7 +12,6 @@ interface MatchHistoryProps {
 }
 
 const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
-  const loader = useRef<HTMLDivElement | null>(null);
   const { lolVersion } = useUserContext();
   const { callApi } = useApi();
   const [matchIds, setMatchIds] = useState<string[]>([]);
@@ -62,8 +62,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
       .then(res => res.json())
       .then(data => {
         const mapping: Record<number, string> = {};
-        Object.values(data.data).forEach((champ: any) => {
-          mapping[parseInt(champ.key)] = champ.id;
+        Object.values(data.data).forEach((champ) => {
+          const championData = champ as { key: string; id: string };
+          mapping[parseInt(championData.key)] = championData.id;
         });
         // Guardar en localStorage para futuras cargas
         localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
@@ -164,7 +165,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
     };
     
     loadMatchDetails();
-  }, [matchIds, region, callApi]);
+  }, [matchIds, region, callApi, loadingDetails, matchDetails]);
 
   // Resetear todo cuando cambia el puuid o la región
   useEffect(() => {
@@ -247,7 +248,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
       )}
       
       <div className="flex flex-col gap-3">
-        {Object.entries(matchDetails).map(([matchId, match], index) => {
+        {Object.entries(matchDetails).map(([matchId, match]) => {
           if (!match || !match.info || !match.metadata) return null;
           
           const user = match.info.participants?.find(p => p && p.puuid === puuid);
@@ -281,14 +282,21 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
             >
               <div className="flex items-center gap-3 w-full md:w-auto min-w-[180px]">
                 {user.championId ? (
-                  <img 
-                    src={getChampionImageUrl(user.championId)}
-                    alt={user.championName || 'Champion'}
-                    className="w-12 h-12 rounded-full border-2 border-gray-800"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
-                    }}
-                  />
+                  <div className="relative w-12 h-12">
+                    <Image 
+                      src={getChampionImageUrl(user.championId)}
+                      alt={user.championName || 'Champion'}
+                      width={48}
+                      height={48}
+                      className="rounded-full border-2 border-gray-800"
+                      onError={(e) => {
+                        const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                        if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                          (e.target as HTMLImageElement).src = fallbackSrc;
+                        }
+                      }}
+                    />
+                  </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-gray-700 border-2 border-gray-800"></div>
                 )}
@@ -331,16 +339,19 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ puuid, region }) => {
                     
                     // Si tenemos un itemId válido, mostrar la imagen
                     return (
-                      <img 
-                        key={`item-${i}`}
-                        src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
-                        alt={`Item ${i}`}
-                        className="w-8 h-8 rounded-md"
-                        onError={(e) => {
-                          // Si hay un error al cargar la imagen, ocultar el elemento
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
+                      <div key={`item-${i}`} className="relative w-8 h-8">
+                        <Image 
+                          src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
+                          alt={`Item ${i}`}
+                          width={32}
+                          height={32}
+                          className="rounded-md"
+                          onError={(e) => {
+                            // Si hay un error al cargar la imagen, ocultar el elemento
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
                     );
                   })}
                 </div>

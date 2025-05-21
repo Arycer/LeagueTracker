@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Spinner from "../../components/Spinner";
 import { useUserContext } from "../../context/UserContext";
 import { useApi } from "../../hooks/useApi";
@@ -16,9 +17,7 @@ interface LolAccount {
   verified: boolean;
 }
 
-interface MainAccount {
-  id: string;
-}
+// Interfaz MainAccount eliminada ya que no se utiliza
 
 interface PendingLolAccount {
   id: string;
@@ -52,7 +51,7 @@ const LinkedAccounts: React.FC = () => {
     useState<PendingActionState>({});
 
   // Fetch linked accounts
-  const fetchAccounts = async () => {
+  const fetchAccounts = useCallback(async () => {
     console.log("Fetching linked accounts...");
     const res = await callApi("/api/lol/accounts/accounts");
     console.log("Linked accounts data:", res);
@@ -63,10 +62,10 @@ const LinkedAccounts: React.FC = () => {
         typeof res.error === "string" ? res.error : "Failed to load accounts"
       );
     }
-  };
+  }, [callApi, setAccounts, setError]);
 
   // Fetch main account
-  const fetchMainAccount = async () => {
+  const fetchMainAccount = useCallback(async () => {
     console.log("Fetching main account...");
     const res = await callApi("/api/lol/accounts/main");
     console.log("Main account data:", res);
@@ -74,7 +73,7 @@ const LinkedAccounts: React.FC = () => {
     if (!res.ok) {
       console.error("Error fetching main account:", res.error);
     }
-  };
+  }, [callApi, setMainAccountId]);
 
   // Set main account
   const handleSetMain = async (id: string) => {
@@ -94,7 +93,7 @@ const LinkedAccounts: React.FC = () => {
   };
 
   // Fetch pending accounts
-  const fetchPendingAccounts = async () => {
+  const fetchPendingAccounts = useCallback(async () => {
     console.log("Fetching pending accounts...");
     const res = await callApi("/api/lol/accounts/pending");
     console.log("Pending accounts data:", res);
@@ -102,7 +101,7 @@ const LinkedAccounts: React.FC = () => {
     if (!res.ok) {
       console.error("Error fetching pending accounts:", res.error);
     }
-  };
+  }, [callApi, setPendingAccounts]);
 
   // Unlink account
   const handleUnlink = async (id: string) => {
@@ -197,7 +196,7 @@ const LinkedAccounts: React.FC = () => {
     };
 
     loadInitialData();
-  }, [callApi]); // Incluir callApi como dependencia para que se actualice si cambia
+  }, [callApi, fetchAccounts, fetchPendingAccounts, fetchMainAccount]); // Incluir todas las dependencias necesarias
 
   return (
     <div className="w-full h-full flex flex-col items-center pt-8 pb-8 px-2 md:px-0 bg-[#232b3a]">
@@ -243,13 +242,15 @@ const LinkedAccounts: React.FC = () => {
                         }`}
                       >
                         {/* Icono de perfil a la izquierda */}
-                        <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
-                          <img
+                        <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 relative">
+                          <Image
                             src={`https://ddragon.leagueoflegends.com/cdn/${
                               lolVersion || "13.1.1"
                             }/img/profileicon/${account.profileIconId}.png`}
                             alt="Profile icon"
-                            className="w-full h-full object-cover"
+                            width={56}
+                            height={56}
+                            className="object-cover"
                           />
                         </div>
                         {/* Info de cuenta */}
@@ -322,11 +323,15 @@ const LinkedAccounts: React.FC = () => {
                         {/* Icono a la izquierda */}
                         <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-700 bg-white flex-shrink-0">
                           {lolVersion && pending.profileIconId ? (
-                            <img
-                              src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${pending.profileIconId}.png`}
-                              alt="Icono requerido"
-                              className="w-full h-full object-cover"
-                            />
+                            <div className="relative w-full h-full">
+                              <Image
+                                src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${pending.profileIconId}.png`}
+                                alt="Icono requerido"
+                                width={56}
+                                height={56}
+                                className="object-cover"
+                              />
+                            </div>
                           ) : (
                             <div className="w-full h-full bg-gray-200 animate-pulse"></div>
                           )}

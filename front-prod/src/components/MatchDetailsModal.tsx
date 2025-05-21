@@ -2,6 +2,7 @@
 import React from "react";
 import { MatchDto, ParticipantDto } from "@/types";
 import Link from "next/link";
+import Image from "next/image";
 import { useUserContext } from "@/context/UserContext";
 
 interface MatchDetailsModalProps {
@@ -41,8 +42,9 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
       .then(res => res.json())
       .then(data => {
         const mapping: Record<number, string> = {};
-        Object.values(data.data).forEach((champ: any) => {
-          mapping[parseInt(champ.key)] = champ.id;
+        Object.values(data.data).forEach((champ) => {
+          const championData = champ as { key: string; id: string };
+          mapping[parseInt(championData.key)] = championData.id;
         });
         // Guardar en localStorage para futuras cargas
         localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
@@ -177,12 +179,17 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                 {team1.map((player) => (
                   <div key={player.puuid} className="grid grid-cols-[auto_minmax(120px,1fr)_auto_auto] gap-3 p-2 rounded bg-black/20 items-center">
                     <div className="relative">
-                      <img
+                      <Image
                         src={getChampionImageUrl(player.championId || 0)}
                         alt={player.championName || "Champion"}
-                        className="w-10 h-10 rounded-full"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                          const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                          if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                            (e.target as HTMLImageElement).src = fallbackSrc;
+                          }
                         }}
                       />
                       <span className="absolute bottom-0 right-0 bg-gray-900 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -217,15 +224,18 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                         );
                         
                         return (
-                          <img 
-                            key={`item-${i}`}
-                            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
-                            alt={`Item ${i}`}
-                            className="w-7 h-7 rounded-md"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
+                          <div key={`item-${i}`} className="relative w-7 h-7">
+                            <Image 
+                              src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
+                              alt={`Item ${i}`}
+                              width={28}
+                              height={28}
+                              className="rounded-md"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
                         );
                       })}
                     </div>
@@ -243,12 +253,17 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                 {team2.map((player) => (
                   <div key={player.puuid} className="grid grid-cols-[auto_minmax(120px,1fr)_auto_auto] gap-3 p-2 rounded bg-black/20 items-center">
                     <div className="relative">
-                      <img
+                      <Image
                         src={getChampionImageUrl(player.championId || 0)}
                         alt={player.championName || "Champion"}
-                        className="w-10 h-10 rounded-full"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                          const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                          if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                            (e.target as HTMLImageElement).src = fallbackSrc;
+                          }
                         }}
                       />
                       <span className="absolute bottom-0 right-0 bg-gray-900 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -283,15 +298,18 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                         );
                         
                         return (
-                          <img 
-                            key={`item-${i}`}
-                            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
-                            alt={`Item ${i}`}
-                            className="w-7 h-7 rounded-md"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
+                          <div key={`item-${i}`} className="relative w-7 h-7">
+                            <Image 
+                              src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
+                              alt={`Item ${i}`}
+                              width={28}
+                              height={28}
+                              className="rounded-md"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
                         );
                       })}
                     </div>

@@ -6,3 +6,6 @@ export type Region = {
   apiName: string;
   name: string;
 };
+
+// Re-exportamos los tipos de match para que estén disponibles desde @/types
+export type { MatchDto, ParticipantDto, TeamDto } from './types/match';

@@ -1,14 +1,14 @@
 "use client";
 import React, { createContext, useContext, useRef, useEffect, useState, ReactNode, useCallback } from 'react';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
-import { useUserContext } from './UserContext';
+
 import { useAuth } from '@clerk/nextjs';
 import SockJS from 'sockjs-client';
 
 export type WebSocketContextType = {
   connected: boolean;
   client: Client | null;
-  sendMessage: (destination: string, body: any) => void;
+  sendMessage: (destination: string, body: unknown) => void;
   subscribe: (destination: string, callback: (message: IMessage) => void) => StompSubscription | null;
 };
 
@@ -43,7 +43,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
           console.log('No hay token disponible para WebSocket, posiblemente no autenticado');
           return;
         }
-      } catch (error) {
+      } catch {
         console.log('Usuario no autenticado, no se puede establecer conexión WebSocket');
         return;
       }
@@ -92,17 +92,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         clientRef.current = null;
         setConnected(false);
       };
-    } catch (error) {
-      console.error('Error al crear cliente WebSocket:', error);
+    } catch (err) {
+      console.error('Error al crear cliente WebSocket:', err);
     }
   }, [getToken]);
 
   useEffect(() => {
     createClient();
-  }, []);
+  }, [createClient]);
 
 
-  const sendMessage = (destination: string, body: any) => {
+  const sendMessage = (destination: string, body: unknown) => {
     if (clientRef.current && clientRef.current.connected) {
       clientRef.current.publish({
         destination,

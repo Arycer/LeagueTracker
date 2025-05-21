@@ -3,10 +3,8 @@ import React from "react";
 import { BaseSidebar } from "./BaseSidebar";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import {
   useRecentProfilesList,
-  RecentProfile,
   clearRecentProfiles,
 } from "../hooks/useRecentProfiles";
 import FavoritesSidebar from "./FavoritesSidebar";

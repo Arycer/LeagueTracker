@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useWebSocket } from "@/context/WebSocketContext";
 import { useUserContext } from "@/context/UserContext";
 import ChatWindow from "./ChatWindow";
@@ -78,9 +78,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     markAsRead(username);
   };
 
-  const closeChat = () => {
+  const closeChat = useCallback(() => {
     setIsOpen(false);
-  };
+  }, [setIsOpen]);
   
   const markAsRead = (username: string) => {
     setUnreadMessages(prev => {
@@ -91,13 +91,13 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   };
 
   // Cerrar chat al hacer clic fuera
-  const handleOutsideClick = (e: MouseEvent) => {
+  const handleOutsideClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
     // Si el clic no es dentro del chat o en un botón de chat, cerramos
     if (isOpen && !target.closest('.chat-window') && !target.closest('.chat-trigger')) {
       closeChat();
     }
-  };
+  }, [isOpen, closeChat]);
 
   // Añadir/eliminar event listener para clicks fuera
   React.useEffect(() => {
@@ -107,7 +107,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [isOpen]);
+  }, [isOpen, handleOutsideClick]);
 
   return (
     <ChatContext.Provider value={{ openChat, closeChat, isOpen, currentFriend, unreadMessages, markAsRead }}>

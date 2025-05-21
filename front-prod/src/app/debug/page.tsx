@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { useWebSocket } from '@/context/WebSocketContext';
 import { useUserContext } from '@/context/UserContext';
@@ -7,7 +7,7 @@ import { useAuth } from '@clerk/nextjs';
 
 export default function DebugPage() {
   const { callApi } = useApi();
-  const { connected, sendMessage, subscribe } = useWebSocket();
+  const { connected, subscribe } = useWebSocket();
   const { username } = useUserContext();
   const { getToken } = useAuth();
   
@@ -18,7 +18,7 @@ export default function DebugPage() {
   const [testEndpoint, setTestEndpoint] = useState<string>('/api/friends');
 
   // Probar obtener token
-  const fetchToken = async () => {
+  const fetchToken = useCallback(async () => {
     try {
       const token = await getToken({ template: 'DefaultJWT' });
       setToken(token || 'No token received');
@@ -26,7 +26,7 @@ export default function DebugPage() {
       console.error('Error getting token:', error);
       setToken('Error getting token');
     }
-  };
+  }, [getToken, setToken]);
 
   // Probar llamada a API
   const testApiCall = async () => {
@@ -61,7 +61,7 @@ export default function DebugPage() {
 
   useEffect(() => {
     fetchToken();
-  }, []);
+  }, [fetchToken]);
 
   return (
     <div className="container mx-auto p-4">

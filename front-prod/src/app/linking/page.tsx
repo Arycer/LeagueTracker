@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@clerk/clerk-react";
 import { useUserContext } from "../../context/UserContext";
 import { useApi } from "../../hooks/useApi";
@@ -179,11 +180,15 @@ const AccountLinker = () => {
           ) : (
             <div className="flex flex-col items-center gap-8">
               <div className="relative mb-6">
-                <img
-                  src={profileIconUrl}
-                  alt="Ícono de verificación"
-                  className="w-32 h-32 rounded-full border-4 border-blue-500 shadow-lg"
-                />
+                <div className="relative w-32 h-32">
+                  <Image
+                    src={profileIconUrl}
+                    alt="Ícono de verificación"
+                    width={128}
+                    height={128}
+                    className="rounded-full border-4 border-blue-500 shadow-lg"
+                  />
+                </div>
                 {verificationStatus === 'success' && (
                   <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1">
                     <Check className="w-6 h-6 text-white" />

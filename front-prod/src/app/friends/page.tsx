@@ -1,7 +1,6 @@
 "use client";
 import FriendManager from "./FriendManager";
-import Image from "next/image";
-import bgTop from "@/assets/bg-top.webp";
+// Importaciones no utilizadas eliminadas
 
 export default function FriendsPage() {
   return (

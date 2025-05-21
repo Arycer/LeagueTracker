@@ -1,8 +1,9 @@
 import { useFavorites } from '@/context/FavoritesContext';
 import { useUserContext } from '@/context/UserContext';
 import Link from 'next/link';
-import { FaStar, FaRegStar } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { FaStar } from 'react-icons/fa';
+import { useState } from 'react';
 import { getProfileIconFromCache } from '@/utils/profileIconCache';
 
 const FavoritesSidebar: React.FC = () => {
@@ -31,14 +32,22 @@ const FavoritesSidebar: React.FC = () => {
         
         return (
         <li key={favorite.id} className="flex items-center gap-2 p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors">
-          <img
-            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/profileicon/${iconId}.png`}
-            alt="Profile Icon"
-            className="w-8 h-8 rounded-full"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/profileicon/1.png`;
-            }}
-          />
+          <div className="relative w-8 h-8">
+            <Image
+              src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/profileicon/${iconId}.png`}
+              alt="Profile Icon"
+              width={32}
+              height={32}
+              className="rounded-full"
+              onError={(e) => {
+                // Next/image no permite modificar src directamente, usamos un fallback
+                const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/profileicon/1.png`;
+                if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                  (e.target as HTMLImageElement).src = fallbackSrc;
+                }
+              }}
+            />
+          </div>
           <div className="flex-1 min-w-0">
             <Link 
               href={`/profiles/${favorite.region}/${encodeURIComponent(favorite.summonerName.split('#')[0])}/${encodeURIComponent(favorite.tagline)}`}

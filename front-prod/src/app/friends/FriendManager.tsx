@@ -84,9 +84,13 @@ export default function FriendManager() {
       setIncomingRequests(Array.isArray(incomingRes.data) ? incomingRes.data : []);
       setOutgoingRequests(Array.isArray(outgoingRes.data) ? outgoingRes.data : []);
       setFriends(Array.isArray(friendsListRes.data) ? friendsListRes.data : []);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error loading friend data:", error);
-      setMessage(error.message || "Error loading friend data. Please try again later.");
+      setMessage(
+        error instanceof Error 
+          ? error.message 
+          : "Error loading friend data. Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }

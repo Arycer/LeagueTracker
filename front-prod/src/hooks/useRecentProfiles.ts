@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export interface RecentProfile {
   region: string;
@@ -42,9 +42,15 @@ export function saveRecentProfile(profile: RecentProfile) {
 
 
 export function useRecentProfilesList(): RecentProfile[] {
-  const [recent, setRecent] = (typeof window === 'undefined')
-    ? [[], () => {}]
-    : useState<RecentProfile[]>(getRecentProfiles());
+  // Siempre llamamos a useState sin condiciones para cumplir con las reglas de hooks
+  const [recent, setRecent] = useState<RecentProfile[]>([]);
+  
+  // Inicializamos el estado en un useEffect
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setRecent(getRecentProfiles());
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

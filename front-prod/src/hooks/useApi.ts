@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useUserContext } from '../context/UserContext';
+
 import { useAuth } from '@clerk/nextjs';
 export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -8,7 +8,7 @@ const BASE_URL = 'http://localhost:8080';
 export function useApi() {
   const { getToken } = useAuth();
 
-  const callApi = useCallback(async (endpoint: string, method: ApiMethod = 'GET', body?: any) => {
+  const callApi = useCallback(async (endpoint: string, method: ApiMethod = 'GET', body?: Record<string, unknown>) => {
     try {
       console.log(`🔄 API Request: ${method} ${endpoint}`);
       
@@ -19,7 +19,7 @@ export function useApi() {
         if (jwt) {
           console.log('✅ Token obtenido correctamente');
         }
-      } catch (error) {
+      } catch {
         // Usuario no autenticado, continuamos sin token
         console.log('Usuario no autenticado, continuando sin token');
       }

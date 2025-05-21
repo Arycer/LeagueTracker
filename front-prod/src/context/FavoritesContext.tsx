@@ -1,8 +1,8 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { useAuth } from '@clerk/nextjs';
-import { cacheProfileIcon, getProfileIconFromCache } from '@/utils/profileIconCache';
+import { getProfileIconFromCache } from '@/utils/profileIconCache';
 
 interface FavoriteProfile {
   id: string;
@@ -35,7 +35,7 @@ export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     if (!userId) {
       setFavorites([]);
       return;
@@ -58,7 +58,7 @@ export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children 
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, callApi]);
 
   useEffect(() => {
     if (userId) {
@@ -66,7 +66,7 @@ export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children 
     } else {
       setFavorites([]);
     }
-  }, [userId]);
+  }, [userId, fetchFavorites]);
 
   const addFavorite = async (region: string, summonerName: string, tagline: string): Promise<boolean> => {
     setLoading(true);

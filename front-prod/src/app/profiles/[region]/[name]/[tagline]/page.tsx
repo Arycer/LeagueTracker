@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
-import ProfileBasicInfo, { SummonerProfileDTO } from "./ProfileBasicInfo";
+import ProfileBasicInfo, { SummonerProfileDTO, ChampionMasteryDTO } from "./ProfileBasicInfo";
 import { saveRecentProfile, triggerRecentProfilesUpdate } from "@/hooks/useRecentProfiles";
 import { useToast } from "@/context/ToastContext";
 import { useUserContext } from "@/context/UserContext";
@@ -17,8 +17,8 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [championMasteries, setChampionMasteries] = useState<any[]>([]);
-  const [loadingMasteries, setLoadingMasteries] = useState(false);
+  const [, setChampionMasteries] = useState<ChampionMasteryDTO[]>([]);
+  const [, setLoadingMasteries] = useState(false);
   const [championIdToName, setChampionIdToName] = useState<Record<number, string>>({});
   const [loadingChampions, setLoadingChampions] = useState(true);
   const { showToast } = useToast();
@@ -115,7 +115,7 @@ const ProfilePage = () => {
   };
 
   // Cargar datos de campeones desde Data Dragon
-  const loadChampionData = async () => {
+  const loadChampionData = useCallback(async () => {
     if (!lolVersion) return;
     setLoadingChampions(true);
     
@@ -136,8 +136,9 @@ const ProfilePage = () => {
       const response = await fetch(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/data/es_ES/champion.json`);
       const data = await response.json();
       const mapping: Record<number, string> = {};
-      Object.values(data.data).forEach((champ: any) => {
-        mapping[parseInt(champ.key)] = champ.id;
+      Object.values(data.data).forEach((champ) => {
+        const championData = champ as { key: string; id: string };
+        mapping[parseInt(championData.key)] = championData.id;
       });
       // Guardar en localStorage para futuras cargas
       localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
@@ -147,13 +148,13 @@ const ProfilePage = () => {
     } finally {
       setLoadingChampions(false);
     }
-  };
+  }, [lolVersion, setChampionIdToName, setLoadingChampions]);
 
   useEffect(() => {
     if (lolVersion) {
       loadChampionData();
     }
-  }, [lolVersion]);
+  }, [lolVersion, loadChampionData]);
 
   useEffect(() => {
     if (params?.region && params?.name && params?.tagline) {

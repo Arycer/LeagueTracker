@@ -1,5 +1,5 @@
 "use client";
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState, useCallback} from "react";
 import {useAuth,useUser} from "@clerk/nextjs";
 
 interface UserContextType {
@@ -19,20 +19,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const {getToken} = useAuth();
     const [userId, setUserId] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
-    const [jwt, setJwt] = useState<string | null>(null);
+    // Eliminamos la variable jwt que no se usa
+    const [, setJwt] = useState<string | null>(null);
     const [lolVersion, setLolVersion] = useState<string | null>(null);
 
-    const fetchToken = async () => {
+    const fetchToken = useCallback(async () => {
         const token = await getToken({template: 'DefaultJWT'});
         setJwt(token);
-    }
+    }, [getToken, setJwt]);
 
     useEffect(() => {
         console.log("Updating user context");
         setUserId(user?.id || null);
         setUsername(user?.username || user?.primaryEmailAddress?.emailAddress || null);
         fetchToken();
-    }, [user, getToken]);
+    }, [user, getToken, fetchToken]);
 
     // Obtener la versión de LoL solo una vez
     useEffect(() => {

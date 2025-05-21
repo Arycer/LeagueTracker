@@ -6,7 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button: React.FC<ButtonProps> = ({variant = "primary", children, ...props}) => {
-    let base =
+    const base =
         "font-inter px-5 py-2 rounded-lg font-semibold text-base transition-colors duration-200 shadow focus:outline-none focus:ring-2 focus:ring-white/40 select-none backdrop-blur-sm";
     let style = "";
     if (variant === "primary") {

@@ -45,7 +45,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
             console.error("RightSidebar: Error loading friends:", res.error);
           }
         }
-      } catch (error) {
+      } catch {
         console.log('Error al cargar amigos, posiblemente no autenticado');
       }
     };
@@ -98,7 +98,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   }, [friends, callApi]);
 
   // Suscribirse a presence-updates para actualizar en tiempo real
-  const handlePresenceUpdate = useCallback((msg: any) => {
+  const handlePresenceUpdate = useCallback((msg: { body: string | { username: string; event: string } }) => {
     try {
       const body = typeof msg.body === 'string' ? JSON.parse(msg.body) : msg.body;
       if (!body || !body.username || !body.event) return;
@@ -109,7 +109,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
           [body.username]: body.event === 'connected',
         };
       });
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, [friends]);

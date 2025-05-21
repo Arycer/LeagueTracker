@@ -73,7 +73,7 @@ const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, region }
     }
 
     // Process each frame to get the gold data
-    timelineData.info.frames.forEach((frame, index) => {
+    timelineData.info.frames.forEach((frame) => {
       // Convert timestamp to minutes:seconds format
       const minutes = Math.floor(frame.timestamp / 60000);
       const seconds = Math.floor((frame.timestamp % 60000) / 1000);
@@ -140,13 +140,17 @@ const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, region }
     );
   }
 
-  // Función personalizada para formatear los valores en el tooltip
-  const formatTooltipValue = (value: number) => {
-    return value.toLocaleString();
-  };
-
   // Función para formatear el tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  interface TooltipProps {
+    active?: boolean;
+    payload?: Array<{
+      value: number;
+      dataKey: string;
+    }>;
+    label?: string;
+  }
+  
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       const blueGold = payload[0].value;
       const redGold = payload[1].value;

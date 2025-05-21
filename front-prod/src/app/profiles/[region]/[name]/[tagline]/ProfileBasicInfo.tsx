@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useUserContext } from "@/context/UserContext";
+import React from "react";
 import FavoriteButton from "@/components/FavoriteButton";
+import Image from "next/image";
 
 export type LeagueEntryDTO = {
   leagueId?: string;
@@ -16,7 +16,7 @@ export type LeagueEntryDTO = {
   veteran: boolean;
   freshBlood: boolean;
   inactive: boolean;
-  miniSeries?: any;
+  miniSeries?: { progress: string; target: number; wins: number; losses: number; };
 };
 
 export type ChampionMasteryDTO = {
@@ -153,11 +153,15 @@ export default function ProfileBasicInfo({
       <div className="flex items-center justify-between w-full">
         {/* Lado izquierdo: Icono y datos del perfil */}
         <div className="flex items-center gap-2">
-          <img
-            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${profile.profileIconId}.png`}
-            alt="Profile Icon"
-            className="w-16 h-16 rounded-full border-2 border-[#232946] shadow bg-white flex-shrink-0"
-          />
+          <div className="relative w-16 h-16 flex-shrink-0">
+            <Image
+              src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${profile.profileIconId}.png`}
+              alt="Profile Icon"
+              width={64}
+              height={64}
+              className="rounded-full border-2 border-[#232946] shadow bg-white"
+            />
+          </div>
           <div className="flex flex-col gap-y-0.5 justify-center">
             <span className="text-xs text-white/60">Región: {profile.region}</span>
             <div className="text-lg font-bold text-white truncate">{profile.name}</div>
@@ -234,16 +238,22 @@ export default function ProfileBasicInfo({
           <div className="flex flex-col space-y-2">
             {profile.championMasteries.map((mastery) => (
               <div key={mastery.championId} className="bg-gray-800 rounded-lg p-3 flex items-center space-x-3">
-                <img
-                  src={getChampionImageUrl(mastery.championId, championIdToName, lolVersion)}
-                  alt="Champion"
-                  className="w-12 h-12 rounded-full"
-                  loading="eager"
-                  onError={(e) => {
-                    // Fallback si la imagen falla
-                    (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/champion/Aatrox.png`;
-                  }}
-                />
+                <div className="relative w-12 h-12">
+                  <Image
+                    src={getChampionImageUrl(mastery.championId, championIdToName, lolVersion)}
+                    alt="Champion"
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                    onError={(e) => {
+                      // Fallback si la imagen falla
+                      const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/champion/Aatrox.png`;
+                      if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                        (e.target as HTMLImageElement).src = fallbackSrc;
+                      }
+                    }}
+                  />
+                </div>
                 <div>
                   <div className="font-medium">{championIdToName[mastery.championId] || `Campeón #${mastery.championId}`}</div>
                   <div className="text-sm text-gray-400">

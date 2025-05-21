@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useApi } from "@/hooks/useApi";
-import { useUserContext } from "@/context/UserContext";
+// Importación de useUserContext eliminada ya que no se utiliza
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { FaCircle, FaTrash } from "react-icons/fa";
 import ChatButton from "@/components/chat/ChatButton";
-import { useAuth } from "@clerk/nextjs";
+// Importación de useAuth eliminada ya que no se utiliza
 
 interface MainLolAccountDto {
   region: string;
@@ -29,7 +30,7 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!friends || friends.length === 0) {
       setAccounts({});
       return;
@@ -65,11 +66,11 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [friends, callApi, setAccounts, setLoading, setError]);
 
   useEffect(() => {
     fetchData();
-  }, [friends, callApi]);
+  }, [friends, callApi, fetchData]);
 
   if (!friends || friends.length === 0) return null;
 
@@ -85,11 +86,15 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
             <span className="font-bold text-blue-200 min-w-[90px]">{username}</span>
             {acc ? (
               <>
-                <img
-                  src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/profileicon/${acc.profileIconId}.png`}
-                  alt="icon"
-                  className="w-8 h-8 rounded-full border"
-                />
+                <div className="relative w-8 h-8">
+                  <Image
+                    src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/profileicon/${acc.profileIconId}.png`}
+                    alt="icon"
+                    width={32}
+                    height={32}
+                    className="rounded-full border"
+                  />
+                </div>
                 <span className="text-gray-100">{acc.summonerName}#{acc.tagline} <span className="text-xs text-blue-300">({acc.region})</span></span>
                 <button
                   className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"

@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MatchDto, ParticipantDto } from "@/types";
 import { useUserContext } from "@/context/UserContext";
 import { useApi } from "@/hooks/useApi";
 import Link from "next/link";
+import Image from "next/image";
 import GoldTimelineChart from "@/components/GoldTimelineChart";
 
 interface MatchDetailPageProps {
@@ -22,6 +23,25 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [championIdToName, setChampionIdToName] = useState<Record<number, string>>({});
 
+  const loadChampionData = useCallback(() => {
+    if (!lolVersion) return;
+    
+    fetch(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/data/es_ES/champion.json`)
+      .then(res => res.json())
+      .then(data => {
+        const mapping: Record<number, string> = {};
+        Object.values(data.data).forEach((champ) => {
+          const championData = champ as { key: string; id: string };
+          mapping[parseInt(championData.key)] = championData.id;
+        });
+        localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
+        setChampionIdToName(mapping);
+      })
+      .catch(err => {
+        console.error('Error cargando datos de campeones:', err);
+      });
+  }, [lolVersion, setChampionIdToName]);
+
   useEffect(() => {
     if (!lolVersion) return;
     
@@ -37,25 +57,7 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
     } else {
       loadChampionData();
     }
-  }, [lolVersion]);
-
-  const loadChampionData = () => {
-    if (!lolVersion) return;
-    
-    fetch(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/data/es_ES/champion.json`)
-      .then(res => res.json())
-      .then(data => {
-        const mapping: Record<number, string> = {};
-        Object.values(data.data).forEach((champ: any) => {
-          mapping[parseInt(champ.key)] = champ.id;
-        });
-        localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
-        setChampionIdToName(mapping);
-      })
-      .catch(err => {
-        console.error('Error cargando datos de campeones:', err);
-      });
-  };
+  }, [lolVersion, loadChampionData]);
 
   useEffect(() => {
     const fetchMatchDetails = async () => {
@@ -190,12 +192,17 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
                   className="grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_1fr_auto_auto] gap-3 p-3 rounded bg-black/20 items-center"
                 >
                   <div className="relative">
-                    <img
+                    <Image
                       src={getChampionImageUrl(player.championId || 0)}
                       alt={player.championName || "Champion"}
-                      className="w-12 h-12 rounded-full"
+                      width={48}
+                      height={48}
+                      className="rounded-full"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                        const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                        if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                          (e.target as HTMLImageElement).src = fallbackSrc;
+                        }
                       }}
                     />
                     <span className="absolute bottom-0 right-0 bg-gray-900 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -236,15 +243,18 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
                       );
                       
                       return (
-                        <img 
-                          key={`item-${i}`}
-                          src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
-                          alt={`Item ${i}`}
-                          className="w-8 h-8 rounded-md"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
+                        <div key={`item-${i}`} className="relative w-8 h-8">
+                          <Image 
+                            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
+                            alt={`Item ${i}`}
+                            width={32}
+                            height={32}
+                            className="rounded-md"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
                       );
                     })}
                   </div>
@@ -283,12 +293,17 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
                   className="grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_1fr_auto_auto] gap-3 p-3 rounded bg-black/20 items-center"
                 >
                   <div className="relative">
-                    <img
+                    <Image
                       src={getChampionImageUrl(player.championId || 0)}
                       alt={player.championName || "Champion"}
-                      className="w-12 h-12 rounded-full"
+                      width={48}
+                      height={48}
+                      className="rounded-full"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                        const fallbackSrc = `https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/champion/Aatrox.png`;
+                        if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+                          (e.target as HTMLImageElement).src = fallbackSrc;
+                        }
                       }}
                     />
                     <span className="absolute bottom-0 right-0 bg-gray-900 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -329,15 +344,18 @@ export default function MatchDetailPage({ params }: MatchDetailPageProps) {
                       );
                       
                       return (
-                        <img 
-                          key={`item-${i}`}
-                          src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
-                          alt={`Item ${i}`}
-                          className="w-8 h-8 rounded-md"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
+                        <div key={`item-${i}`} className="relative w-8 h-8">
+                          <Image 
+                            src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
+                            alt={`Item ${i}`}
+                            width={32}
+                            height={32}
+                            className="rounded-md"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
                       );
                     })}
                   </div>
