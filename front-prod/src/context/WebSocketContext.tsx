@@ -4,7 +4,6 @@ import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 
 import { useAuth } from '@clerk/nextjs';
 import SockJS from 'sockjs-client';
-import {BASE_URL} from "@/hooks/useApi";
 
 export type WebSocketContextType = {
   connected: boolean;
