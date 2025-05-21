@@ -167,7 +167,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
               </h3>
               <div className="space-y-2">
                 {team1.map((player) => (
-                  <div key={player.puuid} className="flex items-center gap-3 p-2 rounded bg-black/20">
+                  <div key={player.puuid} className="grid grid-cols-[auto_minmax(120px,1fr)_auto_auto] gap-3 p-2 rounded bg-black/20 items-center">
                     <div className="relative">
                       <img
                         src={getChampionImageUrl(player.championId || 0)}
@@ -181,23 +181,31 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                         {player.champLevel || "?"}
                       </span>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-white">{player.summonerName || "Jugador"}</div>
+                    <div className="w-32 md:w-40 overflow-hidden">
+                      <Link 
+                        href={player.riotIdGameName && player.riotIdTagline 
+                          ? `/profiles/${region}/${encodeURIComponent(player.riotIdGameName)}/${encodeURIComponent(player.riotIdTagline)}` 
+                          : '#'}
+                        className={`font-medium text-white truncate block hover:text-blue-400 transition-colors ${(!player.riotIdGameName || !player.riotIdTagline) ? 'pointer-events-none' : ''}`}
+                        title={player.riotIdGameName ? `${player.riotIdGameName}${player.riotIdTagline ? ` #${player.riotIdTagline}` : ''}` : player.summonerName || "Jugador"}
+                      >
+                        {player.riotIdGameName ? `${player.riotIdGameName}${player.riotIdTagline ? ` #${player.riotIdTagline}` : ''}` : player.summonerName || "Jugador"}
+                      </Link>
                       <div className="text-xs text-gray-300">
                         {player.kills || 0}/{player.deaths || 0}/{player.assists || 0} KDA
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="w-20 text-right">
                       <div className="text-sm text-white">{(player.totalMinionsKilled || 0) + (player.neutralMinionsKilled || 0)} CS</div>
                       <div className="text-xs text-gray-300">{player.goldEarned?.toLocaleString() || 0} oro</div>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="grid grid-cols-3 grid-rows-2 gap-1 w-24">
                       {[...Array(6)].map((_, i) => {
                         const itemKey = `item${i}` as keyof ParticipantDto;
                         const itemId = player[itemKey] as number | undefined;
                         
                         if (!itemId || itemId === 0) return (
-                          <div key={`item-${i}`} className="w-6 h-6 bg-gray-800 rounded-md"></div>
+                          <div key={`item-${i}`} className="w-7 h-7 bg-gray-800 rounded-md"></div>
                         );
                         
                         return (
@@ -205,7 +213,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                             key={`item-${i}`}
                             src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
                             alt={`Item ${i}`}
-                            className="w-6 h-6 rounded-md"
+                            className="w-7 h-7 rounded-md"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}
@@ -225,7 +233,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
               </h3>
               <div className="space-y-2">
                 {team2.map((player) => (
-                  <div key={player.puuid} className="flex items-center gap-3 p-2 rounded bg-black/20">
+                  <div key={player.puuid} className="grid grid-cols-[auto_minmax(120px,1fr)_auto_auto] gap-3 p-2 rounded bg-black/20 items-center">
                     <div className="relative">
                       <img
                         src={getChampionImageUrl(player.championId || 0)}
@@ -239,23 +247,31 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                         {player.champLevel || "?"}
                       </span>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-white">{player.summonerName || "Jugador"}</div>
+                    <div className="w-32 md:w-40 overflow-hidden">
+                      <Link 
+                        href={player.riotIdGameName && player.riotIdTagline 
+                          ? `/profiles/${region}/${encodeURIComponent(player.riotIdGameName)}/${encodeURIComponent(player.riotIdTagline)}` 
+                          : '#'}
+                        className={`font-medium text-white truncate block hover:text-blue-400 transition-colors ${(!player.riotIdGameName || !player.riotIdTagline) ? 'pointer-events-none' : ''}`}
+                        title={player.riotIdGameName ? `${player.riotIdGameName}${player.riotIdTagline ? ` #${player.riotIdTagline}` : ''}` : player.summonerName || "Jugador"}
+                      >
+                        {player.riotIdGameName ? `${player.riotIdGameName}${player.riotIdTagline ? ` #${player.riotIdTagline}` : ''}` : player.summonerName || "Jugador"}
+                      </Link>
                       <div className="text-xs text-gray-300">
                         {player.kills || 0}/{player.deaths || 0}/{player.assists || 0} KDA
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="w-20 text-right">
                       <div className="text-sm text-white">{(player.totalMinionsKilled || 0) + (player.neutralMinionsKilled || 0)} CS</div>
                       <div className="text-xs text-gray-300">{player.goldEarned?.toLocaleString() || 0} oro</div>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="grid grid-cols-3 grid-rows-2 gap-1 w-24">
                       {[...Array(6)].map((_, i) => {
                         const itemKey = `item${i}` as keyof ParticipantDto;
                         const itemId = player[itemKey] as number | undefined;
                         
                         if (!itemId || itemId === 0) return (
-                          <div key={`item-${i}`} className="w-6 h-6 bg-gray-800 rounded-md"></div>
+                          <div key={`item-${i}`} className="w-7 h-7 bg-gray-800 rounded-md"></div>
                         );
                         
                         return (
@@ -263,7 +279,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                             key={`item-${i}`}
                             src={`https://ddragon.leagueoflegends.com/cdn/${lolVersion || '14.9.1'}/img/item/${itemId}.png`}
                             alt={`Item ${i}`}
-                            className="w-6 h-6 rounded-md"
+                            className="w-7 h-7 rounded-md"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}
