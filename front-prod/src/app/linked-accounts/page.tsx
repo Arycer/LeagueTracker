@@ -54,7 +54,7 @@ const LinkedAccounts: React.FC = () => {
   // Fetch linked accounts
   const fetchAccounts = async () => {
     console.log("Fetching linked accounts...");
-    const res = await callApi("/lol/accounts/accounts");
+    const res = await callApi("/api/lol/accounts/accounts");
     console.log("Linked accounts data:", res);
     setAccounts(Array.isArray(res.data) ? res.data : []);
     if (!res.ok) {
@@ -68,7 +68,7 @@ const LinkedAccounts: React.FC = () => {
   // Fetch main account
   const fetchMainAccount = async () => {
     console.log("Fetching main account...");
-    const res = await callApi("/lol/accounts/main");
+    const res = await callApi("/api/lol/accounts/main");
     console.log("Main account data:", res);
     setMainAccountId(res.ok && res.data && res.data.id ? res.data.id : null);
     if (!res.ok) {
@@ -80,7 +80,7 @@ const LinkedAccounts: React.FC = () => {
   const handleSetMain = async (id: string) => {
     setActionLoading(id);
     console.log(`Setting account ${id} as main...`);
-    const res = await callApi(`/lol/accounts/${id}/set-main`, "POST");
+    const res = await callApi(`/api/lol/accounts/${id}/set-main`, "POST");
     if (res.ok) {
       console.log("Main account updated successfully");
       await Promise.all([fetchAccounts(), fetchMainAccount()]);
@@ -96,7 +96,7 @@ const LinkedAccounts: React.FC = () => {
   // Fetch pending accounts
   const fetchPendingAccounts = async () => {
     console.log("Fetching pending accounts...");
-    const res = await callApi("/lol/accounts/pending");
+    const res = await callApi("/api/lol/accounts/pending");
     console.log("Pending accounts data:", res);
     setPendingAccounts(Array.isArray(res.data) ? res.data : []);
     if (!res.ok) {
@@ -108,7 +108,7 @@ const LinkedAccounts: React.FC = () => {
   const handleUnlink = async (id: string) => {
     setActionLoading(id);
     console.log(`Unlinking account ${id}...`);
-    const res = await callApi(`/lol/accounts/${id}`, "DELETE");
+    const res = await callApi(`/api/lol/accounts/${id}`, "DELETE");
     if (res.ok) {
       console.log("Account unlinked successfully");
       await fetchAccounts();
@@ -125,7 +125,7 @@ const LinkedAccounts: React.FC = () => {
   const handleCancelPending = async (id: string) => {
     setActionLoading(id);
     console.log(`Canceling pending account ${id}...`);
-    const res = await callApi(`/lol/accounts/pending/${id}`, "DELETE");
+    const res = await callApi(`/api/lol/accounts/pending/${id}`, "DELETE");
     if (res.ok) {
       console.log("Pending account canceled successfully");
       await fetchPendingAccounts();
@@ -150,7 +150,7 @@ const LinkedAccounts: React.FC = () => {
     console.log(`Verifying pending account ${id}...`);
     // Usar la misma ruta y método que en el componente de linking
     const res = await callApi(
-      "/lol/accounts/verify",
+      "/api/lol/accounts/verify",
       "POST",
       { pendingAccountId: id } // Enviar el ID de la cuenta pendiente como parte del cuerpo
     );

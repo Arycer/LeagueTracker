@@ -41,7 +41,7 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
     
     try {
       const promises = friends.map(async (friendUsername) => {
-        const res = await callApi(`/lol/accounts/main/${friendUsername}`);
+        const res = await callApi(`/api/lol/accounts/main/${friendUsername}`);
         if (res.ok) {
           return [friendUsername, res.data] as const;
         } else {

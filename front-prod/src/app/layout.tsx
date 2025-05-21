@@ -9,6 +9,7 @@ import { LeftSidebar } from "@/components/LeftSidebar";
 import { Header } from "@/components/Header";
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { ChatProvider } from "@/components/chat/ChatContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <UserProvider>
         <WebSocketProvider>
           <ChatProvider>
+            <FavoritesProvider>
             <html lang="es">
               <body className={`${inter.variable} antialiased`}>
                 <div className="w-screen h-screen overflow-hidden">
@@ -52,6 +54,7 @@ export default function RootLayout({
               </div>
               </body>
             </html>
+            </FavoritesProvider>
           </ChatProvider>
         </WebSocketProvider>
       </UserProvider>

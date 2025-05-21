@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useUserContext } from "@/context/UserContext";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export type LeagueEntryDTO = {
   leagueId?: string;
@@ -32,6 +33,7 @@ export type SummonerProfileDTO = {
   leagueEntries: LeagueEntryDTO[];
   region: string;
   championMasteries?: ChampionMasteryDTO[];
+  tagline?: string;
 };
 
 // Función auxiliar para obtener el nombre de la cola en español
@@ -164,24 +166,16 @@ export default function ProfileBasicInfo({
         </div>
         
         {/* Lado derecho: Botones de acción */}
-        <div className="flex items-center gap-2">
-          {/* Botón de favoritos */}
-          <button
-            className="flex items-center justify-center rounded-full bg-[#232946] hover:bg-[#2a3050] transition-colors p-1.5"
-            style={{ width: 28, height: 28 }}
-            aria-label="Añadir a favoritos"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
-                stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          
-          {/* Botón de refrescar */}
+        <div className="flex items-center gap-1">
+          <FavoriteButton 
+            region={profile.region} 
+            summonerName={profile.name} 
+            tagline={profile.tagline || ""} 
+          />
           <button
             onClick={onRefresh}
             disabled={loading}
-            className="p-1 rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 flex items-center justify-center flex-shrink-0"
+            className="p-2 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
             style={{ width: 28, height: 28 }}
             aria-label="Refrescar perfil"
           >

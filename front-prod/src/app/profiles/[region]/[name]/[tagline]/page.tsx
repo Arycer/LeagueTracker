@@ -7,6 +7,7 @@ import { saveRecentProfile, triggerRecentProfilesUpdate } from "@/hooks/useRecen
 import { useToast } from "@/context/ToastContext";
 import { useUserContext } from "@/context/UserContext";
 import MatchHistory from "./MatchHistory";
+import { cacheProfileIcon } from "@/utils/profileIconCache";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -28,7 +29,24 @@ const ProfilePage = () => {
     setError(null);
     const res = await callApi(`/api/profiles/${params.region}/${params.name}/${params.tagline}`);
     if (res.ok) {
-      setProfile(res.data);
+      // Añadir el tagline al perfil desde los parámetros de la URL
+      const profileData = {
+        ...res.data,
+        tagline: params.tagline as string
+      };
+      
+      setProfile(profileData);
+      
+      // Guardar el icono de perfil en el caché
+      if (profileData.profileIconId && params.region && params.name && params.tagline) {
+        cacheProfileIcon(
+          params.region as string,
+          params.name as string,
+          params.tagline as string,
+          profileData.profileIconId
+        );
+      }
+      
       // Una vez que tenemos el perfil, cargamos las maestrías
       fetchChampionMasteries();
     } else {

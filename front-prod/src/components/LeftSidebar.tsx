@@ -9,6 +9,7 @@ import {
   RecentProfile,
   clearRecentProfiles,
 } from "../hooks/useRecentProfiles";
+import FavoritesSidebar from "./FavoritesSidebar";
 
 export const LeftSidebar: React.FC = () => {
   const recent = useRecentProfilesList();
@@ -22,9 +23,16 @@ export const LeftSidebar: React.FC = () => {
     <BaseSidebar className="border-r border-l-0">
       <div className="text-blue-200 font-bold text-lg mb-4">Acceso Rápido</div>
       <ul className="text-gray-300 text-sm space-y-2 w-full px-4">
-        <li className="opacity-70">Perfiles visitados recientemente</li>
+        <FavoritesSidebar />
+        
+        <li className="opacity-70 flex items-center gap-1 mt-4">
+          Perfiles visitados recientemente
+        </li>
+        {isMounted && recent.length === 0 && (
+          <li className="text-gray-400 text-sm pl-2">No hay perfiles recientes</li>
+        )}
         {isMounted && recent.map((p, i) => (
-          <li key={i} className="truncate">
+          <li key={i} className="truncate border-b border-gray-700 py-2">
             <Link
               className="hover:text-blue-300 transition-colors"
               href={`/profiles/${p.region}/${encodeURIComponent(p.name)}/${encodeURIComponent(p.tagline)}`}
@@ -39,13 +47,12 @@ export const LeftSidebar: React.FC = () => {
             <button
               type="button"
               onClick={clearRecentProfiles}
-              className="w-full text-xs text-red-400 hover:text-red-600 transition-colors text-left"
+              className="w-full text-xs text-red-400 hover:text-red-600 transition-colors text-left mt-1"
             >
               Borrar historial
             </button>
           </li>
         )}
-        <li className="opacity-70">Perfiles favoritos</li>
       </ul>
     </BaseSidebar>
   );
