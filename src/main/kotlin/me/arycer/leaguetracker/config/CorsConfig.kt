@@ -13,7 +13,7 @@ class CorsConfig {
     fun corsFilter(): CorsFilter {
         val source = UrlBasedCorsConfigurationSource()
         val config = CorsConfiguration()
-        config.allowedOrigins = listOf("http://localhost:3000", "https://leaguetracker.arycer.me", "https://lt.arycer.me")
+        config.allowedOrigins = listOf("http://localhost:3000", "https://lt.arycer.me")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("*")
         config.allowCredentials = true
