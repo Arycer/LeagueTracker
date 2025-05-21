@@ -20,6 +20,7 @@ class WebSocketPresenceListener(
 
     @EventListener
     fun handleWebSocketConnectListener(event: SessionConnectEvent) {
+        println("WebSocket connected: ${event.source}")
         val accessor = StompHeaderAccessor.wrap(event.message)
         val authHeader = accessor.getFirstNativeHeader("Authorization") ?: return
         val token = authHeader.substringAfter("Bearer ").trim()

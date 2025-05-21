@@ -20,14 +20,17 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .cors { }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/api/lol/version/**").permitAll()
+                auth.requestMatchers("/api/champion-mastery/**").permitAll()
                 auth.requestMatchers("/api/chat/**").authenticated()
+                auth.requestMatchers("/ws/**").permitAll()
+                auth.requestMatchers("/api/lol/favorites/**").authenticated()
                 auth.requestMatchers("/api/friends/**").authenticated()
                 auth.requestMatchers("/api/lol/accounts/**").authenticated()
-                auth.requestMatchers("/ws/**").authenticated()
-
-                // Resto de endpoints bloqueados
-                auth.anyRequest().permitAll()
+                auth.requestMatchers("/api/lol/version/**").permitAll()
+                auth.requestMatchers("/api/lol/match/**").permitAll()
+                auth.requestMatchers("/api/presence/**").authenticated()
+                auth.requestMatchers("/api/profiles/**").permitAll()
+                auth.anyRequest().denyAll()
             }
             .addFilterBefore(clerkJwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .httpBasic { it.disable() }
