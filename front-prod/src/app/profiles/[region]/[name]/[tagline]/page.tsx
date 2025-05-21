@@ -1,10 +1,121 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useApi } from "@/hooks/useApi";
+import ProfileBasicInfo, { SummonerProfileDTO } from "./ProfileBasicInfo";
 import { saveRecentProfile, triggerRecentProfilesUpdate } from "@/hooks/useRecentProfiles";
+import { useToast } from "@/context/ToastContext";
+import { useUserContext } from "@/context/UserContext";
 
 const ProfilePage = () => {
   const params = useParams();
+  const { callApi } = useApi();
+  const { lolVersion } = useUserContext();
+  const [profile, setProfile] = useState<SummonerProfileDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [championMasteries, setChampionMasteries] = useState<any[]>([]);
+  const [loadingMasteries, setLoadingMasteries] = useState(false);
+  const [championIdToName, setChampionIdToName] = useState<Record<number, string>>({});
+  const [loadingChampions, setLoadingChampions] = useState(true);
+  const { showToast } = useToast();
+
+  const fetchProfile = async () => {
+    if (!params?.region || !params?.name || !params?.tagline) return;
+    setLoading(true);
+    setError(null);
+    const res = await callApi(`/api/profiles/${params.region}/${params.name}/${params.tagline}`);
+    if (res.ok) {
+      setProfile(res.data);
+      // Una vez que tenemos el perfil, cargamos las maestrías
+      fetchChampionMasteries();
+    } else {
+      setError("No se pudo cargar el perfil");
+    }
+    setLoading(false);
+  };
+
+  const fetchChampionMasteries = async () => {
+    if (!params?.region || !params?.name || !params?.tagline) return;
+    setLoadingMasteries(true);
+    try {
+      const res = await callApi(`/api/champion-mastery/top3/${params.region}/${params.name}/${params.tagline}`);
+      if (res.ok && Array.isArray(res.data)) {
+        setChampionMasteries(res.data);
+        // Actualizar el perfil con las maestrías
+        setProfile(prev => prev ? {...prev, championMasteries: res.data} : null);
+      }
+    } catch (error) {
+      console.error("Error al cargar las maestrías de campeones:", error);
+    } finally {
+      setLoadingMasteries(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (!params?.region || !params?.name || !params?.tagline) return;
+    setRefreshing(true);
+    const res = await callApi(`/api/profiles/${params.region}/${params.name}/${params.tagline}/refresh`, "POST");
+    if (res.ok) {
+      setProfile(res.data);
+      saveRecentProfile({
+        region: params.region as string,
+        name: params.name as string,
+        tagline: params.tagline as string,
+      });
+      triggerRecentProfilesUpdate();
+    } else {
+      if (res.status === 400) {
+        showToast("¡No puedes refrescar tan rápido! Espera unos segundos.", "error");
+      } else {
+        showToast("Ocurrió un error al refrescar el perfil.", "error");
+      }
+    }
+    setRefreshing(false);
+  };
+
+  // Cargar datos de campeones desde Data Dragon
+  const loadChampionData = async () => {
+    if (!lolVersion) return;
+    setLoadingChampions(true);
+    
+    // Intentar obtener del localStorage primero para evitar parpadeos
+    const cachedData = localStorage.getItem(`champion-data-${lolVersion}`);
+    if (cachedData) {
+      try {
+        const parsedData = JSON.parse(cachedData);
+        setChampionIdToName(parsedData);
+        setLoadingChampions(false);
+        return;
+      } catch (e) {
+        console.error('Error al parsear datos en caché:', e);
+      }
+    }
+    
+    try {
+      const response = await fetch(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/data/es_ES/champion.json`);
+      const data = await response.json();
+      const mapping: Record<number, string> = {};
+      Object.values(data.data).forEach((champ: any) => {
+        mapping[parseInt(champ.key)] = champ.id;
+      });
+      // Guardar en localStorage para futuras cargas
+      localStorage.setItem(`champion-data-${lolVersion}`, JSON.stringify(mapping));
+      setChampionIdToName(mapping);
+    } catch (err) {
+      console.error('Error cargando datos de campeones:', err);
+    } finally {
+      setLoadingChampions(false);
+    }
+  };
+
+  useEffect(() => {
+    if (lolVersion) {
+      loadChampionData();
+    }
+  }, [lolVersion]);
+
   useEffect(() => {
     if (params?.region && params?.name && params?.tagline) {
       saveRecentProfile({
@@ -13,13 +124,37 @@ const ProfilePage = () => {
         tagline: params.tagline as string,
       });
       triggerRecentProfilesUpdate();
+      fetchProfile();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-200">
-      <h1 className="text-2xl font-bold mb-2">Perfil</h1>
-      <p className="text-gray-400">Aquí irá la información del perfil.</p>
+    <div className="flex w-full min-h-screen h-full bg-gradient-to-br from-[#f3f4f6] to-[#e0e7ef]">
+      {/* Sidebar de perfil a la izquierda, dentro del área central */}
+      <aside className="w-96 h-full bg-gradient-to-b from-[#2a3050] to-[#434a70] border-r border-[#232946]/40 text-white flex flex-col items-center p-4 gap-4">
+
+        {/* Profile info arriba */}
+        {loading || loadingChampions ? (
+          <div className="text-lg text-gray-300">Cargando perfil...</div>
+        ) : error ? (
+          <div className="text-red-400">{error}</div>
+        ) : profile ? (
+          <ProfileBasicInfo 
+            profile={profile} 
+            onRefresh={handleRefresh} 
+            loading={refreshing} 
+            championIdToName={championIdToName} 
+            lolVersion={lolVersion || '14.9.1'}
+          />
+        ) : null}
+        {/* Espacio para navegación o secciones futuras */}
+        <div className="flex-1 w-full"></div>
+      </aside>
+      {/* Contenido principal */}
+      <main className="flex-1 h-full flex flex-col items-center justify-center">
+        <div className="text-gray-400">Aquí irá el historial de partidas.</div>
+      </main>
     </div>
   );
 };

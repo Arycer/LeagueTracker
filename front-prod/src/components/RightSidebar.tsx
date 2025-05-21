@@ -27,16 +27,14 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
     let mounted = true;
     
     const loadFriends = async () => {
-      try {
-        console.log('RightSidebar: Cargando lista de amigos...');
-        const data = await callApi("/api/friends");
-        
-        if (mounted) {
-          console.log('RightSidebar: Amigos cargados:', data);
-          setFriends(Array.isArray(data) ? data : []);
+      console.log('RightSidebar: Cargando lista de amigos...');
+      const res = await callApi("/api/friends");
+      if (mounted) {
+        console.log('RightSidebar: Amigos cargados:', res);
+        setFriends(Array.isArray(res.data) ? res.data : []);
+        if (!res.ok) {
+          console.error("RightSidebar: Error loading friends:", res.error);
         }
-      } catch (err) {
-        console.error("RightSidebar: Error loading friends:", err);
       }
     };
     
@@ -57,36 +55,27 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
     let mounted = true;
     
     const checkPresence = async () => {
-      try {
-        console.log('Verificando presencia para:', friends);
-        
-        const presencePromises = friends.map(async (username) => {
-          try {
-            const res = await callApi(`/api/presence/is-online/${username}`);
-            return {
-              username,
-              online: !!res?.online
-            };
-          } catch (err) {
-            console.error(`Error checking presence for ${username}:`, err);
-            return { username, online: false };
-          }
-        });
-        
-        const results = await Promise.all(presencePromises);
-        
-        if (!mounted) return;
-        
-        const presence: Record<string, boolean> = {};
-        results.forEach(({ username, online }) => {
-          presence[username] = online;
-        });
-        
-        console.log('Estado de presencia actualizado:', presence);
-        setOnline(presence);
-      } catch (err) {
-        console.error('Error al verificar presencia:', err);
-      }
+      console.log('Verificando presencia para:', friends);
+      
+      const presencePromises = friends.map(async (username) => {
+        const res = await callApi(`/api/presence/is-online/${username}`);
+        return {
+          username,
+          online: res.ok && res.data && !!res.data.online
+        };
+      });
+      
+      const results = await Promise.all(presencePromises);
+      
+      if (!mounted) return;
+      
+      const presence: Record<string, boolean> = {};
+      results.forEach(({ username, online }) => {
+        presence[username] = online;
+      });
+      
+      console.log('Estado de presencia actualizado:', presence);
+      setOnline(presence);
     };
     
     checkPresence();

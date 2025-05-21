@@ -28,43 +28,43 @@ export const PlayerSearch: React.FC = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="backdrop-blur-sm bg-white/40 rounded-2xl shadow-xl p-6 flex flex-col gap-4 w-full max-w-xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-3">
-                <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Región</label>
-                    <select
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                        value={region}
-                        onChange={e => setRegion(e.target.value as keyof typeof REGIONS)}
-                    >
-                        {Object.entries(REGIONS).map(([key, reg]) => (
-                            <option key={key} value={key}>{reg.descriptor}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-                    <input
-                        type="text"
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                        placeholder="Invocador"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="w-32">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tagline</label>
-                    <input
-                        type="text"
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                        placeholder="#EUW"
-                        value={tagline}
-                        onChange={e => setTagline(e.target.value)}
-                    />
-                </div>
-            </div>
-            <Button type="submit" variant="primary" className="mt-2 w-full">
-                Buscar jugador
+        <form
+            onSubmit={handleSubmit}
+            className="flex items-center justify-center gap-2 w-full max-w-2xl mx-auto py-[5px] px-0 bg-transparent"
+        >
+            <select
+                className="h-9 rounded-md border px-2 text-sm bg-white text-[var(--color-primary)] border-[var(--color-primary)] placeholder-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)]"
+                value={region}
+                onChange={e => setRegion(e.target.value as keyof typeof REGIONS)}
+                aria-label="Región"
+            >
+                {Object.entries(REGIONS).map(([key, reg]) => (
+                    <option key={key} value={key}>{reg.descriptor}</option>
+                ))}
+            </select>
+            <input
+                type="text"
+                className="h-9 rounded-md border px-2 text-sm bg-white text-[var(--color-primary)] border-[var(--color-primary)] placeholder-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] min-w-[120px]"
+                placeholder="Usuario"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                aria-label="Usuario"
+            />
+            <input
+                type="text"
+                className="h-9 rounded-md border px-2 text-sm bg-white text-[var(--color-primary)] border-[var(--color-primary)] placeholder-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] focus:border-[var(--color-primary)] w-20"
+                placeholder="#TAG"
+                value={tagline}
+                onChange={e => setTagline(e.target.value)}
+                aria-label="Tagline"
+            />
+            <Button
+                type="submit"
+                variant="primary"
+                className="h-9 px-3 py-0 text-xs font-semibold ml-2 bg-[var(--color-primary-dark)] text-white hover:bg-[var(--color-primary)] transition-colors"
+                style={{ minWidth: 0 }}
+            >
+                Buscar
             </Button>
         </form>
     );

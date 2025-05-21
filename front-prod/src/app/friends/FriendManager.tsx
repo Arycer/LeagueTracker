@@ -38,16 +38,11 @@ export default function FriendManager() {
         console.log('FriendManager: Verificando presencia para:', friends);
         
         const presencePromises = friends.map(async (username) => {
-          try {
-            const res = await callApi(`/api/presence/is-online/${username}`);
-            return {
-              username,
-              online: !!res?.online
-            };
-          } catch (err) {
-            console.error(`Error checking presence for ${username}:`, err);
-            return { username, online: false };
-          }
+          const res = await callApi(`/api/presence/is-online/${username}`);
+          return {
+            username,
+            online: res.ok && res.data && res.data.online
+          };
         });
         
         const results = await Promise.all(presencePromises);
@@ -78,17 +73,17 @@ export default function FriendManager() {
       console.log('Loading friend data...');
       setIsLoading(true);
       
-      const [incoming, outgoing, friendsList] = await Promise.all([
+      const [incomingRes, outgoingRes, friendsListRes] = await Promise.all([
         callApi("/api/friends/requests/incoming"),
         callApi("/api/friends/requests/outgoing"),
         callApi("/api/friends")
       ]);
       
-      console.log('Friend data loaded:', { incoming, outgoing, friendsList });
+      console.log('Friend data loaded:', { incomingRes, outgoingRes, friendsListRes });
       
-      setIncomingRequests(Array.isArray(incoming) ? incoming : []);
-      setOutgoingRequests(Array.isArray(outgoing) ? outgoing : []);
-      setFriends(Array.isArray(friendsList) ? friendsList : []);
+      setIncomingRequests(Array.isArray(incomingRes.data) ? incomingRes.data : []);
+      setOutgoingRequests(Array.isArray(outgoingRes.data) ? outgoingRes.data : []);
+      setFriends(Array.isArray(friendsListRes.data) ? friendsListRes.data : []);
     } catch (error: any) {
       console.error("Error loading friend data:", error);
       setMessage(error.message || "Error loading friend data. Please try again later.");
@@ -105,47 +100,43 @@ export default function FriendManager() {
   const handleSendRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!friendUsername.trim()) return;
-    try {
-      setIsLoading(true);
-      await callApi(`/api/friends/requests/${friendUsername}`, "POST");
+    setIsLoading(true);
+    const res = await callApi(`/api/friends/requests/${friendUsername}`, "POST");
+    if (res.ok) {
       setFriendUsername("");
       await loadData();
       setMessage("Friend request sent!");
-    } catch (error: any) {
-      setMessage(error.message || "Failed to send friend request");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setMessage(typeof res.error === 'string' ? res.error : "Failed to send friend request");
     }
+    setIsLoading(false);
   };
 
   const handleRespondRequest = async (requesterUsername: string, accept: boolean) => {
-    try {
-      setIsLoading(true);
-      await callApi(`/api/friends/requests/${requesterUsername}/respond?accept=${accept}`, "POST");
+    setIsLoading(true);
+    const res = await callApi(`/api/friends/requests/${requesterUsername}/respond?accept=${accept}`, "POST");
+    if (res.ok) {
       await loadData();
       setMessage(`Request ${accept ? "accepted" : "rejected"}!`);
-    } catch (error: any) {
-      setMessage(error.message || "Failed to process request");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setMessage(typeof res.error === 'string' ? res.error : "Failed to respond to request");
     }
+    setIsLoading(false);
   };
 
   const handleDeleteFriend = async (friendUsername: string) => {
     if (!window.confirm(`Are you sure you want to remove this friend?`)) return;
-    try {
-      setIsLoading(true);
-      await callApi(`/api/friends/delete/${friendUsername}`, "DELETE");
+    setIsLoading(true);
+    const res = await callApi(`/api/friends/${friendUsername}`, "DELETE");
+    if (res.ok) {
       await loadData();
-      setMessage("Friend removed successfully");
-    } catch (error: any) {
-      setMessage(error.message || "Failed to remove friend");
-    } finally {
-      setIsLoading(false);
+      setMessage("Friend deleted!");
+    } else {
+      setMessage(typeof res.error === 'string' ? res.error : "Failed to delete friend");
     }
+    setIsLoading(false);
   };
 
-  // --- NUEVO DISEÑO UI ---
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col gap-3 px-2 md:px-0">
       {/* Solicitudes entrantes y salientes */}

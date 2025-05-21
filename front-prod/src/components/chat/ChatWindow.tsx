@@ -50,22 +50,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ friendUsername, onClose }) => {
     
     // Usar una función asíncrona inmediatamente invocada
     (async () => {
-      try {
-        const data = await callApi(`/api/chat/history/${friendUsername}?page=0&size=50`);
-        console.log('Datos recibidos del historial:', data);
-        
-        if (Array.isArray(data)) {
-          setMessages(data);
-        } else {
-          console.error('Los datos recibidos no son un array:', data);
-          setMessages([]);
+      const res = await callApi(`/api/chat/history/${friendUsername}?page=0&size=50`);
+      console.log('Datos recibidos del historial:', res);
+      
+      if (res.ok && Array.isArray(res.data)) {
+        setMessages(res.data);
+      } else {
+        console.error('Error o formato incorrecto en la respuesta:', res);
+        setMessages([]);
+        if (!res.ok) {
+          setError(typeof res.error === 'string' ? res.error : 'No se pudo cargar el historial del chat');
         }
-      } catch (err) {
-        console.error('Error cargando historial:', err);
-        setError('No se pudo cargar el historial del chat');
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     })();
   }, [username, friendUsername, callApi]);
   

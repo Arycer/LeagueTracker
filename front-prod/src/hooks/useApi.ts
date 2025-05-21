@@ -45,24 +45,32 @@ export function useApi() {
       const response = await fetch(url, options);
       console.log(`📥 Respuesta recibida: ${response.status} ${response.statusText}`);
       
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`❌ Error API: ${response.status}`, errorText);
-        throw new Error(`API error: ${response.status} - ${errorText || response.statusText}`);
-      }
-      
       const contentType = response.headers.get('content-type');
       let data;
       
       if (contentType && contentType.includes('application/json')) {
         data = await response.json();
-        console.log('📊 Datos JSON recibidos:', data);
-        return data;
+      } else {
+        data = await response.text();
       }
-      
-      data = await response.text();
-      console.log('📝 Texto recibido:', data);
-      return data;
+
+      if (!response.ok) {
+        console.log(`❌ Error API: ${response.status}`, data);
+        return {
+          ok: false,
+          status: response.status,
+          data: null,
+          error: data || response.statusText,
+        };
+      }
+
+      return {
+        ok: true,
+        status: response.status,
+        data,
+        error: null,
+      };
+
     } catch (error) {
       console.error('❌ API call failed:', error);
       throw error;

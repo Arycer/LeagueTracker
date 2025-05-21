@@ -31,13 +31,12 @@ export default function DebugPage() {
   // Probar llamada a API
   const testApiCall = async () => {
     setApiError(null);
-    try {
-      const data = await callApi(testEndpoint);
-      setApiResult(JSON.stringify(data, null, 2));
-    } catch (error: any) {
-      console.error('API test error:', error);
-      setApiError(error.message || 'Unknown error');
-      setApiResult('Error - check console');
+    const res = await callApi(testEndpoint);
+    setApiResult(JSON.stringify(res, null, 2));
+    
+    if (!res.ok) {
+      console.error('API test error:', res.error);
+      setApiError(typeof res.error === 'string' ? res.error : 'Unknown error');
     }
   };
 

@@ -48,27 +48,25 @@ const AccountLinker = () => {
     setLoading(true);
     setError(null);
 
-    try {
-      const response = await callApi(
-        "/lol/accounts/link",
-        "POST",
-        {
-          summonerName,
-          tagline,
-          region: region,
-        }
-      );
-
-      if (response.requiredIcon && lolVersion) {
-        setProfileIconUrl(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${response.requiredIcon}.png`);
-        setStep('verification');
+    const res = await callApi(
+      "/lol/accounts/link",
+      "POST",
+      {
+        summonerName,
+        tagline,
+        region: region,
       }
-    } catch (err: any) {
-      setError(err.message || 'Error al vincular la cuenta');
-      console.error('Error linking account:', err);
-    } finally {
-      setLoading(false);
+    );
+
+    if (res.ok && res.data && res.data.requiredIcon && lolVersion) {
+      setProfileIconUrl(`https://ddragon.leagueoflegends.com/cdn/${lolVersion}/img/profileicon/${res.data.requiredIcon}.png`);
+      setStep('verification');
+    } else {
+      setError(typeof res.error === 'string' ? res.error : 'Error al vincular la cuenta');
+      console.error('Error linking account:', res.error);
     }
+    
+    setLoading(false);
   };
 
   const handleVerifyAccount = async () => {
@@ -77,26 +75,21 @@ const AccountLinker = () => {
     setIsVerifying(true);
     setError(null);
 
-    try {
-      const response = await callApi(
-        "/lol/accounts/verify",
-        "POST"
-      );
+    const res = await callApi(
+      "/lol/accounts/verify",
+      "POST"
+    );
 
-      if (response.verified) {
-        setVerificationStatus('success');
-        // Opcional: redirigir o actualizar lista de cuentas
-      } else {
-        setVerificationStatus('error');
-        setError('No se pudo verificar la cuenta. Asegúrate de haber cambiado el ícono.');
-      }
-    } catch (err: any) {
+    if (res.ok && res.data && res.data.verified) {
+      setVerificationStatus('success');
+      // Opcional: redirigir o actualizar lista de cuentas
+    } else {
       setVerificationStatus('error');
-      setError(err.message || 'Error al verificar la cuenta');
-      console.error('Error verifying account:', err);
-    } finally {
-      setIsVerifying(false);
+      setError(typeof res.error === 'string' ? res.error : 'No se pudo verificar la cuenta. Asegúrate de haber cambiado el ícono');
+      console.error('Error verifying account:', res.error);
     }
+    
+    setIsVerifying(false);
   };
 
   return (

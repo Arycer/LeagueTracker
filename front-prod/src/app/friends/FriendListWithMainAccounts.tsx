@@ -41,11 +41,11 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
     
     try {
       const promises = friends.map(async (friendUsername) => {
-        try {
-          const data = await callApi(`/lol/accounts/main/${friendUsername}`);
-          return [friendUsername, data] as const;
-        } catch (err) {
-          console.error(`Error fetching account for ${friendUsername}:`, err);
+        const res = await callApi(`/lol/accounts/main/${friendUsername}`);
+        if (res.ok) {
+          return [friendUsername, res.data] as const;
+        } else {
+          console.error(`Error fetching account for ${friendUsername}:`, res.error);
           return [friendUsername, null] as const;
         }
       });
@@ -56,7 +56,7 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
       results.forEach(([username, data]) => {
         accs[username] = data;
       });
-      
+        
       console.log('Loaded accounts:', accs);
       setAccounts(accs);
     } catch (err) {
