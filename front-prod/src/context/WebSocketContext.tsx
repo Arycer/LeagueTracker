@@ -49,7 +49,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       }
       
       console.log('Token obtenido, creando conexión WebSocket');
-      const socket = new SockJS("wss://loltracker.arycer.me/ws");
+      const socket = new SockJS("https://loltracker.arycer.me/ws");
       const stompClient = new Client({
         webSocketFactory: () => socket,
         connectHeaders: {
