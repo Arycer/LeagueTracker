@@ -4,6 +4,7 @@ import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 
 import { useAuth } from '@clerk/nextjs';
 import SockJS from 'sockjs-client';
+import {BASE_URL} from "@/hooks/useApi";
 
 export type WebSocketContextType = {
   connected: boolean;
@@ -49,7 +50,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       }
       
       console.log('Token obtenido, creando conexión WebSocket');
-      const socket = new SockJS("http://localhost:8080/ws");
+      const socket = new SockJS(BASE_URL + "/ws");
       const stompClient = new Client({
         webSocketFactory: () => socket,
         connectHeaders: {

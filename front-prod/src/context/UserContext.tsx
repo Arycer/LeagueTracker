@@ -1,6 +1,7 @@
 "use client";
 import React, {createContext, useContext, useEffect, useState, useCallback} from "react";
 import {useAuth,useUser} from "@clerk/nextjs";
+import {BASE_URL} from "@/hooks/useApi";
 
 interface UserContextType {
     userId: string | null;
@@ -38,7 +39,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}
     // Obtener la versión de LoL solo una vez
     useEffect(() => {
         let mounted = true;
-        fetch('http://localhost:8080/api/lol/version/latest')
+        fetch( BASE_URL + '/api/lol/version/latest')
             .then(res => res.json())
             .then((data) => {
                 if (mounted) setLolVersion(typeof data === 'string' ? data : data.version || null);
