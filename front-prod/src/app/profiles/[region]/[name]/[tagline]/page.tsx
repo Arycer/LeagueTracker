@@ -77,7 +77,27 @@ const ProfilePage = () => {
     setRefreshing(true);
     const res = await callApi(`/api/profiles/${params.region}/${params.name}/${params.tagline}/refresh`, "POST");
     if (res.ok) {
-      setProfile(res.data);
+      // Añadir el tagline al perfil desde los parámetros de la URL
+      const profileData = {
+        ...res.data,
+        tagline: params.tagline as string
+      };
+      
+      setProfile(profileData);
+      
+      // Guardar el icono de perfil en el caché
+      if (profileData.profileIconId && params.region && params.name && params.tagline) {
+        cacheProfileIcon(
+          params.region as string,
+          params.name as string,
+          params.tagline as string,
+          profileData.profileIconId
+        );
+      }
+      
+      // Cargar las maestrías después de actualizar el perfil
+      fetchChampionMasteries();
+      
       saveRecentProfile({
         region: params.region as string,
         name: params.name as string,

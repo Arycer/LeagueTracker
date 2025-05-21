@@ -14,6 +14,7 @@ import { useWebSocket } from "../context/WebSocketContext";
 import { useUserContext } from "../context/UserContext";
 import { useChat } from "./chat/ChatContext";
 import { MessageSquare } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
 export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   const { callApi } = useApi();
@@ -21,20 +22,31 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   const [online, setOnline] = useState<Record<string, boolean>>({});
   const { subscribe } = useWebSocket();
   const { openChat, unreadMessages } = useChat();
+  const { userId } = useAuth();
 
-  // Solo cargar amigos al montar
+  // Solo cargar amigos al montar y si hay un usuario autenticado
   useEffect(() => {
+    // Si no hay usuario autenticado, no hacemos nada
+    if (!userId) {
+      setFriends([]);
+      return;
+    }
+    
     let mounted = true;
     
     const loadFriends = async () => {
       console.log('RightSidebar: Cargando lista de amigos...');
-      const res = await callApi("/api/friends");
-      if (mounted) {
-        console.log('RightSidebar: Amigos cargados:', res);
-        setFriends(Array.isArray(res.data) ? res.data : []);
-        if (!res.ok) {
-          console.error("RightSidebar: Error loading friends:", res.error);
+      try {
+        const res = await callApi("/api/friends");
+        if (mounted) {
+          console.log('RightSidebar: Amigos cargados:', res);
+          setFriends(Array.isArray(res.data) ? res.data : []);
+          if (!res.ok) {
+            console.error("RightSidebar: Error loading friends:", res.error);
+          }
         }
+      } catch (error) {
+        console.log('Error al cargar amigos, posiblemente no autenticado');
       }
     };
     
@@ -43,7 +55,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
     return () => {
       mounted = false;
     };
-  }, [callApi]);
+  }, [callApi, userId]);
 
   // Consultar presencia solo cuando cambia la lista de amigos
   useEffect(() => {
@@ -116,37 +128,52 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
   return (
     <BaseSidebar className={className + " flex flex-col h-full min-h-0"}>
       <div className="flex-1 flex flex-col min-h-0">
-        <Link href="/friends" className="text-blue-200 font-bold text-lg mb-4">
-          Amigos
-        </Link>
-        <div className="text-gray-300 text-sm mb-2">
-          {onlineCount} conectados
+        <div className="text-center w-full mb-4">
+          <Link href="/friends" className="text-blue-200 font-bold text-lg">
+            Amigos
+          </Link>
         </div>
-        <div className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-0">
-          {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
-          {friends.map((username) => (
-            <div key={username} className="flex items-center justify-between gap-2 p-1 hover:bg-[#232b3a] rounded group">
-              <div className="flex items-center gap-2">
-                <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
-                <div className="flex items-center gap-1">
-                  <span className="text-gray-200">{username}</span>
-                  {unreadMessages[username] > 0 && (
-                    <span className="bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                      {unreadMessages[username] > 99 ? '99+' : unreadMessages[username]}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <button 
-                onClick={() => openChat(username)}
-                className="chat-trigger text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                title={`Chatear con ${username}`}
-              >
-                <MessageSquare size={16} />
-              </button>
+        
+        {!userId ? (
+          // Usuario no autenticado
+          <div className="flex flex-col items-center justify-center w-full">
+            <Link href="/sign-in" className="text-blue-400 hover:text-blue-300 transition-colors text-center">
+              Inicia sesión
+            </Link>
+          </div>
+        ) : (
+          // Usuario autenticado
+          <>
+            <div className="text-gray-300 text-sm mb-2">
+              {onlineCount} conectados
             </div>
-          ))}
-        </div>
+            <div className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-0">
+              {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
+              {friends.map((username) => (
+                <div key={username} className="flex items-center justify-between gap-2 p-1 hover:bg-[#232b3a] rounded group">
+                  <div className="flex items-center gap-2">
+                    <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
+                    <div className="flex items-center gap-1">
+                      <span className="text-gray-200">{username}</span>
+                      {unreadMessages[username] > 0 && (
+                        <span className="bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                          {unreadMessages[username] > 99 ? '99+' : unreadMessages[username]}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => openChat(username)}
+                    className="chat-trigger text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title={`Chatear con ${username}`}
+                  >
+                    <MessageSquare size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="sticky bottom-0 w-full text-center text-[11px] text-gray-400 pt-2 pb-1 select-none border-t border-gray-700 bg-transparent z-10">
         Versión de LoL: {lolVersion || '...'}

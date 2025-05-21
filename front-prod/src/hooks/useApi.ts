@@ -13,11 +13,15 @@ export function useApi() {
       console.log(`🔄 API Request: ${method} ${endpoint}`);
       
       // Obtener token fresco para cada solicitud
-      const jwt = await getToken({ template: 'DefaultJWT' });
-      if (!jwt) {
-        console.error('❌ No se pudo obtener token para la solicitud API');
-      } else {
-        console.log('✅ Token obtenido correctamente');
+      let jwt: string | null = null;
+      try {
+        jwt = await getToken({ template: 'DefaultJWT' });
+        if (jwt) {
+          console.log('✅ Token obtenido correctamente');
+        }
+      } catch (error) {
+        // Usuario no autenticado, continuamos sin token
+        console.log('Usuario no autenticado, continuando sin token');
       }
       
       const url = `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;

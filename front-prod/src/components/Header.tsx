@@ -4,11 +4,8 @@ import Link from "next/link";
 import {
   SignedIn,
   SignedOut,
-  SignInButton,
-  SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
-import { Button } from "./Button";
 import { useUserContext } from "../context/UserContext";
 
 export const Header: React.FC = () => {
@@ -45,24 +42,19 @@ export const Header: React.FC = () => {
         <span className="text-sky-400">League</span>
         <span className="text-white">Tracker</span>
       </Link>
-      <div className="flex items-center gap-3 justify-self-end">
+      <div className="flex items-center gap-4 justify-self-end">
         <SignedOut>
-          <SignInButton>
-            <Button
-              variant="outline"
-              className="border-blue-200 text-blue-200 hover:bg-blue-200 hover:text-[#232946]"
-            >
+          <Link href="/sign-in" className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-md blur opacity-30 group-hover:opacity-100 transition duration-200"></div>
+            <button className="relative px-5 py-2 bg-[#1e293b] rounded-md text-blue-300 font-medium border border-blue-500/30 group-hover:text-blue-100 transition-all duration-200">
               Iniciar sesión
-            </Button>
-          </SignInButton>
-          <SignUpButton>
-            <Button
-              variant="primary"
-              className="bg-blue-500 text-white hover:bg-blue-400"
-            >
+            </button>
+          </Link>
+          <Link href="/sign-up" className="relative">
+            <button className="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-500 rounded-md text-white font-semibold shadow-lg hover:shadow-blue-500/20 hover:from-blue-500 hover:to-blue-400 transition-all duration-300">
               Registrarse
-            </Button>
-          </SignUpButton>
+            </button>
+          </Link>
         </SignedOut>
         <SignedIn>
           {username && (

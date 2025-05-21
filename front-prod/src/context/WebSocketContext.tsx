@@ -36,9 +36,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       }
       
       // Obtener token fresco
-      const token = await getToken({ template: 'DefaultJWT' });
-      if (!token) {
-        console.error('No se pudo obtener token para WebSocket');
+      let token: string | null = null;
+      try {
+        token = await getToken({ template: 'DefaultJWT' });
+        if (!token) {
+          console.log('No hay token disponible para WebSocket, posiblemente no autenticado');
+          return;
+        }
+      } catch (error) {
+        console.log('Usuario no autenticado, no se puede establecer conexión WebSocket');
         return;
       }
       

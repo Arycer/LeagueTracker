@@ -10,6 +10,7 @@ import {
   clearRecentProfiles,
 } from "../hooks/useRecentProfiles";
 import FavoritesSidebar from "./FavoritesSidebar";
+import { FaClock } from "react-icons/fa";
 
 export const LeftSidebar: React.FC = () => {
   const recent = useRecentProfilesList();
@@ -26,7 +27,7 @@ export const LeftSidebar: React.FC = () => {
         <FavoritesSidebar />
         
         <li className="opacity-70 flex items-center gap-1 mt-4">
-          Perfiles visitados recientemente
+          <FaClock className="text-blue-400" /> Visitados recientemente
         </li>
         {isMounted && recent.length === 0 && (
           <li className="text-gray-400 text-sm pl-2">No hay perfiles recientes</li>
