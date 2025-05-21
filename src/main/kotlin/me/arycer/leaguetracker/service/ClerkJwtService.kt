@@ -18,7 +18,7 @@ import java.util.*
 class ClerkJwtService(
     private val userRepository: UserRepository
 ) {
-    private val jwkSetUrl = URL("https://assured-hermit-45.clerk.accounts.dev/.well-known/jwks.json")
+    private val jwkSetUrl = URL("https://clerk.lt.arycer.me/.well-known/jwks.json")
     private val jwkSet = RemoteJWKSet<SecurityContext>(jwkSetUrl)
 
     fun validateToken(token: String): TokenInfo? {
