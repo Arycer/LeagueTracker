@@ -24,15 +24,15 @@ export default function Home() {
               <span className="text-white">Tracker</span>
             </h1>
           </div>
-          <div className="backdrop-blur-sm bg-white/40 rounded-2xl px-8 py-6 shadow-xl flex flex-col items-center">
+          <div className="w-full flex flex-col items-center mb-8">
+            <PlayerSearch />
+          </div>
+          <div className="backdrop-blur-sm bg-white/40 rounded-2xl px-8 py-6 shadow-xl flex flex-col items-center w-full">
             <p className="text-gray-900 text-center mb-2 font-semibold drop-shadow">
               Información acerca de tus partidas de League of Legends y las de tus amigos y oponentes en un solo lugar.
             </p>
           </div>
         </section>
-        <div className="w-full flex flex-col items-center pt-32">
-          <PlayerSearch />
-        </div>
       </div>
     </div>
   );
