@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useAuth } from '@clerk/nextjs';
 export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://na25.holy.gg:19308';
 
 export function useApi() {
   const { getToken } = useAuth();
