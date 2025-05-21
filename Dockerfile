@@ -1,13 +1,15 @@
-# Etapa 1: build del JAR
-FROM gradle:8.7-jdk21 AS build
-COPY --chown=gradle:gradle . /home/gradle/project
-WORKDIR /home/gradle/project
-RUN ./gradlew clean build -x test
-
-# Etapa 2: imagen final con JAR ya construido
+# Imagen base con Java 21
 FROM eclipse-temurin:21-jdk-jammy
+
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
-COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
+
+# Copiamos el JAR construido al contenedor (ajusta el nombre)
+COPY build/libs/LeagueTracker-0.0.1-SNAPSHOT.jar app.jar
 COPY application-secrets.properties application-secrets.properties
+
+# Exponemos el puerto 8080 (el que uses en tu app)
 EXPOSE 8080
+
+# Comando para ejecutar el JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
