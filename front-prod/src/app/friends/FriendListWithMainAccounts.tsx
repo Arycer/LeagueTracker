@@ -91,7 +91,6 @@ const FriendListWithMainAccounts: React.FC<FriendListWithMainAccountsProps> = ({
                   className="w-8 h-8 rounded-full border"
                 />
                 <span className="text-gray-100">{acc.summonerName}#{acc.tagline} <span className="text-xs text-blue-300">({acc.region})</span></span>
-                <span className="text-xs text-gray-300">Nv. {acc.summonerLevel}</span>
                 <button
                   className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
                   onClick={() => router.push(`/profiles/${acc.region}/${encodeURIComponent(acc.summonerName)}/${encodeURIComponent(acc.tagline)}`)}
