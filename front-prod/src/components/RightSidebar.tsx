@@ -144,19 +144,21 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
         ) : (
           // Usuario autenticado
           <>
-            <div className="text-gray-300 text-sm mb-2">
-              {onlineCount} conectados
+            <div className="text-gray-300 text-sm mb-2 text-center">
+              <span className="flex items-center justify-center gap-1">
+                <FaCircle size={8} color="#22c55e" /> {onlineCount} conectados
+              </span>
             </div>
             <div className="flex flex-col gap-2 flex-1 overflow-y-auto min-h-0">
-              {friends.length === 0 && <span className="text-gray-500">Sin amigos</span>}
+              {friends.length === 0 && <span className="text-gray-500 text-center">Sin amigos</span>}
               {friends.map((username) => (
-                <div key={username} className="flex items-center justify-between gap-2 p-1 hover:bg-[#232b3a] rounded group">
-                  <div className="flex items-center gap-2">
+                <div key={username} className="flex items-center justify-between gap-2 p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors group">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
                     <FaCircle size={10} color={online[username] ? "#22c55e" : "#64748b"} />
-                    <div className="flex items-center gap-1">
-                      <span className="text-gray-200">{username}</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-white hover:text-blue-300 transition-colors truncate block">{username}</span>
                       {unreadMessages[username] > 0 && (
-                        <span className="bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                        <span className="bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 inline-flex">
                           {unreadMessages[username] > 99 ? '99+' : unreadMessages[username]}
                         </span>
                       )}
@@ -164,7 +166,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                   </div>
                   <button 
                     onClick={() => openChat(username)}
-                    className="chat-trigger text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="chat-trigger text-blue-400 hover:text-blue-300 transition-colors p-1"
                     title={`Chatear con ${username}`}
                   >
                     <MessageSquare size={16} />
