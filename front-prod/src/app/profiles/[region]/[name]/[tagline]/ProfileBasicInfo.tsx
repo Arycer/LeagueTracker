@@ -163,25 +163,40 @@ export default function ProfileBasicInfo({
           </div>
         </div>
         
-        {/* Lado derecho: Botón de recargar */}
-        <button
-          onClick={onRefresh}
-          disabled={loading}
-          className="p-1 rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 flex items-center justify-center flex-shrink-0"
-          style={{ width: 28, height: 28 }}
-          aria-label="Refrescar perfil"
-        >
-          {loading ? (
-            <svg className="animate-spin" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="8" stroke="white" strokeWidth="3" strokeDasharray="25 10" />
+        {/* Lado derecho: Botones de acción */}
+        <div className="flex items-center gap-2">
+          {/* Botón de favoritos */}
+          <button
+            className="flex items-center justify-center rounded-full bg-[#232946] hover:bg-[#2a3050] transition-colors p-1.5"
+            style={{ width: 28, height: 28 }}
+            aria-label="Añadir a favoritos"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+                stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 10a6 6 0 0 1 10.39-4.19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <polyline points="14 3 14 7 10 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          )}
-        </button>
+          </button>
+          
+          {/* Botón de refrescar */}
+          <button
+            onClick={onRefresh}
+            disabled={loading}
+            className="p-1 rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 flex items-center justify-center flex-shrink-0"
+            style={{ width: 28, height: 28 }}
+            aria-label="Refrescar perfil"
+          >
+            {loading ? (
+              <svg className="animate-spin" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="8" stroke="white" strokeWidth="3" strokeDasharray="25 10" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 10a6 6 0 0 1 10.39-4.19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="14 3 14 7 10 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Tarjetas de Ranked */}

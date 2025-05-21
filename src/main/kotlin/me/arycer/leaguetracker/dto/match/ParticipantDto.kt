@@ -109,7 +109,7 @@ data class ParticipantDto(
     val summoner2Id: Int,
     val summonerId: String,
     val summonerLevel: Int,
-    val summonerName: String,
+    var summonerName: String,
     val teamEarlySurrendered: Boolean,
     val teamId: Int,
     val teamPosition: String,

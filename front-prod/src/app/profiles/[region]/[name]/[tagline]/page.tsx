@@ -6,6 +6,7 @@ import ProfileBasicInfo, { SummonerProfileDTO } from "./ProfileBasicInfo";
 import { saveRecentProfile, triggerRecentProfilesUpdate } from "@/hooks/useRecentProfiles";
 import { useToast } from "@/context/ToastContext";
 import { useUserContext } from "@/context/UserContext";
+import MatchHistory from "./MatchHistory";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -130,9 +131,9 @@ const ProfilePage = () => {
   }, [params]);
 
   return (
-    <div className="flex w-full min-h-screen h-full bg-gradient-to-br from-[#f3f4f6] to-[#e0e7ef]">
+    <div className="flex w-full min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
       {/* Sidebar de perfil a la izquierda, dentro del área central */}
-      <aside className="w-96 h-full bg-gradient-to-b from-[#2a3050] to-[#434a70] border-r border-[#232946]/40 text-white flex flex-col items-center p-4 gap-4">
+      <aside className="w-96 min-h-screen sticky top-0 bg-gradient-to-b from-[#2a3050] to-[#434a70] border-r border-[#232946]/40 text-white flex flex-col items-center p-4 gap-4 overflow-y-auto">
 
         {/* Profile info arriba */}
         {loading || loadingChampions ? (
@@ -152,8 +153,18 @@ const ProfilePage = () => {
         <div className="flex-1 w-full"></div>
       </aside>
       {/* Contenido principal */}
-      <main className="flex-1 h-full flex flex-col items-center justify-center">
-        <div className="text-gray-400">Aquí irá el historial de partidas.</div>
+      <main className="flex-1 min-h-screen flex flex-col p-6">
+        {loading || loadingChampions ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-lg text-gray-600">Cargando datos...</div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-lg text-red-500">{error}</div>
+          </div>
+        ) : profile ? (
+          <MatchHistory puuid={profile.puuid} region={profile.region} />
+        ) : null}
       </main>
     </div>
   );

@@ -91,6 +91,16 @@ class RiotService(
         return response.body ?: throw RuntimeException("Summoner not found")
     }
 
+    fun getSummonerByPuuid(region: Region, puuid: String): SummonerDto {
+        val url = "https://${region.apiName}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/$puuid"
+        val response = restTemplate.exchange<SummonerDto>(
+            url,
+            HttpMethod.GET,
+            buildAuthHeader(),
+        )
+        return response.body ?: throw RuntimeException("Summoner not found")
+    }
+
 
     // 3. Elegir un icono predeterminado aleatorio
     fun pickRandomDefaultIcon(): Int {

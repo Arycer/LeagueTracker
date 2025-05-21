@@ -15,7 +15,7 @@ import org.springframework.web.client.exchange
 class MatchCacheService(
     private val restTemplate: RestTemplate,
     private val objectMapper: ObjectMapper,
-    private val matchCacheRepository: MatchCacheRepository
+    private val matchCacheRepository: MatchCacheRepository,
 ) {
 
     @Transactional
@@ -32,7 +32,6 @@ class MatchCacheService(
         }
 
         val match = response.body ?: throw RuntimeException("Match not found")
-
         val matchJson = objectMapper.writeValueAsString(match)
         matchCacheRepository.save(MatchCache(matchId = matchId, matchJson = matchJson, region = region))
 
