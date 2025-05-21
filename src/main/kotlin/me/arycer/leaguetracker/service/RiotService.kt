@@ -7,6 +7,7 @@ import me.arycer.leaguetracker.dto.ddragon.VersionsDTO
 import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 import me.arycer.leaguetracker.dto.match.MatchDto
 import me.arycer.leaguetracker.dto.misc.Region
+import me.arycer.leaguetracker.dto.timeline.TimelineDto
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -154,6 +155,20 @@ class RiotService(
 
         return response.body?.toList() ?: emptyList()
     }
+
+    fun fetchTimelineFromApi(matchId: String): TimelineDto {
+    val url =
+        "https://europe.api.riotgames.com/lol/match/v5/matches/$matchId/timeline"
+
+    val response = restTemplate.exchange<TimelineDto>(
+        url,
+        HttpMethod.GET,
+        buildAuthHeader(),
+    )
+
+    return response.body ?: throw RuntimeException("Timeline not found for match $matchId")
+}
+
 
 
     fun getMatchInfoByMatchId(matchId: String, region: Region): MatchDto {

@@ -2,14 +2,17 @@ package me.arycer.leaguetracker.controller
 
 import me.arycer.leaguetracker.dto.match.MatchDto
 import me.arycer.leaguetracker.dto.misc.Region
+import me.arycer.leaguetracker.dto.timeline.TimelineDto
 import me.arycer.leaguetracker.service.RiotService
+import me.arycer.leaguetracker.service.TimelineCacheService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/lol/match")
 class MatchController(
-    private val riotService: RiotService
+    private val riotService: RiotService,
+    private val timelineCacheService: TimelineCacheService
 ) {
 
     @GetMapping("/matches")
@@ -33,5 +36,10 @@ class MatchController(
         } catch (_: Exception) {
             ResponseEntity.status(403).body(null)
         }
+    }
+
+    @GetMapping("/{matchId}/timeline")
+    fun getTimeline(@PathVariable matchId: String): TimelineDto {
+        return timelineCacheService.getTimelineByMatchId(matchId)
     }
 }
