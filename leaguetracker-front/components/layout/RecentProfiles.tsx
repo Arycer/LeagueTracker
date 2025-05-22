@@ -1,10 +1,10 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { useRecentProfiles } from '@/hooks/useRecentProfiles';
-import { Clock, XIcon, Trash2 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { useToast } from '@/hooks/useToast';
+import {useRecentProfiles} from '@/hooks/useRecentProfiles';
+import {Clock, Trash2, XIcon} from 'lucide-react';
+import {Button} from '../ui/button';
+import {useToast} from '@/hooks/useToast';
 
 const RecentProfiles: React.FC = () => {
   const { recentProfiles, isLoading, removeRecentProfile, clearRecentProfiles } = useRecentProfiles();

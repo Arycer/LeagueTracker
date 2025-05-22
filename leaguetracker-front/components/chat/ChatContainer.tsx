@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, {useEffect, useState} from 'react';
+import {useSearchParams} from 'next/navigation';
 import ChatList from './ChatList';
 import ChatInterface from './ChatInterface';
 

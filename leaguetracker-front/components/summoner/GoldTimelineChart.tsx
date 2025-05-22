@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { TimelineDto } from '@/types/timeline';
-import { useApi } from '@/hooks/useApi';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, {useEffect, useState} from 'react';
+import {TimelineDto} from '@/types/timeline';
+import {useApi} from '@/hooks/useApi';
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 interface GoldTimelineChartProps {
   matchId: string;

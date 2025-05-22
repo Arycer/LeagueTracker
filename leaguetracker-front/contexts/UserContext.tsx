@@ -1,6 +1,6 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth, useUser } from '@clerk/nextjs';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import {useAuth, useUser} from '@clerk/nextjs';
 
 // Definir la estructura de datos del usuario
 export interface UserData {

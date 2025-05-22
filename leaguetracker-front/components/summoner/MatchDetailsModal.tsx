@@ -1,14 +1,14 @@
 import React from "react";
-import { X } from "lucide-react";
-import { MatchSummary, MatchDto } from "@/types/match";
-import { useDDragon } from "@/contexts/DDragonContext";
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
-import { Button } from "@/components/ui/button";
-import { ChampionIcon, ItemIcon } from "@/components/ddragon";
+import {X} from "lucide-react";
+import {MatchDto, MatchSummary} from "@/types/match";
+import {useDDragon} from "@/contexts/DDragonContext";
+import {formatDistanceToNow} from "date-fns";
+import {es} from "date-fns/locale";
+import {Button} from "@/components/ui/button";
+import {ItemIcon} from "@/components/ddragon";
 import Link from "next/link";
-import { Region } from "@/constants/regions";
-import { QUEUE_TYPES } from "@/constants/queueTypes";
+import {Region} from "@/constants/regions";
+import {QUEUE_TYPES} from "@/constants/queueTypes";
 
 interface MatchDetailsModalProps {
   match: MatchSummary | null;

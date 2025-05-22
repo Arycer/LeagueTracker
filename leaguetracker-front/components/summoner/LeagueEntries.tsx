@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { LeagueEntryDTO } from '@/hooks/useProfiles';
+import {LeagueEntryDTO} from '@/hooks/useProfiles';
 import RankedIcon from '@/components/ddragon/RankedIcon';
 
 interface LeagueEntriesProps {

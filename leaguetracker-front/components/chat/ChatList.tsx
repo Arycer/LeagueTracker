@@ -1,10 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useChatContext } from '@/contexts/ChatContext';
-import { FriendsContext } from '@/contexts/FriendsContext';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from 'lucide-react';
+import React, {useContext, useEffect, useState} from 'react';
+import {useChatContext} from '@/contexts/ChatContext';
+import {FriendsContext} from '@/contexts/FriendsContext';
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Input} from "@/components/ui/input";
+import {Search} from 'lucide-react';
 
 interface ChatListProps {
   onSelectChat: (username: string) => void;

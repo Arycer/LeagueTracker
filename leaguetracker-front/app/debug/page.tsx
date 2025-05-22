@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useApi, ApiMethod } from '@/hooks/useApi';
-import { DDragonVersionDisplay } from '@/components/ddragon';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
+import React, {useRef, useState} from 'react';
+import {Card, CardContent} from '@/components/ui/card';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {ApiMethod, useApi} from '@/hooks/useApi';
+import {DDragonVersionDisplay} from '@/components/ddragon';
+import {SignedOut} from '@clerk/nextjs';
 
 // Endpoints predefinidos para facilitar las pruebas
 const PREDEFINED_ENDPOINTS = [

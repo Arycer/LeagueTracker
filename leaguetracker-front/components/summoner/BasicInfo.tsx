@@ -1,14 +1,14 @@
 "use client";
 import React from 'react';
-import { SummonerProfileDTO } from '@/hooks/useProfiles';
-import { useDDragon } from '@/contexts/DDragonContext';
-import { useUserContext } from '@/contexts/UserContext';
-import { useFavoriteProfiles, AddFavoriteProfileRequest } from '@/contexts/FavoriteProfilesContext';
+import {SummonerProfileDTO} from '@/hooks/useProfiles';
+import {useDDragon} from '@/contexts/DDragonContext';
+import {useUserContext} from '@/contexts/UserContext';
+import {AddFavoriteProfileRequest, useFavoriteProfiles} from '@/contexts/FavoriteProfilesContext';
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
-import { getRegionLabel } from '@/constants/regions';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, Star, StarOff } from 'lucide-react';
-import { useToast } from '@/hooks/useToast';
+import {getRegionLabel} from '@/constants/regions';
+import {Button} from '@/components/ui/button';
+import {RefreshCw, Star} from 'lucide-react';
+import {useToast} from '@/hooks/useToast';
 
 interface BasicInfoProps {
   profile: SummonerProfileDTO;

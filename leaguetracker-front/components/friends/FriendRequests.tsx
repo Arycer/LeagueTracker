@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import { useFriends, FriendRequestDto } from '@/contexts/FriendsContext';
-import { useToast } from '@/hooks/useToast';
+import React, {useState} from 'react';
+import {FriendRequestDto, useFriends} from '@/contexts/FriendsContext';
+import {useToast} from '@/hooks/useToast';
 
 interface FriendRequestsProps {
   incomingRequests: FriendRequestDto[];

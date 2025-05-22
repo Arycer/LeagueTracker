@@ -1,11 +1,11 @@
 "use client";
-import React, { useState } from 'react';
-import { useUserContext } from '@/contexts/UserContext';
-import { useToast } from '@/hooks/useToast';
+import React, {useState} from 'react';
+import {useUserContext} from '@/contexts/UserContext';
+import {useToast} from '@/hooks/useToast';
 import AddFriend from './AddFriend';
 import FriendRequests from './FriendRequests';
 import FriendsList from './FriendsList';
-import { useFriends } from '@/contexts/FriendsContext';
+import {useFriends} from '@/contexts/FriendsContext';
 
 /**
  * Sidebar derecho que muestra la lista de amigos y su estado online

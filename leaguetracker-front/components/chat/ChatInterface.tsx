@@ -1,19 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useChatContext } from '@/contexts/ChatContext';
-import { useUserContext } from '@/contexts/UserContext';
+import React, {useEffect, useRef, useState} from 'react';
+import {useChatContext} from '@/contexts/ChatContext';
+import {useUserContext} from '@/contexts/UserContext';
 
 // Componentes de Shadcn
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 
 interface ChatInterfaceProps {
   recipientUsername: string;

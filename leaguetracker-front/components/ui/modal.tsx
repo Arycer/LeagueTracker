@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
-import { useModal } from "@/contexts/ModalContext";
-import { AnimatePresence, motion } from "framer-motion";
+import React, {useEffect} from "react";
+import {useModal} from "@/contexts/ModalContext";
+import {AnimatePresence, motion} from "framer-motion";
 
 export const Modal: React.FC = () => {
   const { isOpen, closeModal, modalContent } = useModal();

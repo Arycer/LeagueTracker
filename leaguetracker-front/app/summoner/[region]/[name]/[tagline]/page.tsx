@@ -1,16 +1,13 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
-import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Region, getRegionLabel } from '@/constants/regions';
-import { useProfiles, SummonerProfileDTO } from '@/hooks/useProfiles';
+import React, {useEffect, useRef, useState} from 'react';
+import {useParams} from 'next/navigation';
+import {AlertCircle, Loader2} from 'lucide-react';
+import {Region} from '@/constants/regions';
+import {SummonerProfileDTO, useProfiles} from '@/hooks/useProfiles';
 import ProfileVisitTracker from '@/components/summoner/ProfileVisitTracker';
 import BasicInfo from '@/components/summoner/BasicInfo';
 import LeagueEntries from '@/components/summoner/LeagueEntries';
 import TopChampionMasteries from '@/components/summoner/TopChampionMasteries';
-import RankedIcon from '@/components/ddragon/RankedIcon';
-import ProfileIcon from '@/components/ddragon/ProfileIcon';
 import MatchHistory from '@/components/summoner/MatchHistory';
 
 // Tipos para los parámetros de la URL

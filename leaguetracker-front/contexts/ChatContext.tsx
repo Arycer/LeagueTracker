@@ -1,11 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useWebSocket } from './WebSocketContext';
-import { useApi } from '@/hooks/useApi';
-import { useToast } from '@/hooks/useToast';
-import { useUserContext, UserData } from './UserContext';
-import { IMessage } from '@stomp/stompjs';
+import React, {createContext, useCallback, useContext, useEffect, useState} from 'react';
+import {useWebSocket} from './WebSocketContext';
+import {useApi} from '@/hooks/useApi';
+import {useToast} from '@/hooks/useToast';
+import {useUserContext} from './UserContext';
+import {IMessage} from '@stomp/stompjs';
 
 // Definición de tipos
 export interface ChatMessage {

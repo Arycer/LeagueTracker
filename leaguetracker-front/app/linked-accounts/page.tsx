@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useLinkedAccounts, LolAccount, PendingLolAccount } from '@/contexts/LinkedAccountsContext';
-import { useDDragon } from '@/contexts/DDragonContext';
-import { Button } from '@/components/ui/button';
+import {LolAccount, PendingLolAccount, useLinkedAccounts} from '@/contexts/LinkedAccountsContext';
+import {useDDragon} from '@/contexts/DDragonContext';
+import {Button} from '@/components/ui/button';
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
-import { Spinner } from '@/components/ui/spinner';
-import { getRegionLabel } from '@/constants/regions';
+import {Spinner} from '@/components/ui/spinner';
+import {getRegionLabel} from '@/constants/regions';
 
 /**
  * Página de cuentas vinculadas

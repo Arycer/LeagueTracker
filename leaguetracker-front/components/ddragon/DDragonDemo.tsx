@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { ChampionIcon, ItemIcon, SummonerSpellIcon, ProfileIcon, DDragonVersionDisplay } from './';
+import {Card, CardContent} from '@/components/ui/card';
+import {ChampionIcon, DDragonVersionDisplay, ItemIcon, ProfileIcon, SummonerSpellIcon} from './';
 
 /**
  * Componente de demostración que muestra todos los componentes de DDragon

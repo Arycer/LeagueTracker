@@ -1,8 +1,8 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useUserContext } from './UserContext';
-import { useApi } from '@/hooks/useApi';
-import { useToast } from '@/hooks/useToast';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import {useUserContext} from './UserContext';
+import {useApi} from '@/hooks/useApi';
+import {useToast} from '@/hooks/useToast';
 
 // Tipos para perfiles favoritos
 export interface FavoriteProfile {

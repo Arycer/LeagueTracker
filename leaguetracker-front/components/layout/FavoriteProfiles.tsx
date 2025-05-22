@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { useFavoriteProfiles } from '@/contexts/FavoriteProfilesContext';
-import { StarIcon, XIcon } from 'lucide-react';
-import { Button } from '../ui/button';
+import {useFavoriteProfiles} from '@/contexts/FavoriteProfilesContext';
+import {StarIcon, XIcon} from 'lucide-react';
+import {Button} from '../ui/button';
 
 const FavoriteProfiles: React.FC = () => {
   const { favorites, isLoading, deleteFavorite } = useFavoriteProfiles();

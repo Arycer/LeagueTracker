@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { MatchDto, MatchSummary } from '@/types/match';
-import { useApi } from './useApi';
-import { useToast } from './useToast';
-import { Region } from '@/constants/regions';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {MatchDto, MatchSummary} from '@/types/match';
+import {useApi} from './useApi';
+import {useToast} from './useToast';
+import {Region} from '@/constants/regions';
 
 interface UseMatchesResult {
   matches: MatchSummary[];

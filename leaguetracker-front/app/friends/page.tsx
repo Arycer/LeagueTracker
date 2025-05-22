@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from 'react';
-import { useFriends } from '@/contexts/FriendsContext';
-import { useUserContext } from '@/contexts/UserContext';
-import { useToast } from '@/hooks/useToast';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Search, UserCheck, UserMinus, UserPlus, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import React, {useState} from 'react';
+import {useFriends} from '@/contexts/FriendsContext';
+import {useUserContext} from '@/contexts/UserContext';
+import {useToast} from '@/hooks/useToast';
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {MessageSquare, Search, UserCheck, UserMinus, UserPlus} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 export default function FriendsPage() {
   const router = useRouter();

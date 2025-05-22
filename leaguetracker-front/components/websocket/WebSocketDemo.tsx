@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { useWebSocket } from '@/contexts/WebSocketContext';
-import { useAuth } from '@clerk/nextjs';
+import React, {useEffect, useRef, useState} from 'react';
+import {useWebSocket} from '@/contexts/WebSocketContext';
+import {useAuth} from '@clerk/nextjs';
 
 /**
  * Componente de demostración para WebSocket

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback } from 'react';
-import { useApi } from './useApi';
-import { Region } from '@/constants/regions';
-import { useDDragon } from '@/contexts/DDragonContext';
+import {useCallback, useState} from 'react';
+import {useApi} from './useApi';
+import {Region} from '@/constants/regions';
+import {useDDragon} from '@/contexts/DDragonContext';
 
 // Interfaces para la respuesta de la API
 export interface ChampionMasteryDTO {

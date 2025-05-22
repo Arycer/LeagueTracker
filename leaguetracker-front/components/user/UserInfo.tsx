@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { useUserContext } from '@/contexts/UserContext';
+import {useUserContext} from '@/contexts/UserContext';
 
 /**
  * Componente que muestra la información del usuario actual

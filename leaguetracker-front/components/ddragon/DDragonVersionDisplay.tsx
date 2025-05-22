@@ -1,4 +1,4 @@
-import { useDDragon } from '@/contexts/DDragonContext';
+import {useDDragon} from '@/contexts/DDragonContext';
 import React from 'react';
 
 /**

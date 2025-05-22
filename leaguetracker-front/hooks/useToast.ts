@@ -1,4 +1,4 @@
-import { toast, ExternalToast } from 'sonner';
+import {ExternalToast, toast} from 'sonner';
 
 /**
  * Tipos de toast disponibles

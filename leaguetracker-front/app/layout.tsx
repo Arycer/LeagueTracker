@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type {Metadata} from "next";
+import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layout/main-layout";
-import { ClerkProvider } from "@clerk/nextjs";
-import { DDragonProvider } from "../contexts/DDragonContext";
-import { WebSocketProvider } from "../contexts/WebSocketContext";
-import { UserProvider } from "../contexts/UserContext";
-import { FriendsProvider } from "../contexts/FriendsContext";
-import { ChatProvider } from "../contexts/ChatContext";
-import { FavoriteProfilesProvider } from "../contexts/FavoriteProfilesContext";
-import { LinkedAccountsProvider } from "../contexts/LinkedAccountsContext";
-import { ModalProvider } from "@/contexts/ModalContext";
+import {ClerkProvider} from "@clerk/nextjs";
+import {DDragonProvider} from "../contexts/DDragonContext";
+import {WebSocketProvider} from "../contexts/WebSocketContext";
+import {UserProvider} from "../contexts/UserContext";
+import {FriendsProvider} from "../contexts/FriendsContext";
+import {ChatProvider} from "../contexts/ChatContext";
+import {FavoriteProfilesProvider} from "../contexts/FavoriteProfilesContext";
+import {LinkedAccountsProvider} from "../contexts/LinkedAccountsContext";
+import {ModalProvider} from "@/contexts/ModalContext";
 import Modal from "@/components/ui/modal";
-import { Toaster } from "sonner";
+import {Toaster} from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

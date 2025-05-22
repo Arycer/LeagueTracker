@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useMatches } from "@/hooks/useMatches";
-import { MatchSummary, MatchDto } from "@/types/match";
-import { useDDragon } from "@/contexts/DDragonContext";
-import { useApi } from "@/hooks/useApi";
-import { useToast } from "@/hooks/useToast";
-import { Skeleton } from "@/components/ui/skeleton";
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
-import { Region } from "@/constants/regions";
-import { Button } from "@/components/ui/button";
-import { Loader2, RefreshCw } from "lucide-react";
-import { ItemIcon } from "../ddragon";
+import React, {useCallback, useEffect, useState} from "react";
+import {useMatches} from "@/hooks/useMatches";
+import {MatchDto, MatchSummary} from "@/types/match";
+import {useDDragon} from "@/contexts/DDragonContext";
+import {useApi} from "@/hooks/useApi";
+import {useToast} from "@/hooks/useToast";
+import {Skeleton} from "@/components/ui/skeleton";
+import {formatDistanceToNow} from "date-fns";
+import {es} from "date-fns/locale";
+import {Region} from "@/constants/regions";
+import {Button} from "@/components/ui/button";
+import {Loader2, RefreshCw} from "lucide-react";
+import {ItemIcon} from "../ddragon";
 import MatchDetailsModal from "./MatchDetailsModal";
-import { useModal } from "@/contexts/ModalContext";
-import { QUEUE_TYPES } from "@/constants/queueTypes";
+import {useModal} from "@/contexts/ModalContext";
+import {QUEUE_TYPES} from "@/constants/queueTypes";
 
 interface MatchHistoryProps {
   puuid: string;

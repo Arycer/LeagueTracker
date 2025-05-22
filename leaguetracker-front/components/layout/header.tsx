@@ -2,18 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Button } from '../ui/button';
-import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from '@clerk/nextjs';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useUserContext } from '@/contexts/UserContext';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+import {Button} from '../ui/button';
+import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from '@clerk/nextjs';
+import {useUserContext} from '@/contexts/UserContext';
 
 const Header = () => {
   const { user, isLoading } = useUserContext();

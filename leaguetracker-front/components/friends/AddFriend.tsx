@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import { useFriends } from '@/contexts/FriendsContext';
-import { useToast } from '@/hooks/useToast';
+import React, {useState} from 'react';
+import {useFriends} from '@/contexts/FriendsContext';
+import {useToast} from '@/hooks/useToast';
 
 /**
  * Componente para añadir amigos mediante nombre de usuario

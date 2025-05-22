@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { useDDragon } from '../../contexts/DDragonContext';
-import { cn } from '@/lib/utils';
+import {useDDragon} from '../../contexts/DDragonContext';
+import {cn} from '@/lib/utils';
 
 export interface ItemIconProps {
   itemId: string;

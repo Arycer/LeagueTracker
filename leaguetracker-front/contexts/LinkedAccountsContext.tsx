@@ -1,10 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { useApi } from '@/hooks/useApi';
-import { useToast } from '@/hooks/useToast';
-import { useDDragon } from './DDragonContext';
-import { Region } from '@/constants/regions';
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState} from 'react';
+import {useApi} from '@/hooks/useApi';
+import {useToast} from '@/hooks/useToast';
+import {useDDragon} from './DDragonContext';
+import {Region} from '@/constants/regions';
 
 // Definición de tipos
 export interface LolAccount {

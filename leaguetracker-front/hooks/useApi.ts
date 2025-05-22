@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
-import { useToast } from './useToast';
+import {useCallback, useState} from 'react';
+import {useAuth} from '@clerk/nextjs';
+import {useToast} from './useToast';
 
 export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 

@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useFriends, FriendMainAccount } from '@/contexts/FriendsContext';
-import { useToast } from '@/hooks/useToast';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {FriendMainAccount, useFriends} from '@/contexts/FriendsContext';
+import {useToast} from '@/hooks/useToast';
 
 interface FriendsListProps {
   friends: string[];

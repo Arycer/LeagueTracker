@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef } from 'react';
-import { useRecentProfiles } from '@/hooks/useRecentProfiles';
+import {useEffect, useRef} from 'react';
+import {useRecentProfiles} from '@/hooks/useRecentProfiles';
 
 interface ProfileVisitTrackerProps {
   summonerName: string;

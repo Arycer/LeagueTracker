@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback } from 'react';
-import { useApi } from './useApi';
-import { useToast } from './useToast';
-import { Region } from '@/constants/regions';
+import {useCallback, useState} from 'react';
+import {useApi} from './useApi';
+import {useToast} from './useToast';
+import {Region} from '@/constants/regions';
 
 // Interfaces para la respuesta de la API
 export interface MiniSeriesDTO {

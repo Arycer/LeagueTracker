@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useApi } from '@/hooks/useApi';
-import { MatchDto } from '@/types/match';
-import { Loader2 } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import { useDDragon } from '@/contexts/DDragonContext';
-import { ChampionIcon, ItemIcon } from '@/components/ddragon';
+import React, {useEffect, useState} from 'react';
+import {useApi} from '@/hooks/useApi';
+import {MatchDto} from '@/types/match';
+import {Loader2} from 'lucide-react';
+import {useParams} from 'next/navigation';
+import {useDDragon} from '@/contexts/DDragonContext';
+import {ItemIcon} from '@/components/ddragon';
 import Link from 'next/link';
-import { QUEUE_TYPES } from '@/constants/queueTypes';
-import { useToast } from '@/hooks/useToast';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { GoldTimelineChart } from '@/components/summoner/GoldTimelineChart';
+import {QUEUE_TYPES} from '@/constants/queueTypes';
+import {useToast} from '@/hooks/useToast';
+import {ScrollArea} from '@/components/ui/scroll-area';
+import {GoldTimelineChart} from '@/components/summoner/GoldTimelineChart';
 
 // Convierte segundos a formato mm:ss
 const formatGameDuration = (durationInSeconds: number): string => {

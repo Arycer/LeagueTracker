@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import Link from 'next/link';
-import { useLinkedAccounts, LinkRequest, LinkResponse } from '@/contexts/LinkedAccountsContext';
-import { useToast } from '@/hooks/useToast';
-import { useDDragon } from '@/contexts/DDragonContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {LinkRequest, useLinkedAccounts} from '@/contexts/LinkedAccountsContext';
+import {useToast} from '@/hooks/useToast';
+import {useDDragon} from '@/contexts/DDragonContext';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+import {Spinner} from '@/components/ui/spinner';
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card';
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
-import { REGIONS, Region } from '@/constants/regions';
+import {Region, REGIONS} from '@/constants/regions';
 
 // Estados del proceso de vinculación
 

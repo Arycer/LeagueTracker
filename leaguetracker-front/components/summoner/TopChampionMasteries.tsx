@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useDDragon } from '@/contexts/DDragonContext';
-import { useChampionMastery, ChampionMasteryDTO } from '@/hooks/useChampionMastery';
-import { Region } from '@/constants/regions';
+import {Skeleton} from '@/components/ui/skeleton';
+import {useDDragon} from '@/contexts/DDragonContext';
+import {ChampionMasteryDTO, useChampionMastery} from '@/hooks/useChampionMastery';
+import {Region} from '@/constants/regions';
 
 interface TopChampionMasteriesProps {
   summonerName: string;
