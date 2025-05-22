@@ -140,9 +140,10 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
     }
   };
 
-  // Cargar perfiles favoritos al iniciar o cuando cambia el usuario
   useEffect(() => {
-    refreshFavorites();
+    if (!isLoadingUser && user.isSignedIn) {
+      refreshFavorites();
+    }
   }, [user.isSignedIn]);
 
   // Valor del contexto
