@@ -31,7 +31,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({children}) 
   const createClient = useCallback(async () => {
     try {
       console.log('🔌 Iniciando conexión WebSocket...');
-      // Desconectar cliente existente si hay uno
       if (clientRef.current) {
         console.log('🔌 Desconectando cliente WebSocket existente');
         clientRef.current.deactivate();
