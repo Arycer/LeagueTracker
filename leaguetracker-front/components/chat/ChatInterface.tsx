@@ -32,16 +32,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
   const currentChatMessages = messages[recipientUsername];
   const hasMessages = currentChatMessages && currentChatMessages.length > 0;
 
-  // Cargar el historial solo cuando cambia el chat activo
-  // y solo si no tenemos mensajes para ese chat
-  useEffect(() => {
-    // Usamos una variable para rastrear si ya se ha cargado el historial
-    // para evitar bucles infinitos
-    let isMounted = true;
+useEffect(() => {
+  let isMounted = true;
 
     const loadHistory = async () => {
-      // Solo cargar si es el chat activo, no tenemos mensajes, y el componente sigue montado
-      if (isMounted && activeChat === recipientUsername && !hasMessages) {
+      // Solo cargar si:
+      // - componente montado
+      // - chat activo es el correcto
+      // - no hay mensajes
+      // - no está cargando el historial actualmente
+      if (isMounted && activeChat === recipientUsername && !hasMessages && !loadingHistory) {
         try {
           await loadChatHistory(recipientUsername);
         } catch (error) {
@@ -52,11 +52,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
 
     loadHistory();
 
-    // Función de limpieza para evitar actualizaciones de estado en componentes desmontados
     return () => {
       isMounted = false;
     };
-  }, [activeChat, recipientUsername, loadChatHistory, hasMessages]);
+  }, [activeChat, recipientUsername, loadChatHistory, hasMessages, loadingHistory]);
+
 
   // Scroll al último mensaje
   useEffect(() => {
