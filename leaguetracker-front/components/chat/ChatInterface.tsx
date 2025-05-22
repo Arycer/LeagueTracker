@@ -12,6 +12,7 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
+  const [checkedNoMessages, setCheckedNoMessages] = useState(false);
   const [message, setMessage] = useState('');
   const {messages, sendMessage, activeChat, setActiveChat, loadingHistory, loadChatHistory} = useChatContext();
   const userContext = useUserContext();
@@ -41,9 +42,10 @@ useEffect(() => {
       // - chat activo es el correcto
       // - no hay mensajes
       // - no está cargando el historial actualmente
-      if (isMounted && activeChat === recipientUsername && !hasMessages && !loadingHistory) {
+      if (isMounted && activeChat === recipientUsername && !loadingHistory && (!hasMessages && !checkedNoMessages)) {
         try {
           await loadChatHistory(recipientUsername);
+          setCheckedNoMessages(true);
         } catch (error) {
           console.error('Error al cargar el historial de chat:', error);
         }

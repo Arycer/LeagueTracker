@@ -58,6 +58,10 @@ const BasicInfo: React.FC<BasicInfoProps> = ({profile, onRefresh, isRefreshing =
     }
   };
 
+  const displayName = profile.name.includes('#') ?
+    profile.name.split('#')[0] :
+    profile.name;
+
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div className="flex items-center">
@@ -73,7 +77,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({profile, onRefresh, isRefreshing =
           </div>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">{`${profile.name}#${profile.tagline}`}</h1>
+          <h1 className="text-2xl font-bold text-white">{`${displayName}#${profile.tagline}`}</h1>
           <div className="text-blue-400 text-sm mt-1">{getRegionLabel(profile.region)}</div>
         </div>
       </div>
