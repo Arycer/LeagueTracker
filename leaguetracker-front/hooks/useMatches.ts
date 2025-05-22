@@ -94,16 +94,8 @@ export const useMatches = (
 
       // Buscar al participante por su nombre de invocador (insensible a mayúsculas)
       let participant = match.info.participants.find(
-        p => p.summonerName.toLowerCase() === name.toLowerCase()
+        p => p.puuid === puuid
       );
-
-      // Si no encontramos por nombre exacto, buscar si el nombre está contenido
-      if (!participant) {
-        participant = match.info.participants.find(
-          p => p.summonerName.toLowerCase().includes(name.toLowerCase()) ||
-            name.toLowerCase().includes(p.summonerName.toLowerCase())
-        );
-      }
 
       if (!participant) {
         console.error(`❌ No se encontró al participante ${name} en la partida ${match.metadata.matchId}`);
