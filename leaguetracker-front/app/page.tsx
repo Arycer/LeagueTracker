@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center w-full py-8 px-4">
+    <div className="h-full flex flex-col items-center justify-center w-full py-8 px-4">
       {/* Hero Section */}
       <div className="w-full max-w-6xl mx-auto text-center mb-12">
         <div className="flex flex-col items-center justify-center space-y-6">
