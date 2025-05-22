@@ -4,8 +4,7 @@ import {Client, IMessage, StompSubscription} from '@stomp/stompjs';
 import {useAuth} from '@clerk/nextjs';
 import SockJS from 'sockjs-client';
 
-// URL del servidor WebSocket - usando la URL local para desarrollo
-const WS_URL = 'http://localhost:8080/ws';
+const WS_URL = 'https://loltracker.arycer.me/ws';
 
 export type WebSocketContextType = {
   connected: boolean;

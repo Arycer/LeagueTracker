@@ -21,7 +21,7 @@ export type ApiOptions = {
   supressErrorToast?: boolean;
 };
 
-export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'https://loltracker.arycer.me';
 
 /**
  * Hook personalizado para realizar llamadas a la API con autenticación de Clerk
