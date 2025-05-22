@@ -18,7 +18,7 @@ export const useMatches = (
   region: Region,
   summonerName: string
 ): UseMatchesResult => {
-  const { get } = useApi();
+  const {get} = useApi();
   const [matches, setMatches] = useState<MatchSummary[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,12 +62,12 @@ export const useMatches = (
   const fetchMatchDetails = useCallback(async (matchId: string): Promise<MatchDto | null> => {
     try {
       console.log(`📝 Obteniendo detalles para partida: ${matchId}`);
-      
+
       const response = await get<MatchDto>(
         `/api/lol/match/match/${matchId}?region=${region}`,
         {supressErrorToast: true}
       );
-      
+
       if (response.ok && response.data) {
         console.log(`✅ Detalles obtenidos para partida ${matchId}`);
         return response.data;
@@ -77,7 +77,7 @@ export const useMatches = (
           console.log(`🚫 Partida ${matchId} no disponible (403 - restringida por Riot)`);
           return null;
         }
-        
+
         console.error(`❌ Error al obtener detalles de la partida ${matchId}:`, response.error);
         return null;
       }
@@ -91,17 +91,17 @@ export const useMatches = (
   const createMatchSummary = useCallback((match: MatchDto, name: string): MatchSummary | null => {
     try {
       console.log(`🔍 Creando resumen para partida ${match.metadata.matchId}, buscando jugador: ${name}`);
-      
+
       // Buscar al participante por su nombre de invocador (insensible a mayúsculas)
       let participant = match.info.participants.find(
         p => p.summonerName.toLowerCase() === name.toLowerCase()
       );
-      
+
       // Si no encontramos por nombre exacto, buscar si el nombre está contenido
       if (!participant) {
         participant = match.info.participants.find(
           p => p.summonerName.toLowerCase().includes(name.toLowerCase()) ||
-               name.toLowerCase().includes(p.summonerName.toLowerCase())
+            name.toLowerCase().includes(p.summonerName.toLowerCase())
         );
       }
 
@@ -110,7 +110,7 @@ export const useMatches = (
         console.log('Participantes disponibles:', match.info.participants.map(p => p.summonerName));
         return null;
       }
-      
+
       console.log(`✅ Participante encontrado: ${participant.summonerName}`);
 
       // Determinar si el equipo del invocador ganó
@@ -136,10 +136,10 @@ export const useMatches = (
   // Cargar más partidas
   const loadMore = useCallback(async (): Promise<void> => {
     if (isLoadingRef.current || !hasMore || !puuid) {
-      console.log('⏭️ Saltando loadMore:', { 
-        isLoading: isLoadingRef.current, 
-        hasMore, 
-        puuid: !!puuid 
+      console.log('⏭️ Saltando loadMore:', {
+        isLoading: isLoadingRef.current,
+        hasMore,
+        puuid: !!puuid
       });
       return;
     }
@@ -152,7 +152,7 @@ export const useMatches = (
     try {
       // Obtener IDs de partidas para la página actual
       const newMatchIds = await fetchMatchIds(page);
-      
+
       if (newMatchIds.length === 0) {
         console.log('📭 No hay más partidas disponibles');
         setHasMore(false);
@@ -160,11 +160,11 @@ export const useMatches = (
       }
 
       console.log(`📋 Procesando ${newMatchIds.length} partidas...`);
-      
+
       // Obtener detalles de cada partida de forma secuencial para evitar rate limiting
       const matchResults: (MatchDto | null)[] = [];
       let restrictedCount = 0;
-      
+
       for (const id of newMatchIds) {
         const matchDetail = await fetchMatchDetails(id);
         if (matchDetail === null) {
@@ -172,26 +172,26 @@ export const useMatches = (
           restrictedCount++;
         }
         matchResults.push(matchDetail);
-        
+
         // Pequeña pausa entre requests para evitar rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));
       }
-      
+
       // Crear resúmenes de partidas y filtrar los nulos
       const newMatches = matchResults
         .filter((match): match is MatchDto => match !== null)
         .map(match => createMatchSummary(match, summonerName))
         .filter((summary): summary is MatchSummary => summary !== null);
-      
+
       console.log(`✅ Se procesaron ${newMatches.length} partidas exitosamente`);
-      
+
       if (restrictedCount > 0) {
         console.log(`🚫 ${restrictedCount} partidas omitidas (no disponibles o restringidas)`);
       }
-      
+
       setMatches(prevMatches => [...prevMatches, ...newMatches]);
       setPage(prevPage => prevPage + 1);
-      
+
       // Lógica para determinar si hay más partidas
       // Solo marcamos hasMore como false si NO obtuvimos el número completo de IDs de la API
       if (newMatchIds.length < pageSize) {
@@ -205,7 +205,7 @@ export const useMatches = (
           console.log(`🚫 ${restrictedCount} partidas omitidas (restringidas), pero hay más páginas`);
         }
       }
-      
+
     } catch (err) {
       console.error('❌ Error en loadMore:', err);
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido al cargar partidas';
@@ -220,14 +220,14 @@ export const useMatches = (
   // Refrescar partidas (reiniciar y cargar de nuevo)
   const refreshMatches = useCallback(async (): Promise<void> => {
     console.log('🔄 Iniciando refresh de partidas');
-    
+
     // Resetear todo el estado
     setMatches([]);
     setPage(0);
     setHasMore(true);
     setError(null);
     isLoadingRef.current = false;
-    
+
     // Forzar una nueva carga
     if (puuid) {
       await loadMore();
@@ -237,7 +237,7 @@ export const useMatches = (
   // Efecto para cargar partidas cuando cambia el puuid
   useEffect(() => {
     console.log('🔄 useEffect principal - puuid cambió:', puuid ? `${puuid.substring(0, 10)}...` : 'undefined');
-    
+
     // Si no hay puuid, limpiar estado
     if (!puuid) {
       setMatches([]);
@@ -247,25 +247,25 @@ export const useMatches = (
       isLoadingRef.current = false;
       return;
     }
-    
+
     // Si el puuid cambió, resetear y cargar
     if (currentPuuidRef.current !== puuid) {
       console.log('📥 PUUID cambió, reseteando estado y cargando partidas');
       currentPuuidRef.current = puuid;
-      
+
       setMatches([]);
       setPage(0);
       setHasMore(true);
       setError(null);
       isLoadingRef.current = false;
-      
+
       // Cargar partidas después de un pequeño delay para asegurar que el estado se resetee
       const timer = setTimeout(() => {
         if (currentPuuidRef.current === puuid) {
           loadMore();
         }
       }, 50);
-      
+
       return () => clearTimeout(timer);
     }
   }, [puuid, loadMore]);

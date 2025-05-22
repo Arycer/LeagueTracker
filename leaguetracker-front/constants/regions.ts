@@ -18,13 +18,13 @@ export interface RegionInfo {
 
 // Lista de regiones disponibles (coincide con la enumeración del backend)
 export const REGIONS: RegionInfo[] = [
-  { value: 'EUW', label: 'Europa Oeste (EUW)', apiName: 'euw1', policy: 'EUROPE' },
-  { value: 'EUNE', label: 'Europa Norte & Este (EUNE)', apiName: 'eun1', policy: 'EUROPE' },
-  { value: 'NA', label: 'Norte América (NA)', apiName: 'na1', policy: 'AMERICAS' },
-  { value: 'KR', label: 'Korea (KR)', apiName: 'kr', policy: 'ASIA' },
-  { value: 'BR', label: 'Brasil (BR)', apiName: 'br1', policy: 'AMERICAS' },
-  { value: 'LAS', label: 'Latinoamérica Sur (LAS)', apiName: 'la2', policy: 'AMERICAS' },
-  { value: 'LAN', label: 'Latinoamérica Norte (LAN)', apiName: 'la1', policy: 'AMERICAS' },
+  {value: 'EUW', label: 'Europa Oeste (EUW)', apiName: 'euw1', policy: 'EUROPE'},
+  {value: 'EUNE', label: 'Europa Norte & Este (EUNE)', apiName: 'eun1', policy: 'EUROPE'},
+  {value: 'NA', label: 'Norte América (NA)', apiName: 'na1', policy: 'AMERICAS'},
+  {value: 'KR', label: 'Korea (KR)', apiName: 'kr', policy: 'ASIA'},
+  {value: 'BR', label: 'Brasil (BR)', apiName: 'br1', policy: 'AMERICAS'},
+  {value: 'LAS', label: 'Latinoamérica Sur (LAS)', apiName: 'la2', policy: 'AMERICAS'},
+  {value: 'LAN', label: 'Latinoamérica Norte (LAN)', apiName: 'la1', policy: 'AMERICAS'},
 ];
 
 // Obtener información de una región por su valor

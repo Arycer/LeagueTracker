@@ -22,7 +22,7 @@ const STORAGE_KEY = 'leaguetracker_recent_profiles';
 export const useRecentProfiles = () => {
   const [recentProfiles, setRecentProfiles] = useState<RecentProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Cargar perfiles desde localStorage al iniciar
   useEffect(() => {
     const loadProfiles = () => {
@@ -41,10 +41,10 @@ export const useRecentProfiles = () => {
         setIsLoading(false);
       }
     };
-    
+
     loadProfiles();
   }, []);
-  
+
   // Guardar perfiles en localStorage cuando cambian
   useEffect(() => {
     // Solo guardar si ya se ha completado la carga inicial y no estamos en SSR
@@ -56,15 +56,15 @@ export const useRecentProfiles = () => {
       }
     }
   }, [recentProfiles, isLoading]);
-  
+
   // Usar useRef para evitar dependencias circulares
   const profilesRef = useRef(recentProfiles);
-  
+
   // Actualizar la referencia cuando cambian los perfiles
   useEffect(() => {
     profilesRef.current = recentProfiles;
   }, [recentProfiles]);
-  
+
   /**
    * Añadir un perfil a la lista de recientes
    * Si ya existe, lo mueve al principio y actualiza su timestamp
@@ -72,7 +72,7 @@ export const useRecentProfiles = () => {
   const addRecentProfile = useCallback((profile: Omit<RecentProfile, 'timestamp'>) => {
     // Evitar actualizaciones durante SSR
     if (typeof window === 'undefined') return;
-    
+
     setRecentProfiles(prevProfiles => {
       // Verificar si el perfil es igual al último añadido para evitar actualizaciones innecesarias
       if (
@@ -82,47 +82,47 @@ export const useRecentProfiles = () => {
       ) {
         return prevProfiles;
       }
-      
+
       // Crear una copia de los perfiles actuales
       const updatedProfiles = [...prevProfiles];
-      
+
       // Buscar si el perfil ya existe (por región y nombre)
       const existingIndex = updatedProfiles.findIndex(
         p => p.region === profile.region && p.summonerName === profile.summonerName
       );
-      
+
       // Si existe, eliminarlo de su posición actual
       if (existingIndex !== -1) {
         updatedProfiles.splice(existingIndex, 1);
       }
-      
+
       // Añadir el perfil al principio con timestamp actualizado
       updatedProfiles.unshift({
         ...profile,
         timestamp: Date.now()
       });
-      
+
       // Limitar a MAX_RECENT_PROFILES perfiles
       return updatedProfiles.slice(0, MAX_RECENT_PROFILES);
     });
   }, []);
-  
+
   /**
    * Eliminar un perfil de la lista de recientes
    */
   const removeRecentProfile = useCallback((profileId: string) => {
-    setRecentProfiles(prevProfiles => 
+    setRecentProfiles(prevProfiles =>
       prevProfiles.filter(profile => profile.id !== profileId)
     );
   }, []);
-  
+
   /**
    * Limpiar todos los perfiles recientes
    */
   const clearRecentProfiles = useCallback(() => {
     setRecentProfiles([]);
   }, []);
-  
+
   return {
     recentProfiles,
     isLoading,

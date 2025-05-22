@@ -5,7 +5,7 @@ import React from 'react';
  * Componente de ejemplo que muestra la versión actual de DDragon
  */
 const DDragonVersionDisplay: React.FC = () => {
-  const { currentVersion, isLoading, error } = useDDragon();
+  const {currentVersion, isLoading, error} = useDDragon();
 
   if (isLoading) {
     return (

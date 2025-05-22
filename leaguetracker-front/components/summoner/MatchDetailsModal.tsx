@@ -35,14 +35,14 @@ const calculateKDA = (
 };
 
 const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
-  match,
-  matchDetails,
-  onClose,
-  region,
-}) => {
+                                                               match,
+                                                               matchDetails,
+                                                               onClose,
+                                                               region,
+                                                             }) => {
   if (!match) return null;
 
-  const { participant, gameCreation, gameDuration, queueId } = match;
+  const {participant, gameCreation, gameDuration, queueId} = match;
   const gameDate = new Date(gameCreation);
   const queueName = QUEUE_TYPES[queueId] || `Cola ${queueId}`;
   const isWin = match.win;
@@ -76,13 +76,14 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
       >
         <div className="flex items-center gap-3">
           <div className="relative">
-<ChampionIcon
-  championId={participant.championName}
-  size={48}
-  className="rounded-full border-2 border-slate-600"
-/>
+            <ChampionIcon
+              championId={participant.championName}
+              size={48}
+              className="rounded-full border-2 border-slate-600"
+            />
 
-            <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
+            <div
+              className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
               {participant.champLevel}
             </div>
           </div>
@@ -116,7 +117,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
           <div className="text-right hidden sm:block">
             <div className="text-white font-medium">{queueName}</div>
             <div className="text-slate-400 text-sm">
-              {formatDistanceToNow(gameDate, { addSuffix: true, locale: es })}
+              {formatDistanceToNow(gameDate, {addSuffix: true, locale: es})}
             </div>
           </div>
           <Button
@@ -125,7 +126,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
             onClick={onClose}
             className="text-slate-400 hover:text-white"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5"/>
           </Button>
         </div>
       </div>
@@ -167,10 +168,10 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
           <div className="bg-slate-700/50 rounded-lg p-4 sm:w-1/2">
             <h4 className="text-white font-medium mb-3">Ítems</h4>
             <div className="grid grid-cols-3 gap-2">
-              {Array.from({ length: 6 }).map((_, index) => {
+              {Array.from({length: 6}).map((_, index) => {
                 const itemId = participant[
                   `item${index}` as keyof typeof participant
-                ] as number;
+                  ] as number;
                 return (
                   <div key={index} className="flex justify-center">
                     <ItemIcon
@@ -229,7 +230,8 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Equipo Azul */}
               <div>
-                <div className="text-blue-400 font-medium mb-2 text-center bg-blue-500/20 py-1 rounded-md">
+                <div
+                  className="text-blue-400 font-medium mb-2 text-center bg-blue-500/20 py-1 rounded-md">
                   Equipo Azul{" "}
                   {matchDetails?.info.teams[0]?.win
                     ? "(Victoria)"
@@ -241,11 +243,11 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                       key={player.summonerId}
                       className="flex items-center gap-2 p-2 rounded-md hover:bg-slate-700/50"
                     >
-<ChampionIcon
-  championId={player.championName}
-  size={32}
-  className="rounded-full border border-slate-600"
-/>
+                      <ChampionIcon
+                        championId={player.championName}
+                        size={32}
+                        className="rounded-full border border-slate-600"
+                      />
 
                       <div className="min-w-0 flex-1">
                         <Link
@@ -269,7 +271,8 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
 
               {/* Equipo Rojo */}
               <div>
-                <div className="text-red-400 font-medium mb-2 text-center bg-red-500/20 py-1 rounded-md">
+                <div
+                  className="text-red-400 font-medium mb-2 text-center bg-red-500/20 py-1 rounded-md">
                   Equipo Rojo{" "}
                   {matchDetails?.info.teams[1]?.win
                     ? "(Victoria)"
@@ -281,11 +284,11 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                       key={player.summonerId}
                       className="flex items-center gap-2 p-2 rounded-md hover:bg-slate-700/50"
                     >
-<ChampionIcon
-  championId={player.championName}
-  size={32}
-  className="rounded-full border border-slate-600"
-/>
+                      <ChampionIcon
+                        championId={player.championName}
+                        size={32}
+                        className="rounded-full border border-slate-600"
+                      />
 
                       <div className="min-w-0 flex-1">
                         <Link

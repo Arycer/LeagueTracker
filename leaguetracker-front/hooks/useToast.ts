@@ -14,7 +14,7 @@ export interface ToastOptions extends ExternalToast {
    * @default 5000
    */
   duration?: number;
-  
+
   /**
    * Mostrar icono según el tipo
    * @default true
@@ -45,12 +45,12 @@ export function useToast() {
       duration: 5000,
       ...options,
     };
-    
+
     // Añadir icono según el tipo si showIcon es true
     if (options?.showIcon !== false) {
       toastOptions.icon = getIconForType(type);
     }
-    
+
     // Llamar al método correspondiente según el tipo
     switch (type) {
       case 'success':
@@ -81,7 +81,7 @@ export function useToast() {
         });
     }
   };
-  
+
   /**
    * Actualiza un toast existente (reemplazándolo con uno nuevo)
    * @param id ID del toast a actualizar
@@ -99,23 +99,23 @@ export function useToast() {
   ) => {
     // Primero eliminar el toast existente
     toast.dismiss(id);
-    
+
     // Luego crear uno nuevo con el mismo ID
     const toastOptions: ToastOptions = {
       duration: 5000,
       id, // Usar el mismo ID
       ...options,
     };
-    
+
     // Añadir icono según el tipo si showIcon es true
     if (options?.showIcon !== false) {
       toastOptions.icon = getIconForType(type);
     }
-    
+
     // Mostrar el nuevo toast con el mismo ID
     showToast(message, type, description, toastOptions);
   };
-  
+
   /**
    * Elimina un toast existente
    * @param id ID del toast a eliminar
@@ -123,43 +123,43 @@ export function useToast() {
   const dismissToast = (id: string) => {
     toast.dismiss(id);
   };
-  
+
   /**
    * Muestra un toast de éxito
    * @param message Mensaje principal
    * @param description Descripción opcional
    * @param options Opciones adicionales
    */
-  const success = (message: string, description?: string, options?: ToastOptions) => 
+  const success = (message: string, description?: string, options?: ToastOptions) =>
     showToast(message, 'success', description, options);
-  
+
   /**
    * Muestra un toast de error
    * @param message Mensaje principal
    * @param description Descripción opcional
    * @param options Opciones adicionales
    */
-  const error = (message: string, description?: string, options?: ToastOptions) => 
+  const error = (message: string, description?: string, options?: ToastOptions) =>
     showToast(message, 'error', description, options);
-  
+
   /**
    * Muestra un toast de información
    * @param message Mensaje principal
    * @param description Descripción opcional
    * @param options Opciones adicionales
    */
-  const info = (message: string, description?: string, options?: ToastOptions) => 
+  const info = (message: string, description?: string, options?: ToastOptions) =>
     showToast(message, 'info', description, options);
-  
+
   /**
    * Muestra un toast de advertencia
    * @param message Mensaje principal
    * @param description Descripción opcional
    * @param options Opciones adicionales
    */
-  const warning = (message: string, description?: string, options?: ToastOptions) => 
+  const warning = (message: string, description?: string, options?: ToastOptions) =>
     showToast(message, 'warning', description, options);
-  
+
   /**
    * Muestra un toast de carga
    * @param message Mensaje principal
@@ -167,9 +167,9 @@ export function useToast() {
    * @param options Opciones adicionales
    * @returns ID del toast para actualizarlo posteriormente
    */
-  const loading = (message: string, description?: string, options?: ToastOptions) => 
+  const loading = (message: string, description?: string, options?: ToastOptions) =>
     showToast(message, 'loading', description, options);
-  
+
   /**
    * Muestra un toast de promesa
    * @param promise Promesa a monitorear
@@ -192,7 +192,7 @@ export function useToast() {
       ...options,
     });
   };
-  
+
   return {
     showToast,
     updateToast,

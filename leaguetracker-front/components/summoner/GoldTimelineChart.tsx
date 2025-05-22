@@ -24,8 +24,8 @@ interface CustomTooltipProps {
 }
 
 
-export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, region }) => {
-  const { get } = useApi();
+export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({matchId, region}) => {
+  const {get} = useApi();
   const [timeline, setTimeline] = useState<TimelineDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,13 +36,13 @@ export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, r
   useEffect(() => {
     const fetchTimeline = async () => {
       if (!matchId || !region) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
         const response = await get<TimelineDto>(`/api/lol/match/${matchId}/timeline?region=${region}`);
-        
+
         if (response.ok && response.data) {
           setTimeline(response.data);
           processTimelineData(response.data);
@@ -56,7 +56,7 @@ export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, r
         setLoading(false);
       }
     };
-    
+
     fetchTimeline();
   }, [matchId, region, get]);
 
@@ -126,26 +126,26 @@ export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, r
     );
   }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const blueGold = payload[0].value;
-    const redGold = payload[1].value;
-    const diff = blueGold - redGold;
-    const isBlueAhead = diff > 0;
+  const CustomTooltip: React.FC<CustomTooltipProps> = ({active, payload, label}) => {
+    if (active && payload && payload.length) {
+      const blueGold = payload[0].value;
+      const redGold = payload[1].value;
+      const diff = blueGold - redGold;
+      const isBlueAhead = diff > 0;
 
-    return (
-      <div className="bg-[#0f172a] p-3 border border-gray-700 rounded shadow-lg">
-        <p className="text-gray-300 text-sm mb-1">{`Tiempo: ${label}`}</p>
-        <p className="text-blue-400 text-sm">{`Equipo Azul: ${blueGold.toLocaleString()}`}</p>
-        <p className="text-red-400 text-sm">{`Equipo Rojo: ${redGold.toLocaleString()}`}</p>
-        <p className={`text-sm ${isBlueAhead ? 'text-blue-400' : 'text-red-400'}`}>
-          {`Diferencia: ${Math.abs(diff).toLocaleString()} ${isBlueAhead ? '(Azul)' : '(Rojo)'}`}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
+      return (
+        <div className="bg-[#0f172a] p-3 border border-gray-700 rounded shadow-lg">
+          <p className="text-gray-300 text-sm mb-1">{`Tiempo: ${label}`}</p>
+          <p className="text-blue-400 text-sm">{`Equipo Azul: ${blueGold.toLocaleString()}`}</p>
+          <p className="text-red-400 text-sm">{`Equipo Rojo: ${redGold.toLocaleString()}`}</p>
+          <p className={`text-sm ${isBlueAhead ? 'text-blue-400' : 'text-red-400'}`}>
+            {`Diferencia: ${Math.abs(diff).toLocaleString()} ${isBlueAhead ? '(Azul)' : '(Rojo)'}`}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
 
   const maxGold = Math.max(...chartData.map(data => Math.max(data.blueTeamGold, data.redTeamGold)));
@@ -154,52 +154,52 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
   return (
     <div className="bg-[#1e293b]/80 rounded-lg p-6 border border-blue-900/30">
       <h2 className="text-xl font-semibold mb-4">Evolución del oro por equipo</h2>
-      
+
       <div className="w-full h-80 bg-[#0f172a]/80 rounded-lg p-4">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis 
-              dataKey="time" 
-              tick={{ fill: '#94a3b8' }} 
+          <LineChart data={chartData} margin={{top: 20, right: 30, left: 20, bottom: 10}}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155"/>
+            <XAxis
+              dataKey="time"
+              tick={{fill: '#94a3b8'}}
               tickMargin={10}
               interval="preserveStartEnd"
             />
-            <YAxis 
+            <YAxis
               domain={yAxisDomain}
-              tick={{ fill: '#94a3b8' }} 
+              tick={{fill: '#94a3b8'}}
               tickFormatter={(value) => (value / 1000) + 'k'}
             />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend 
+            <Tooltip content={<CustomTooltip/>}/>
+            <Legend
               formatter={(value) => (
-                <span style={{ color: value === 'blueTeamGold' ? '#3b82f6' : '#ef4444' }}>
+                <span style={{color: value === 'blueTeamGold' ? '#3b82f6' : '#ef4444'}}>
                   {value === 'blueTeamGold' ? 'Equipo Azul' : 'Equipo Rojo'}
                 </span>
               )}
             />
-            <Line 
-              type="monotone" 
-              dataKey="blueTeamGold" 
-              stroke="#3b82f6" 
-              strokeWidth={2} 
+            <Line
+              type="monotone"
+              dataKey="blueTeamGold"
+              stroke="#3b82f6"
+              strokeWidth={2}
               dot={false}
-              activeDot={{ r: 5 }}
+              activeDot={{r: 5}}
               name="blueTeamGold"
             />
-            <Line 
-              type="monotone" 
-              dataKey="redTeamGold" 
-              stroke="#ef4444" 
-              strokeWidth={2} 
+            <Line
+              type="monotone"
+              dataKey="redTeamGold"
+              stroke="#ef4444"
+              strokeWidth={2}
               dot={false}
-              activeDot={{ r: 5 }}
+              activeDot={{r: 5}}
               name="redTeamGold"
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div className="bg-black/20 p-3 rounded">
           <div className="text-xs text-gray-400">Oro final Equipo Azul</div>

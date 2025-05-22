@@ -10,7 +10,7 @@ interface ModalContextType {
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ModalProvider: React.FC<{ children: ReactNode }> = ({children}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
 
@@ -32,7 +32,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   return (
-    <ModalContext.Provider value={{ isOpen, openModal, closeModal, modalContent }}>
+    <ModalContext.Provider value={{isOpen, openModal, closeModal, modalContent}}>
       {children}
     </ModalContext.Provider>
   );

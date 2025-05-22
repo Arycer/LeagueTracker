@@ -16,37 +16,37 @@ export interface SummonerSpellIconProps {
  * Componente para mostrar el icono de un hechizo de invocador
  */
 const SummonerSpellIcon: React.FC<SummonerSpellIconProps> = ({
-  spellId,
-  size = 24,
-  className,
-  withBorder = true,
-  withTooltip = false,
-  alt,
-}) => {
-  const { getSummonerSpellIcon, isLoading } = useDDragon();
-  
+                                                               spellId,
+                                                               size = 24,
+                                                               className,
+                                                               withBorder = true,
+                                                               withTooltip = false,
+                                                               alt,
+                                                             }) => {
+  const {getSummonerSpellIcon, isLoading} = useDDragon();
+
   // Placeholder para cuando está cargando o no hay ID
   if (isLoading || !spellId) {
     return (
-      <div 
+      <div
         className={cn(
           'bg-blue-900/20 flex items-center justify-center rounded-md',
           withBorder && 'border border-blue-900/30',
           className
-        )} 
-        style={{ width: size, height: size }}
+        )}
+        style={{width: size, height: size}}
       />
     );
   }
-  
+
   return (
-    <div 
+    <div
       className={cn(
         'relative overflow-hidden rounded-md',
         withBorder && 'border border-blue-900/30',
         className
       )}
-      style={{ width: size, height: size }}
+      style={{width: size, height: size}}
       title={withTooltip ? `Spell ${spellId}` : undefined}
     >
       <Image

@@ -16,8 +16,8 @@ export interface ChampionMasteryDTO {
  * Hook para gestionar las maestrías de campeones
  */
 export const useChampionMastery = () => {
-  const { get } = useApi();
-  const { getChampionById } = useDDragon();
+  const {get} = useApi();
+  const {getChampionById} = useDDragon();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,11 +35,11 @@ export const useChampionMastery = () => {
     try {
       // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
-      
+
       // Procesar el nombre y tagline para evitar duplicación
       let summonerName = name;
       let summonerTagline = tagline;
-      
+
       // Si el nombre ya incluye el tagline (formato 'name#tagline'), lo separamos
       if (summonerName.includes('#')) {
         const parts = summonerName.split('#');
@@ -49,9 +49,9 @@ export const useChampionMastery = () => {
           summonerTagline = parts[1];
         }
       }
-      
+
       console.log(`Obteniendo maestrías: ${upperRegion}/${summonerName}/${summonerTagline}`);
-      
+
       const response = await get<ChampionMasteryDTO[]>(`/api/champion-mastery/top3/${upperRegion}/${summonerName}/${summonerTagline}`);
 
       if (response.ok && response.data) {

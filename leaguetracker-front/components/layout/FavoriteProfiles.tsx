@@ -6,8 +6,8 @@ import {StarIcon, XIcon} from 'lucide-react';
 import {Button} from '../ui/button';
 
 const FavoriteProfiles: React.FC = () => {
-  const { favorites, isLoading, deleteFavorite } = useFavoriteProfiles();
-  
+  const {favorites, isLoading, deleteFavorite} = useFavoriteProfiles();
+
   // Manejar eliminación de favorito
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -18,10 +18,10 @@ const FavoriteProfiles: React.FC = () => {
   return (
     <div>
       <div className="flex items-center mb-2">
-        <StarIcon className="w-4 h-4 mr-2 text-yellow-500" />
+        <StarIcon className="w-4 h-4 mr-2 text-yellow-500"/>
         <span className="text-white">Favoritos</span>
       </div>
-      
+
       {isLoading ? (
         <div className="pl-6 py-2">
           <div className="h-4 bg-blue-900/20 rounded w-3/4 animate-pulse mb-2"></div>
@@ -34,13 +34,14 @@ const FavoriteProfiles: React.FC = () => {
       ) : (
         <div className="space-y-1 pl-2">
           {favorites.map((profile) => (
-            <Link 
-              key={profile.id} 
+            <Link
+              key={profile.id}
               href={`/summoner/${profile.region.toLowerCase()}/${encodeURIComponent(profile.summonerName)}/${profile.tagline || ''}`}
               className="flex items-center justify-between p-2 rounded hover:bg-blue-900/20 text-gray-300 hover:text-white transition-colors group"
             >
               <div className="flex items-center overflow-hidden">
-                <div className="w-6 h-6 rounded-full bg-blue-900/40 flex items-center justify-center text-xs mr-2 flex-shrink-0">
+                <div
+                  className="w-6 h-6 rounded-full bg-blue-900/40 flex items-center justify-center text-xs mr-2 flex-shrink-0">
                   {profile.summonerName.charAt(0).toUpperCase()}
                 </div>
                 <div className="overflow-hidden">
@@ -57,7 +58,7 @@ const FavoriteProfiles: React.FC = () => {
                 className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={(e) => handleDelete(e, profile.id)}
               >
-                <XIcon className="h-3 w-3 text-gray-400 hover:text-red-400" />
+                <XIcon className="h-3 w-3 text-gray-400 hover:text-red-400"/>
               </Button>
             </Link>
           ))}

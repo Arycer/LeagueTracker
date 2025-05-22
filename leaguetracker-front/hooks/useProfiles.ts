@@ -43,7 +43,7 @@ export interface SummonerProfileDTO {
  * Hook para gestionar perfiles de invocador
  */
 export const useProfiles = () => {
-  const { get, post } = useApi();
+  const {get, post} = useApi();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +63,7 @@ export const useProfiles = () => {
       // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
       console.log(`Obteniendo perfil: ${upperRegion}/${name}/${tagline}`);
-      
+
       const response = await get<SummonerProfileDTO>(`/api/profiles/${upperRegion}/${name}/${tagline}`);
 
       if (response.ok && response.data) {
@@ -102,9 +102,9 @@ export const useProfiles = () => {
       // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
       console.log(`Actualizando perfil: ${upperRegion}/${name}/${tagline}`);
-      
+
       const response = await post<SummonerProfileDTO>(
-        `/api/profiles/${upperRegion}/${name}/${tagline}/refresh`, 
+        `/api/profiles/${upperRegion}/${name}/${tagline}/refresh`,
         {}
       );
 

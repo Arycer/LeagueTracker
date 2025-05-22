@@ -12,10 +12,10 @@ const LeftSidebar = () => {
           <h2 className="text-lg font-semibold text-white mb-3">Acceso Rápido</h2>
           <div className="space-y-4">
             {/* Componente de perfiles favoritos */}
-            <FavoriteProfiles />
-            
+            <FavoriteProfiles/>
+
             {/* Visitados recientemente */}
-            <RecentProfiles />
+            <RecentProfiles/>
           </div>
         </div>
       </div>

@@ -9,10 +9,10 @@ export interface SpinnerProps {
 /**
  * Componente Spinner para indicar estados de carga
  */
-export const Spinner: React.FC<SpinnerProps> = ({ 
-  size = 'md', 
-  className 
-}) => {
+export const Spinner: React.FC<SpinnerProps> = ({
+                                                  size = 'md',
+                                                  className
+                                                }) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
@@ -20,7 +20,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={cn(
         'animate-spin rounded-full border-2 border-t-transparent',
         sizeClasses[size],

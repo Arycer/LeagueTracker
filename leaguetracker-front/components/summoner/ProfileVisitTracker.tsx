@@ -13,11 +13,11 @@ interface ProfileVisitTrackerProps {
  * Se debe incluir en la página de perfil de invocador
  */
 const ProfileVisitTracker: React.FC<ProfileVisitTrackerProps> = ({
-  summonerName,
-  region,
-  tagline
-}) => {
-  const { addRecentProfile } = useRecentProfiles();
+                                                                   summonerName,
+                                                                   region,
+                                                                   tagline
+                                                                 }) => {
+  const {addRecentProfile} = useRecentProfiles();
   const initialRenderRef = useRef(true);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ProfileVisitTracker: React.FC<ProfileVisitTrackerProps> = ({
         tagline
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Este componente no renderiza nada visible

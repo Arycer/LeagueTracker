@@ -31,10 +31,10 @@ const formatGameDuration = (durationInSeconds: number): string => {
 };
 
 const MatchHistory: React.FC<MatchHistoryProps> = ({
-  puuid,
-  region,
-  summonerName,
-}) => {
+                                                     puuid,
+                                                     region,
+                                                     summonerName,
+                                                   }) => {
   console.log("🎮 MatchHistory renderizando con:", {
     puuid: puuid ? `${puuid.substring(0, 10)}...` : "undefined",
     region,
@@ -45,20 +45,20 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
   const hasValidData = Boolean(puuid && region && summonerName);
 
   // Usar el hook con validación
-  const { matches, isLoading, error, hasMore, loadMore, refreshMatches } =
+  const {matches, isLoading, error, hasMore, loadMore, refreshMatches} =
     useMatches(
       hasValidData ? puuid : undefined,
       hasValidData ? region : "EUW",
       hasValidData ? summonerName : ""
     );
 
-  const { get } = useApi();
+  const {get} = useApi();
   const toast = useToast();
-  const { openModal, closeModal } = useModal();
+  const {openModal, closeModal} = useModal();
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
-  
+
   // Log para debugging
   useEffect(() => {
     console.log("📊 MatchHistory estado actualizado:", {
@@ -139,7 +139,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     }
   }, [isLoading, hasValidData, refreshMatches]);
 
-    const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
+  const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
     try {
       // Cargar los detalles completos de la partida
       const response = await get<MatchDto>(
@@ -179,31 +179,31 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
         {/* Encabezado con campeón e info básica */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-700 shrink-0" />
+            <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-700 shrink-0"/>
             <div className="min-w-0 flex-1">
-              <Skeleton className="w-20 h-4 mb-1 bg-slate-700" />
-              <Skeleton className="w-16 h-3 bg-slate-700" />
+              <Skeleton className="w-20 h-4 mb-1 bg-slate-700"/>
+              <Skeleton className="w-16 h-3 bg-slate-700"/>
             </div>
           </div>
           <div className="text-right shrink-0">
-            <Skeleton className="w-12 h-3 mb-1 bg-slate-700" />
-            <Skeleton className="w-10 h-3 bg-slate-700" />
+            <Skeleton className="w-12 h-3 mb-1 bg-slate-700"/>
+            <Skeleton className="w-10 h-3 bg-slate-700"/>
           </div>
         </div>
 
         {/* Estadísticas */}
         <div className="grid grid-cols-3 gap-2 text-center py-2">
           <div>
-            <Skeleton className="w-12 h-4 mb-1 mx-auto bg-slate-700" />
-            <Skeleton className="w-8 h-3 mx-auto bg-slate-700" />
+            <Skeleton className="w-12 h-4 mb-1 mx-auto bg-slate-700"/>
+            <Skeleton className="w-8 h-3 mx-auto bg-slate-700"/>
           </div>
           <div>
-            <Skeleton className="w-10 h-4 mb-1 mx-auto bg-slate-700" />
-            <Skeleton className="w-6 h-3 mx-auto bg-slate-700" />
+            <Skeleton className="w-10 h-4 mb-1 mx-auto bg-slate-700"/>
+            <Skeleton className="w-6 h-3 mx-auto bg-slate-700"/>
           </div>
           <div>
-            <Skeleton className="w-16 h-4 mb-1 mx-auto bg-slate-700" />
-            <Skeleton className="w-8 h-3 mx-auto bg-slate-700" />
+            <Skeleton className="w-16 h-4 mb-1 mx-auto bg-slate-700"/>
+            <Skeleton className="w-8 h-3 mx-auto bg-slate-700"/>
           </div>
         </div>
 
@@ -224,10 +224,10 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
       <div className="hidden md:flex items-center gap-4 overflow-hidden">
         {/* Sección del campeón */}
         <div className="flex items-center gap-3 w-48 shrink-0">
-          <Skeleton className="w-12 h-12 rounded-full bg-slate-700" />
+          <Skeleton className="w-12 h-12 rounded-full bg-slate-700"/>
           <div className="min-w-0 flex-1">
-            <Skeleton className="w-20 h-4 mb-1 bg-slate-700" />
-            <Skeleton className="w-16 h-3 bg-slate-700" />
+            <Skeleton className="w-20 h-4 mb-1 bg-slate-700"/>
+            <Skeleton className="w-16 h-3 bg-slate-700"/>
           </div>
         </div>
 
@@ -235,16 +235,16 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
         <div className="flex-1 flex items-center justify-between gap-4 min-w-0">
           <div className="flex items-center gap-6 min-w-0 flex-1">
             <div className="min-w-0">
-              <Skeleton className="w-16 h-4 mb-1 bg-slate-700" />
-              <Skeleton className="w-20 h-3 bg-slate-700" />
+              <Skeleton className="w-16 h-4 mb-1 bg-slate-700"/>
+              <Skeleton className="w-20 h-3 bg-slate-700"/>
             </div>
             <div className="min-w-0">
-              <Skeleton className="w-20 h-4 mb-1 bg-slate-700" />
-              <Skeleton className="w-16 h-3 bg-slate-700" />
+              <Skeleton className="w-20 h-4 mb-1 bg-slate-700"/>
+              <Skeleton className="w-16 h-3 bg-slate-700"/>
             </div>
             <div className="min-w-0">
-              <Skeleton className="w-12 h-4 mb-1 bg-slate-700" />
-              <Skeleton className="w-16 h-3 bg-slate-700" />
+              <Skeleton className="w-12 h-4 mb-1 bg-slate-700"/>
+              <Skeleton className="w-16 h-3 bg-slate-700"/>
             </div>
           </div>
 
@@ -253,7 +253,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             {Array(7)
               .fill(0)
               .map((_, idx) => (
-                <Skeleton key={idx} className="w-8 h-8 rounded bg-slate-700" />
+                <Skeleton key={idx} className="w-8 h-8 rounded bg-slate-700"/>
               ))}
           </div>
         </div>
@@ -263,7 +263,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
 
   // Renderizar una partida
   const renderMatch = (match: MatchSummary, index: number) => {
-    const { participant, gameCreation, gameDuration, queueId } = match;
+    const {participant, gameCreation, gameDuration, queueId} = match;
     const gameDate = new Date(gameCreation);
     const queueName = QUEUE_TYPES[queueId] || `Cola ${queueId}`;
     const isWin = match.win;
@@ -281,9 +281,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
       participant.deaths === 0
         ? "Perfect"
         : (
-            (participant.kills + participant.assists) /
-            participant.deaths
-          ).toFixed(2);
+          (participant.kills + participant.assists) /
+          participant.deaths
+        ).toFixed(2);
 
     // Calculamos el CS total
     const totalCS =
@@ -302,10 +302,12 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           <div className="flex items-center justify-between gap-2 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="relative shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-600 overflow-hidden">
-                  <ChampionIcon championId={participant.championName} size={48} />
+                <div
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-600 overflow-hidden">
+                  <ChampionIcon championId={participant.championName} size={48}/>
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center border border-slate-600">
+                <div
+                  className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center border border-slate-600">
                   <span className="text-xs">{participant.champLevel}</span>
                 </div>
               </div>
@@ -324,7 +326,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             {/* Tiempo de la partida */}
             <div className="text-right shrink-0">
               <div className="text-slate-400 text-xs mb-1">
-                {formatDistanceToNow(gameDate, { addSuffix: true, locale: es })}
+                {formatDistanceToNow(gameDate, {addSuffix: true, locale: es})}
               </div>
               <div className="text-white text-xs">
                 {formatGameDuration(gameDuration)}
@@ -335,7 +337,8 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           {/* Estadísticas en grid para móvil/tablet */}
           <div className="grid grid-cols-3 gap-1 text-center border-t border-b border-slate-700 py-2">
             <div className="min-w-0">
-              <div className="text-white text-sm font-medium truncate">{`${participant.kills}/${participant.deaths}/${participant.assists}`}</div>
+              <div
+                className="text-white text-sm font-medium truncate">{`${participant.kills}/${participant.deaths}/${participant.assists}`}</div>
               <div className="text-slate-400 text-xs truncate">
                 {kdaRatio} KDA
               </div>
@@ -370,12 +373,12 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                 className="w-6 h-6 sm:w-7 sm:h-7 bg-slate-800 rounded overflow-hidden border border-slate-600 shrink-0"
               >
                 {itemId && itemId > 0 && (
-                <ItemIcon
-                  itemId={itemId.toString()}
-                  className="w-full h-full"
-                  withBorder={false}
-                  alt={`Item ${itemId}`}
-                />
+                  <ItemIcon
+                    itemId={itemId.toString()}
+                    className="w-full h-full"
+                    withBorder={false}
+                    alt={`Item ${itemId}`}
+                  />
                 )}
               </div>
             ))}
@@ -387,16 +390,17 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           {/* Sección del campeón */}
           <div className="flex items-center gap-3 w-48 shrink-0">
             <div className="relative">
-<ChampionIcon
-  championId={participant.championName}
-  size={48}
-  className="rounded-full border-2 border-slate-600"
-  alt={participant.championName}
-  withBorder={false}
-  withTooltip={false}
-/>
+              <ChampionIcon
+                championId={participant.championName}
+                size={48}
+                className="rounded-full border-2 border-slate-600"
+                alt={participant.championName}
+                withBorder={false}
+                withTooltip={false}
+              />
 
-              <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
+              <div
+                className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
                 {participant.champLevel}
               </div>
             </div>
@@ -507,9 +511,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             className="text-red-400 border-red-500/30 hover:bg-red-500/10 shrink-0"
           >
             {isRefreshing ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin"/>
             ) : (
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4"/>
             )}
           </Button>
         </div>
@@ -525,7 +529,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
 
   return (
     <div className="space-y-4 min-w-0">
-      
+
       <div className="bg-slate-800 rounded-lg p-4 sm:p-6 shadow-md">
         <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
           <h2 className="text-lg sm:text-xl font-bold text-white min-w-0 flex-1">
@@ -542,7 +546,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           {isLoading && matches.length === 0 && (
             <>
               <div className="flex flex-col items-center justify-center py-8">
-                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4"/>
                 <p className="text-white font-medium text-center">
                   Cargando historial de partidas...
                 </p>
@@ -564,7 +568,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                 .fill(0)
                 .map((_, idx) => renderMatchSkeleton(idx))}
               <div className="flex justify-center pt-2">
-                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+                <Loader2 className="w-6 h-6 text-blue-500 animate-spin"/>
               </div>
             </div>
           )}

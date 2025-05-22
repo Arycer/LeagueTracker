@@ -30,9 +30,9 @@ interface UserProviderProps {
  * Proveedor del contexto de usuario
  * Proporciona acceso global a la información del usuario autenticado
  */
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
-  const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
+export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
+  const {isLoaded: isAuthLoaded, isSignedIn} = useAuth();
+  const {user: clerkUser, isLoaded: isUserLoaded} = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<UserData>({
     id: null,
@@ -47,7 +47,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     // Actualizar los datos del usuario cuando cambia el estado de autenticación
     if (isAuthLoaded && isUserLoaded) {
       setIsLoading(false);
-      
+
       if (isSignedIn && clerkUser) {
         // Usuario autenticado, extraer información relevante
         setUserData({
@@ -58,7 +58,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           isLoaded: true,
           isSignedIn: true,
         });
-        
+
         console.log('✅ Información de usuario cargada:', clerkUser.username);
       } else {
         // Usuario no autenticado
@@ -70,14 +70,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           isLoaded: true,
           isSignedIn: false,
         });
-        
+
         console.log('ℹ️ No hay usuario autenticado');
       }
     }
   }, [isAuthLoaded, isUserLoaded, isSignedIn, clerkUser]);
 
   return (
-    <UserContext.Provider value={{ user: userData, isLoading }}>
+    <UserContext.Provider value={{user: userData, isLoading}}>
       {children}
     </UserContext.Provider>
   );

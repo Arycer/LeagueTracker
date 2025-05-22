@@ -3,7 +3,7 @@ import React from 'react';
 import {FriendsSidebar} from '../friends';
 
 const RightSidebar = () => {
-  return <FriendsSidebar />;
+  return <FriendsSidebar/>;
 };
 
 export default RightSidebar;

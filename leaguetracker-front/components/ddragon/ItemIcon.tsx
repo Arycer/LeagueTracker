@@ -17,15 +17,15 @@ export interface ItemIconProps {
  * Componente para mostrar el icono de un ítem
  */
 const ItemIcon: React.FC<ItemIconProps> = ({
-  itemId,
-  size = 32,
-  className,
-  withBorder = true,
-  withTooltip = false,
-  alt,
-  emptySlot = false,
-}) => {
-  const { getItemIcon, isLoading } = useDDragon();
+                                             itemId,
+                                             size = 32,
+                                             className,
+                                             withBorder = true,
+                                             withTooltip = false,
+                                             alt,
+                                             emptySlot = false,
+                                           }) => {
+  const {getItemIcon, isLoading} = useDDragon();
 
   // Si quieres que el tamaño pueda ser controlado vía CSS, permite size opcional y que si se pasa className con w/h, respete eso.
   // Por eso ponemos tamaño fijo pero con estilos css para que pueda adaptarse.
@@ -39,7 +39,7 @@ const ItemIcon: React.FC<ItemIconProps> = ({
           emptySlot && 'opacity-30',
           className
         )}
-        style={{ width: size, height: size }}
+        style={{width: size, height: size}}
         title={withTooltip ? `Item ${itemId}` : undefined}
       />
     );
@@ -52,7 +52,7 @@ const ItemIcon: React.FC<ItemIconProps> = ({
         withBorder && 'border border-blue-900/100',
         className
       )}
-      style={{ width: size, height: size }}
+      style={{width: size, height: size}}
       title={withTooltip ? `Item ${itemId}` : undefined}
     >
       <Image

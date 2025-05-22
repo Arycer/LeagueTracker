@@ -31,51 +31,51 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClerkProvider>
-          <UserProvider>
-            <DDragonProvider>
-              <WebSocketProvider>
-                <FriendsProvider>
-                  <ModalProvider>
-                    <ChatProvider>
-                      <FavoriteProfilesProvider>
-                        <LinkedAccountsProvider>
-                          <ModalProvider>
-                            <MainLayout>{children}</MainLayout>
-                            <Modal />
-                          </ModalProvider>
-                        </LinkedAccountsProvider>
-                      </FavoriteProfilesProvider>
-                      <Toaster
-                        position="top-right"
-                        toastOptions={{
-                          style: {
-                            background: "#0f172a",
-                            color: "#ffffff",
-                            border: "1px solid rgba(59, 130, 246, 0.3)",
-                            fontWeight: "500",
-                          },
-                          className: "dark-toast",
-                          descriptionClassName: "text-white",
-                        }}
-                      />
-                    </ChatProvider>
-                  </ModalProvider>
-                </FriendsProvider>
-              </WebSocketProvider>
-            </DDragonProvider>
-          </UserProvider>
-        </ClerkProvider>
-      </body>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+    <ClerkProvider>
+      <UserProvider>
+        <DDragonProvider>
+          <WebSocketProvider>
+            <FriendsProvider>
+              <ModalProvider>
+                <ChatProvider>
+                  <FavoriteProfilesProvider>
+                    <LinkedAccountsProvider>
+                      <ModalProvider>
+                        <MainLayout>{children}</MainLayout>
+                        <Modal/>
+                      </ModalProvider>
+                    </LinkedAccountsProvider>
+                  </FavoriteProfilesProvider>
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      style: {
+                        background: "#0f172a",
+                        color: "#ffffff",
+                        border: "1px solid rgba(59, 130, 246, 0.3)",
+                        fontWeight: "500",
+                      },
+                      className: "dark-toast",
+                      descriptionClassName: "text-white",
+                    }}
+                  />
+                </ChatProvider>
+              </ModalProvider>
+            </FriendsProvider>
+          </WebSocketProvider>
+        </DDragonProvider>
+      </UserProvider>
+    </ClerkProvider>
+    </body>
     </html>
   );
 }

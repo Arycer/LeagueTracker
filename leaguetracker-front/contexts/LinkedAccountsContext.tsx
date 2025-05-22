@@ -56,7 +56,7 @@ interface LinkedAccountsContextType {
   error: string | null;
   actionLoading: string | null;
   pendingActionState: PendingActionState;
-  
+
   // Acciones
   fetchAccounts: () => Promise<void>;
   fetchPendingAccounts: () => Promise<void>;
@@ -66,7 +66,7 @@ interface LinkedAccountsContextType {
   cancelPendingAccount: (id: string) => Promise<boolean>;
   verifyPendingAccount: (id: string) => Promise<boolean>;
   refreshAll: () => Promise<void>;
-  
+
   // Acciones de vinculación
   linkAccount: (request: LinkRequest) => Promise<LinkResponse | null>;
   verifyAccount: () => Promise<boolean>;
@@ -84,7 +84,7 @@ interface LinkedAccountsProviderProps {
  * Proveedor del contexto de cuentas vinculadas
  * Gestiona el estado y las operaciones relacionadas con las cuentas de LoL vinculadas
  */
-export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ children }) => {
+export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({children}) => {
   // Estado
   const [accounts, setAccounts] = useState<LolAccount[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<PendingLolAccount[]>([]);
@@ -93,20 +93,20 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [pendingActionState, setPendingActionState] = useState<PendingActionState>({});
-  
+
   // Hooks
-  const { get, post, delete: del } = useApi();
-  const { success, error: showError, info } = useToast();
-  const { currentVersion } = useDDragon();
-  
+  const {get, post, delete: del} = useApi();
+  const {success, error: showError, info} = useToast();
+  const {currentVersion} = useDDragon();
+
   // Obtener cuentas vinculadas
   const fetchAccounts = useCallback(async () => {
     console.log("Obteniendo cuentas vinculadas...");
     try {
       const res = await get('/api/lol/accounts/accounts');
-      
+
       console.log("Respuesta completa de cuentas vinculadas:", res);
-      
+
       if (res.ok) {
         // Si la respuesta es exitosa pero no hay datos, asumimos una lista vacía
         if (!res.data) {
@@ -127,15 +127,15 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       setError("Error de conexión al obtener cuentas vinculadas");
     }
   }, [get]);
-  
+
   // Obtener cuenta principal
   const fetchMainAccount = useCallback(async () => {
     console.log("Obteniendo cuenta principal...");
     try {
       const res = await get('/api/lol/accounts/main');
-      
+
       console.log("Respuesta completa de cuenta principal:", res);
-      
+
       if (res.ok) {
         // Si la respuesta es exitosa pero no hay datos, no hay cuenta principal
         if (!res.data) {
@@ -154,14 +154,14 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       setMainAccountId(null);
     }
   }, [get]);
-  
+
   // Establecer cuenta principal
   const setMainAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Estableciendo cuenta ${id} como principal...`);
-    
+
     const res = await post(`/api/lol/accounts/${id}/set-main`);
-    
+
     if (res.ok) {
       console.log("Cuenta principal actualizada correctamente");
       await Promise.all([fetchAccounts(), fetchMainAccount()]);
@@ -175,12 +175,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       return false;
     }
   }, [post, fetchAccounts, fetchMainAccount, success, showError]);
-  
+
   // Obtener cuentas pendientes
   const fetchPendingAccounts = useCallback(async () => {
     console.log("Obteniendo cuentas pendientes...");
     const res = await get('/api/lol/accounts/pending');
-    
+
     if (res.ok && res.data) {
       setPendingAccounts(Array.isArray(res.data) ? res.data : []);
       console.log("Cuentas pendientes obtenidas:", res.data);
@@ -188,14 +188,14 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       console.error("Error al obtener cuentas pendientes:", res.error);
     }
   }, [get]);
-  
+
   // Desvincular cuenta
   const unlinkAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Desvinculando cuenta ${id}...`);
-    
+
     const res = await del(`/api/lol/accounts/${id}`);
-    
+
     if (res.ok) {
       console.log("Cuenta desvinculada correctamente");
       await fetchAccounts();
@@ -209,12 +209,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       return false;
     }
   }, [del, fetchAccounts, success, showError]);
-  
+
   // Cancelar cuenta pendiente
   const cancelPendingAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Cancelando cuenta pendiente ${id}...`);
-    
+
     const res = await del(`/api/lol/accounts/pending/${id}`);
 
     if (res.ok) {
@@ -230,24 +230,24 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       return false;
     }
   }, [del, fetchPendingAccounts, success, showError]);
-  
+
   // Verificar cuenta pendiente
   const verifyPendingAccount = useCallback(async (id: string) => {
     setPendingActionState((prev) => ({
       ...prev,
-      [id]: { verifying: true, verificationResult: "idle" },
+      [id]: {verifying: true, verificationResult: "idle"},
     }));
-    
+
     console.log(`Verificando cuenta pendiente ${id}...`);
-    const res = await post('/api/lol/accounts/verify', { pendingAccountId: id });
-    
+    const res = await post('/api/lol/accounts/verify', {pendingAccountId: id});
+
     if (res.ok && res.data && res.data.verified) {
       console.log("Cuenta verificada correctamente");
       setPendingActionState((prev) => ({
         ...prev,
-        [id]: { verifying: false, verificationResult: "success" },
+        [id]: {verifying: false, verificationResult: "success"},
       }));
-      
+
       await Promise.all([fetchPendingAccounts(), fetchAccounts()]);
       success("Cuenta verificada", "La cuenta ha sido verificada y vinculada correctamente");
       return true;
@@ -261,20 +261,20 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
           errorMsg: res.error || "No se pudo verificar la cuenta. Asegúrate de tener el icono correcto.",
         },
       }));
-      
+
       showError(
-        "Error de verificación", 
+        "Error de verificación",
         res.error || "No se pudo verificar la cuenta. Asegúrate de tener el icono correcto."
       );
       return false;
     }
   }, [post, fetchPendingAccounts, fetchAccounts, success, showError]);
-  
+
   // Actualizar todos los datos
   const refreshAll = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await Promise.all([
         fetchAccounts(),
@@ -289,12 +289,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       setIsLoading(false);
     }
   }, [fetchAccounts, fetchPendingAccounts, fetchMainAccount]);
-  
+
   // Iniciar proceso de vinculación
   const linkAccount = useCallback(async (request: LinkRequest): Promise<LinkResponse | null> => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Convertir a Record<string, unknown> para satisfacer el tipo esperado por post
       const requestData: Record<string, unknown> = {
@@ -302,9 +302,9 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
         tagline: request.tagline,
         region: request.region
       };
-      
+
       const res = await post('/api/lol/accounts/link', requestData);
-      
+
       if (res.ok && res.data) {
         const response: LinkResponse = {
           requiredIcon: res.data.requiredIcon
@@ -314,7 +314,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       } else {
         // Extraer el mensaje de error de la respuesta
         let errorMessage = 'Error desconocido al vincular la cuenta';
-        
+
         if (res.error) {
           try {
             // Intentar parsear el error si es un string JSON
@@ -331,10 +331,10 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
             errorMessage = res.error;
           }
         }
-        
+
         // Mostrar el error como toast en lugar de en la consola
         showError('Error de vinculación', errorMessage);
-        
+
         setError(errorMessage);
         return null;
       }
@@ -347,19 +347,19 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       setIsLoading(false);
     }
   }, [post, info, showError]);
-  
+
   // Verificar cuenta (sin ID específico)
   const verifyAccount = useCallback(async (): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       console.log("Verificando cuenta...");
-      
+
       const res = await post('/api/lol/accounts/verify');
-      
+
       console.log("Respuesta de verificación:", res);
-      
+
       if (res.ok && res.data && res.data.verified) {
         console.log("Cuenta verificada correctamente");
         await Promise.all([fetchPendingAccounts(), fetchAccounts()]);
@@ -368,7 +368,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       } else {
         console.error("Error al verificar cuenta:", res.error);
         showError(
-          "Error de verificación", 
+          "Error de verificación",
           res.error || "No se pudo verificar la cuenta. Asegúrate de tener el icono correcto."
         );
         return false;
@@ -381,12 +381,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({ 
       setIsLoading(false);
     }
   }, [post, fetchPendingAccounts, fetchAccounts, success, showError]);
-  
+
   // Cargar datos iniciales al montar el componente
   useEffect(() => {
     refreshAll();
   }, [refreshAll]);
-  
+
   return (
     <LinkedAccountsContext.Provider
       value={{

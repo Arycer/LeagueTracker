@@ -13,13 +13,13 @@ import {getRegionLabel} from '@/constants/regions';
  * Muestra las cuentas de LoL vinculadas al usuario y permite gestionar las cuentas pendientes
  */
 export default function LinkedAccountsPage() {
-  const { 
-    accounts, 
-    pendingAccounts, 
-    mainAccountId, 
-    isLoading, 
-    error, 
-    actionLoading, 
+  const {
+    accounts,
+    pendingAccounts,
+    mainAccountId,
+    isLoading,
+    error,
+    actionLoading,
     pendingActionState,
     setMainAccount,
     unlinkAccount,
@@ -27,13 +27,13 @@ export default function LinkedAccountsPage() {
     verifyPendingAccount,
     refreshAll
   } = useLinkedAccounts();
-  
+
   // Renderizar una cuenta vinculada
   const renderAccount = (account: LolAccount) => {
     const isMain = account.id === mainAccountId;
-    
+
     return (
-      <div 
+      <div
         key={account.id}
         className={`flex flex-row items-center gap-4 p-4 border-b border-blue-900/40 bg-[#1e293b]/70 rounded-md ${
           isMain ? 'ring-2 ring-blue-500' : ''
@@ -41,14 +41,14 @@ export default function LinkedAccountsPage() {
       >
         {/* Icono de perfil */}
         <div className="flex-shrink-0">
-          <ProfileIcon 
-            iconId={account.profileIconId} 
-            size={56} 
+          <ProfileIcon
+            iconId={account.profileIconId}
+            size={56}
             withBorder={true}
             alt={`Icono de perfil de ${account.summonerName}`}
           />
         </div>
-        
+
         {/* Información de la cuenta */}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-white flex items-center gap-2 truncate">
@@ -63,7 +63,7 @@ export default function LinkedAccountsPage() {
             {getRegionLabel(account.region)} • {account.verified ? 'Verificada' : 'Pendiente de verificación'}
           </div>
         </div>
-        
+
         {/* Botones de acción */}
         <div className="flex flex-col gap-2 items-end">
           {account.verified && !isMain && (
@@ -90,14 +90,14 @@ export default function LinkedAccountsPage() {
       </div>
     );
   };
-  
+
   // Renderizar una cuenta pendiente
   const renderPendingAccount = (pending: PendingLolAccount) => {
     const pendingState = pendingActionState[pending.id] || {
       verifying: false,
       verificationResult: 'idle',
     };
-    
+
     return (
       <div
         key={pending.id}
@@ -105,15 +105,15 @@ export default function LinkedAccountsPage() {
       >
         {/* Icono requerido */}
         <div className="flex-shrink-0">
-          <ProfileIcon 
-            iconId={pending.profileIconId} 
-            size={56} 
+          <ProfileIcon
+            iconId={pending.profileIconId}
+            size={56}
             withBorder={true}
             className="border-blue-700 border-2"
             alt="Icono requerido para verificación"
           />
         </div>
-        
+
         {/* Información de la cuenta pendiente */}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-white truncate">
@@ -136,7 +136,7 @@ export default function LinkedAccountsPage() {
             </div>
           )}
         </div>
-        
+
         {/* Botones de acción */}
         <div className="flex flex-col gap-2 items-end">
           <Button
@@ -161,26 +161,28 @@ export default function LinkedAccountsPage() {
       </div>
     );
   };
-  
+
   return (
-    <div className="w-full min-h-full flex flex-col items-center py-8 px-4 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
+    <div
+      className="w-full min-h-full flex flex-col items-center py-8 px-4 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
       {isLoading && (
         <div className="flex items-center justify-center h-64 w-full">
-          <Spinner size="lg" className="text-blue-500" />
+          <Spinner size="lg" className="text-blue-500"/>
           <span className="ml-3 text-white">Cargando cuentas...</span>
         </div>
       )}
-      
+
       {!isLoading && (
         <div className="w-full max-w-2xl flex flex-col gap-8">
           {/* Encabezado */}
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-bold text-white">Cuentas vinculadas</h1>
             <p className="text-gray-300">
-              Vincula tus cuentas de League of Legends para acceder a estadísticas y funcionalidades adicionales.
+              Vincula tus cuentas de League of Legends para acceder a estadísticas y funcionalidades
+              adicionales.
             </p>
           </div>
-          
+
           {/* Cuentas vinculadas */}
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -194,7 +196,7 @@ export default function LinkedAccountsPage() {
                 Vincular nueva
               </Link>
             </div>
-            
+
             {accounts.length === 0 ? (
               <div className="p-6 bg-[#1e293b]/50 rounded-md text-center">
                 <div className="text-blue-100 mb-4">
@@ -222,7 +224,7 @@ export default function LinkedAccountsPage() {
               </div>
             )}
           </div>
-          
+
           {/* Cuentas pendientes */}
           {pendingAccounts.length > 0 && (
             <div>
@@ -234,7 +236,7 @@ export default function LinkedAccountsPage() {
               </div>
             </div>
           )}
-          
+
           {/* Mensaje de error */}
           {error && (
             <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-md text-red-300">

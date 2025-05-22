@@ -45,19 +45,19 @@ interface FriendsContextType {
   friendsMainAccounts: Record<string, FriendMainAccount | null>;
   incomingRequests: FriendRequestDto[];
   outgoingRequests: FriendRequestDto[];
-  
+
   // Estado de carga
   isLoading: boolean;
   isLoadingIncoming: boolean;
   isLoadingOutgoing: boolean;
-  
+
   // Acciones
   sendFriendRequest: (username: string) => Promise<boolean>;
   acceptFriendRequest: (username: string) => Promise<boolean>;
   rejectFriendRequest: (username: string) => Promise<boolean>;
   removeFriend: (username: string) => Promise<boolean>;
   getFriendMainAccount: (username: string) => Promise<FriendMainAccount | null>;
-  
+
   // Actualizaciones
   refreshFriends: () => Promise<void>;
   refreshIncomingRequests: () => Promise<void>;
@@ -76,46 +76,46 @@ interface FriendsProviderProps {
  * Proveedor del contexto de amigos
  * Gestiona la lista de amigos, solicitudes y estado de presencia
  */
-export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) => {
-  const { user, isLoading: isLoadingUser } = useUserContext();
-  const { connected, subscribe, unsubscribe } = useWebSocket();
-  const { get, post, delete: del } = useApi();
-  const { success, error: showError, info } = useToast();
-  
+export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
+  const {user, isLoading: isLoadingUser} = useUserContext();
+  const {connected, subscribe, unsubscribe} = useWebSocket();
+  const {get, post, delete: del} = useApi();
+  const {success, error: showError, info} = useToast();
+
   // Estado para amigos y solicitudes
   const [friends, setFriends] = useState<string[]>([]);
   const [friendsStatus, setFriendsStatus] = useState<Record<string, boolean>>({});
   const [friendsMainAccounts, setFriendsMainAccounts] = useState<Record<string, FriendMainAccount | null>>({});
   const [incomingRequests, setIncomingRequests] = useState<FriendRequestDto[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<FriendRequestDto[]>([]);
-  
+
   // Estado de carga
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingIncoming, setIsLoadingIncoming] = useState(true);
   const [isLoadingOutgoing, setIsLoadingOutgoing] = useState(true);
-  
+
   // Cargar la lista de amigos
   const refreshFriends = async () => {
     if (!user.isSignedIn) return;
-    
+
     setIsLoading(true);
     try {
       const response = await get<string[]>('/api/friends');
       if (response.ok && response.data) {
         setFriends(response.data);
-        
+
         // Inicializar el estado de presencia para todos los amigos
         const initialStatus: Record<string, boolean> = {};
         for (const friend of response.data) {
           initialStatus[friend] = false;
-          
+
           // Consultar el estado de presencia de cada amigo
           const presenceResponse = await get<PresenceStatus>(`/api/presence/is-online/${friend}`);
           if (presenceResponse.ok && presenceResponse.data) {
             initialStatus[friend] = presenceResponse.data.online;
           }
         }
-        
+
         setFriendsStatus(initialStatus);
       }
     } catch (err) {
@@ -124,11 +124,11 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       setIsLoading(false);
     }
   };
-  
+
   // Cargar solicitudes entrantes
   const refreshIncomingRequests = async () => {
     if (!user.isSignedIn) return;
-    
+
     setIsLoadingIncoming(true);
     try {
       const response = await get<FriendRequestDto[]>('/api/friends/requests/incoming');
@@ -141,11 +141,11 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       setIsLoadingIncoming(false);
     }
   };
-  
+
   // Cargar solicitudes salientes
   const refreshOutgoingRequests = async () => {
     if (!user.isSignedIn) return;
-    
+
     setIsLoadingOutgoing(true);
     try {
       const response = await get<FriendRequestDto[]>('/api/friends/requests/outgoing');
@@ -158,16 +158,16 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       setIsLoadingOutgoing(false);
     }
   };
-  
+
   // Enviar solicitud de amistad
   const sendFriendRequest = async (username: string): Promise<boolean> => {
     try {
       // Mostrar mensaje de depuración
       console.log(`Enviando solicitud a: ${username}`);
-      
+
       // Enviar solicitud a la API
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}`);
-      
+
       if (response.ok) {
         success('Solicitud enviada', `Se ha enviado una solicitud de amistad a ${username}`);
         refreshOutgoingRequests();
@@ -182,16 +182,16 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       return false;
     }
   };
-  
+
   // Aceptar solicitud de amistad
   const acceptFriendRequest = async (username: string): Promise<boolean> => {
     try {
       // Mostrar mensaje de depuración
       console.log(`Aceptando solicitud de: ${username}`);
-      
+
       // Enviar solicitud a la API usando query params
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}/respond?accept=true`);
-      
+
       if (response.ok) {
         success('Solicitud aceptada', `Ahora eres amigo de ${username}`);
         refreshIncomingRequests();
@@ -207,16 +207,16 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       return false;
     }
   };
-  
+
   // Rechazar solicitud de amistad
   const rejectFriendRequest = async (username: string): Promise<boolean> => {
     try {
       // Mostrar mensaje de depuración
       console.log(`Rechazando solicitud de: ${username}`);
-      
+
       // Enviar solicitud a la API usando query params
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}/respond?accept=false`);
-      
+
       if (response.ok) {
         info('Solicitud rechazada', `Has rechazado la solicitud de ${username}`);
         refreshIncomingRequests();
@@ -231,16 +231,16 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       return false;
     }
   };
-  
+
   // Eliminar amigo
   const removeFriend = async (username: string): Promise<boolean> => {
     try {
       // Mostrar mensaje de depuración
       console.log(`Eliminando amigo: ${username}`);
-      
+
       // Enviar solicitud a la API usando el endpoint correcto
       const response = await del(`/api/friends/delete/${username}`);
-      
+
       if (response.ok) {
         info('Amigo eliminado', `Has eliminado a ${username} de tu lista de amigos`);
         refreshFriends();
@@ -255,7 +255,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       return false;
     }
   };
-  
+
   // Obtener la cuenta principal de un amigo
   const getFriendMainAccount = async (username: string): Promise<FriendMainAccount | null> => {
     try {
@@ -263,10 +263,10 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       if (friendsMainAccounts[username] !== undefined) {
         return friendsMainAccounts[username];
       }
-      
+
       // Obtener la cuenta principal del amigo
       const response = await get<FriendMainAccount>(`/api/lol/accounts/main/${username}`);
-      
+
       if (response.ok && response.data) {
         // Guardar en caché
         setFriendsMainAccounts(prev => ({
@@ -287,38 +287,38 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       return null;
     }
   };
-  
+
   // Suscribirse a actualizaciones de presencia
   useEffect(() => {
     if (!connected || !user.isSignedIn) return;
-    
+
     const subscription = subscribe('/topic/presence-updates', (message) => {
       try {
         const data = JSON.parse(message.body);
-        const { event, username } = data;
-        
+        const {event, username} = data;
+
         if (friends.includes(username)) {
           setFriendsStatus(prev => ({
             ...prev,
             [username]: event === 'connected'
           }));
-          
+
           if (event === 'connected') {
-            info(`${username} está en línea`, '', { duration: 3000 });
+            info(`${username} está en línea`, '', {duration: 3000});
           }
         }
       } catch (err) {
         console.error('Error al procesar actualización de presencia:', err);
       }
     });
-    
+
     return () => {
       if (subscription) {
         unsubscribe(subscription);
       }
     };
   }, [connected, user.isSignedIn, friends, subscribe, unsubscribe, info]);
-  
+
   // Cargar datos iniciales cuando el usuario esté autenticado
   useEffect(() => {
     if (user.isSignedIn && !isLoadingUser) {
@@ -327,7 +327,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({ children }) =>
       refreshOutgoingRequests();
     }
   }, [user.isSignedIn, isLoadingUser]);
-  
+
   return (
     <FriendsContext.Provider
       value={{

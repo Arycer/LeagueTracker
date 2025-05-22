@@ -21,7 +21,7 @@ interface ChatContextType {
   messages: Record<string, ChatMessage[]>;
   loadingHistory: boolean;
   unreadMessages: Record<string, number>;
-  
+
   // Acciones
   setActiveChat: (username: string | null) => void;
   sendMessage: (recipientUsername: string, content: string) => Promise<boolean>;
@@ -38,41 +38,41 @@ interface ChatProviderProps {
 }
 
 // Proveedor del contexto
-export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
+export const ChatProvider: React.FC<ChatProviderProps> = ({children}) => {
   // Estado
   const [activeChat, setActiveChat] = useState<string | null>(null);
   const [messages, setMessages] = useState<Record<string, ChatMessage[]>>({});
   const [loadingHistory, setLoadingHistory] = useState<boolean>(false);
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
-  
+
   // Hooks
-  const { connected, subscribe, unsubscribe, sendMessage: sendWsMessage } = useWebSocket();
-  const { get } = useApi();
+  const {connected, subscribe, unsubscribe, sendMessage: sendWsMessage} = useWebSocket();
+  const {get} = useApi();
   const toast = useToast();
   const userContext = useUserContext();
-  
+
   // Cargar historial de chat
   const loadChatHistory = useCallback(async (otherUsername: string) => {
     const currentUser = userContext.user?.username;
     if (!currentUser) return;
-    
+
     // Usamos una variable local para evitar dependencias circulares
     let isCurrentlyLoading = false;
-    
+
     // Evitar cargar el historial si ya estamos cargando
     if (loadingHistory) return;
-    
+
     setLoadingHistory(true);
     isCurrentlyLoading = true;
-    
+
     try {
       // Usar la URL correcta según el controlador del backend
       const response = await get<ChatMessage[]>(`/api/chat/history/${otherUsername}`);
-      
+
       if (response.ok && response.data) {
         // Ordenar mensajes por timestamp para asegurar que se muestran en orden cronológico
         const sortedMessages = [...response.data].sort((a, b) => a.timestamp - b.timestamp);
-        
+
         // Solo actualizar si hay mensajes
         if (sortedMessages.length > 0) {
           setMessages(prev => {
@@ -98,7 +98,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       }
     }
   }, [get, userContext.user?.username, toast]);
-  
+
   // Enviar mensaje
   const sendMessage = useCallback(async (recipientUsername: string, content: string): Promise<boolean> => {
     const currentUsername = userContext.user?.username;
@@ -106,7 +106,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       toast.error('Error', 'No estás conectado al servidor');
       return false;
     }
-    
+
     try {
       const message: ChatMessage = {
         senderUsername: currentUsername,
@@ -114,10 +114,10 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         content,
         timestamp: Date.now()
       };
-      
+
       // Enviar mensaje a través de WebSocket
       sendWsMessage('/app/chat.sendMessage', message);
-      
+
       // Actualizar estado local inmediatamente
       setMessages(prev => {
         const existingMessages = prev[recipientUsername] || [];
@@ -127,7 +127,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         };
         return updatedMessages;
       });
-      
+
       return true;
     } catch (err) {
       console.error('Error al enviar mensaje:', err);
@@ -135,7 +135,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       return false;
     }
   }, [connected, sendWsMessage]);
-  
+
   // Suscribirse a mensajes entrantes cuando el usuario está autenticado
   useEffect(() => {
     const currentUsername = userContext.user?.username;
@@ -148,7 +148,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         const body = messageData.body;
         const chatMessage: ChatMessage = JSON.parse(body);
         const chatKey = chatMessage.senderUsername;
-        
+
         // Actualizar mensajes
         setMessages(prev => {
           const existingMessages = prev[chatKey] || [];
@@ -158,7 +158,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
           };
           return updatedMessages;
         });
-        
+
         // Incrementar contador de mensajes no leídos si no es el chat activo
         if (activeChat !== chatKey) {
           setUnreadMessages(prev => ({
@@ -170,26 +170,26 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         console.error('Error al procesar mensaje recibido:', err);
       }
     });
-    
+
     return () => {
       if (currentUsername && subscription) {
         unsubscribe(subscription);
       }
     };
   }, [connected, userContext.user?.username, subscribe, unsubscribe]);
-  
+
   // Cambiar chat activo
   const handleSetActiveChat = useCallback((username: string | null) => {
     setActiveChat(username);
     if (username) {
       // Marcar mensajes como leídos cuando se activa un chat
       markMessagesAsRead(username);
-      
+
       // No cargamos el historial aquí para evitar bucles infinitos
       // El efecto en ChatInterface se encargará de cargar el historial cuando sea necesario
     }
   }, []);
-  
+
   // Marcar mensajes como leídos
   const markMessagesAsRead = useCallback((username: string) => {
     setUnreadMessages(prev => ({
@@ -197,7 +197,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       [username]: 0
     }));
   }, []);
-  
+
   const value = {
     activeChat,
     messages,
@@ -208,7 +208,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     loadChatHistory,
     markMessagesAsRead
   };
-  
+
   return (
     <ChatContext.Provider value={value}>
       {children}

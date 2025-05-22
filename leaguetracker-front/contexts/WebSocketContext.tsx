@@ -22,11 +22,11 @@ interface WebSocketProviderProps {
   children: ReactNode;
 }
 
-export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
+export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({children}) => {
   const [client, setClient] = useState<Client | null>(null);
   const clientRef = useRef<Client | null>(null);
   const [connected, setConnected] = useState(false);
-  const { getToken } = useAuth();
+  const {getToken} = useAuth();
   const subscriptionsRef = useRef<StompSubscription[]>([]);
 
   const createClient = useCallback(async () => {
@@ -39,11 +39,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         clientRef.current = null;
         setConnected(false);
       }
-      
+
       // Obtener token fresco
       let token: string | null = null;
       try {
-        token = await getToken({ template: 'DefaultJWT' });
+        token = await getToken({template: 'DefaultJWT'});
         if (!token) {
           console.log('🔑 No hay token disponible para WebSocket, posiblemente no autenticado');
           return;
@@ -52,7 +52,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         console.log('👤 Usuario no autenticado, no se puede establecer conexión WebSocket');
         return;
       }
-      
+
       console.log('🔑 Token obtenido, creando conexión WebSocket');
       const socket = new SockJS(WS_URL);
       const stompClient = new Client({
@@ -99,7 +99,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         clientRef.current = null;
         setConnected(false);
       };
-      
+
       window.addEventListener('beforeunload', handleUnload);
 
       return () => {
@@ -117,7 +117,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
   useEffect(() => {
     // Iniciar la conexión WebSocket
     createClient();
-    
+
     // Función de limpieza
     return () => {
       // La limpieza se maneja dentro de createClient cuando se desactiva
@@ -140,7 +140,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       clientRef.current.publish({
         destination,
         body: typeof body === 'string' ? body : JSON.stringify(body),
-        headers: { 'content-type': 'application/json' },
+        headers: {'content-type': 'application/json'},
       });
     } else {
       console.warn('⚠️ Intento de enviar mensaje sin conexión WebSocket activa');
@@ -170,7 +170,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
   };
 
   return (
-    <WebSocketContext.Provider value={{ connected, client, sendMessage, subscribe, unsubscribe, reconnect }}>
+    <WebSocketContext.Provider value={{connected, client, sendMessage, subscribe, unsubscribe, reconnect}}>
       {children}
     </WebSocketContext.Provider>
   );

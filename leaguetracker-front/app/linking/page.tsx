@@ -24,7 +24,7 @@ type LinkingStep = 'search' | 'verify' | 'success';
  */
 export default function LinkingPage() {
   const router = useRouter();
-  const { linkAccount, verifyAccount, isLoading: contextLoading} = useLinkedAccounts();
+  const {linkAccount, verifyAccount, isLoading: contextLoading} = useLinkedAccounts();
   const {error: showError} = useToast();
 
   // Estado
@@ -35,38 +35,38 @@ export default function LinkingPage() {
   const [requiredIcon, setRequiredIcon] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Iniciar proceso de vinculación
   const handleLinkRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!summonerName.trim()) {
       showError('Error', 'Debes introducir un nombre de invocador');
       return;
     }
-    
+
     if (!tagline.trim()) {
       showError('Error', 'Debes introducir un tagline');
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Normalizar el tagline (eliminar # si está presente)
       const normalizedTagline = tagline.startsWith('#') ? tagline.substring(1) : tagline;
-      
+
       // Preparar la solicitud
       const request: LinkRequest = {
         summonerName: summonerName.trim(),
         tagline: normalizedTagline.trim(),
         region
       };
-      
+
       // Usar la función del contexto para iniciar la vinculación
       const response = await linkAccount(request);
-      
+
       if (response) {
         // Guardar el icono requerido para la verificación
         setRequiredIcon(response.requiredIcon);
@@ -81,18 +81,18 @@ export default function LinkingPage() {
       setIsLoading(false);
     }
   };
-  
+
   // Verificar cuenta
   const handleVerify = async () => {
     if (!requiredIcon) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Usar la función del contexto para verificar la cuenta
       const verified = await verifyAccount();
-      
+
       if (verified) {
         setStep('success');
       } else {
@@ -105,12 +105,12 @@ export default function LinkingPage() {
       setIsLoading(false);
     }
   };
-  
+
   // Ir a la página de cuentas vinculadas
   const handleGoToAccounts = () => {
     router.push('/linked-accounts');
   };
-  
+
   // Renderizar el paso de búsqueda
   const renderSearchStep = () => (
     <Card className="w-full max-w-md bg-[#1e293b]/70 border-blue-900/40">
@@ -129,7 +129,7 @@ export default function LinkingPage() {
               onValueChange={(value) => setRegion(value as Region)}
             >
               <SelectTrigger className="bg-[#0f172a] border-blue-900/40 text-white">
-                <SelectValue placeholder="Selecciona una región" />
+                <SelectValue placeholder="Selecciona una región"/>
               </SelectTrigger>
               <SelectContent className="bg-[#0f172a] border-blue-900/40 text-white">
                 {REGIONS.map((regionItem) => (
@@ -140,7 +140,7 @@ export default function LinkingPage() {
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-200">Nombre de invocador</label>
             <Input
@@ -151,7 +151,7 @@ export default function LinkingPage() {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-200">Tagline</label>
             <Input
@@ -165,13 +165,13 @@ export default function LinkingPage() {
               El tagline es el código que aparece después del # en tu nombre de Riot (ej: Nombre#0000)
             </p>
           </div>
-          
+
           {error && (
             <div className="p-3 bg-red-900/20 border border-red-500/50 rounded-md text-red-300 text-sm">
               {error}
             </div>
           )}
-          
+
           <Button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
@@ -179,7 +179,7 @@ export default function LinkingPage() {
           >
             {(isLoading || contextLoading) ? (
               <>
-                <Spinner size="sm" className="mr-2" />
+                <Spinner size="sm" className="mr-2"/>
                 Iniciando vinculación...
               </>
             ) : (
@@ -195,11 +195,11 @@ export default function LinkingPage() {
       </CardFooter>
     </Card>
   );
-  
+
   // Renderizar el paso de verificación
   const renderVerifyStep = () => {
     if (!requiredIcon) return null;
-    
+
     return (
       <Card className="w-full max-w-md bg-[#1e293b]/70 border-blue-900/40">
         <CardHeader>
@@ -213,9 +213,9 @@ export default function LinkingPage() {
             <h3 className="text-lg font-semibold text-white">Cambia tu icono de perfil</h3>
             <div className="flex flex-col items-center">
               <div className="mb-2">
-                <ProfileIcon 
-                  iconId={requiredIcon} 
-                  size={96} 
+                <ProfileIcon
+                  iconId={requiredIcon}
+                  size={96}
                   withBorder={true}
                   className="border-blue-700 border-2"
                   alt="Icono requerido para verificación"
@@ -225,7 +225,7 @@ export default function LinkingPage() {
                 Cambia tu icono de perfil a este en el cliente de League of Legends
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="text-md font-medium text-white">Pasos:</h4>
               <ol className="text-sm text-gray-300 space-y-2 list-decimal pl-5">
@@ -239,13 +239,13 @@ export default function LinkingPage() {
               </ol>
             </div>
           </div>
-          
+
           {error && (
             <div className="p-3 bg-red-900/20 border border-red-500/50 rounded-md text-red-300 text-sm">
               {error}
             </div>
           )}
-          
+
           <Button
             onClick={handleVerify}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
@@ -253,7 +253,7 @@ export default function LinkingPage() {
           >
             {(isLoading || contextLoading) ? (
               <>
-                <Spinner size="sm" className="mr-2" />
+                <Spinner size="sm" className="mr-2"/>
                 Verificando...
               </>
             ) : (
@@ -277,7 +277,7 @@ export default function LinkingPage() {
       </Card>
     );
   };
-  
+
   // Renderizar el paso de éxito
   const renderSuccessStep = () => (
     <Card className="w-full max-w-md bg-[#1e293b]/70 border-blue-900/40">
@@ -291,7 +291,7 @@ export default function LinkingPage() {
         <div className="flex flex-col items-center justify-center p-6">
           <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/>
             </svg>
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">¡Verificación completada!</h3>
@@ -299,7 +299,7 @@ export default function LinkingPage() {
             Tu cuenta de League of Legends ha sido vinculada correctamente a tu perfil.
           </p>
         </div>
-        
+
         <Button
           onClick={handleGoToAccounts}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
@@ -309,7 +309,7 @@ export default function LinkingPage() {
       </CardContent>
     </Card>
   );
-  
+
   // Renderizar el paso actual
   const renderCurrentStep = () => {
     switch (step) {
@@ -323,9 +323,10 @@ export default function LinkingPage() {
         return renderSearchStep();
     }
   };
-  
+
   return (
-    <div className="w-full min-h-full flex flex-col items-center justify-center py-8 px-4 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
+    <div
+      className="w-full min-h-full flex flex-col items-center justify-center py-8 px-4 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
       {renderCurrentStep()}
     </div>
   );

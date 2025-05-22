@@ -6,7 +6,7 @@ import {useUserContext} from '@/contexts/UserContext';
  * Componente que muestra la información del usuario actual
  */
 const UserInfo = () => {
-  const { user, isLoading } = useUserContext();
+  const {user, isLoading} = useUserContext();
 
   if (isLoading) {
     return (
@@ -32,23 +32,23 @@ const UserInfo = () => {
   return (
     <div className="p-4 bg-card rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">Información de Usuario</h2>
-      
+
       <div className="space-y-2">
         <div>
           <span className="font-medium text-muted-foreground">ID: </span>
           <span className="font-mono text-sm">{user.id}</span>
         </div>
-        
+
         <div>
           <span className="font-medium text-muted-foreground">Nombre de usuario: </span>
           <span>{user.username || 'No disponible'}</span>
         </div>
-        
+
         <div>
           <span className="font-medium text-muted-foreground">Nombre completo: </span>
           <span>{user.fullName || 'No disponible'}</span>
         </div>
-        
+
         <div>
           <span className="font-medium text-muted-foreground">Email: </span>
           <span>{user.email || 'No disponible'}</span>

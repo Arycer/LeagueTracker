@@ -7,16 +7,16 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({children}: MainLayoutProps) => {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
-      <Header />
+      <Header/>
       <div className="flex flex-1 overflow-hidden">
-        <LeftSidebar />
+        <LeftSidebar/>
         <main className={`flex-1 overflow-y-auto p-0`}>
           {children}
         </main>
-        <RightSidebar />
+        <RightSidebar/>
       </div>
     </div>
   );

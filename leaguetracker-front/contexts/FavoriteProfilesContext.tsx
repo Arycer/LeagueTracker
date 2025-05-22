@@ -22,14 +22,14 @@ export interface AddFavoriteProfileRequest {
 interface FavoriteProfilesContextType {
   // Perfiles favoritos
   favorites: FavoriteProfile[];
-  
+
   // Estado de carga
   isLoading: boolean;
-  
+
   // Acciones
   addFavorite: (request: AddFavoriteProfileRequest) => Promise<boolean>;
   deleteFavorite: (id: string) => Promise<boolean>;
-  
+
   // Actualizaciones
   refreshFavorites: () => Promise<void>;
 }
@@ -46,17 +46,17 @@ interface FavoriteProfilesProviderProps {
  * Proveedor del contexto de perfiles favoritos
  * Gestiona la lista de perfiles favoritos del usuario
  */
-export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> = ({ children }) => {
-  const { user, isLoading: isLoadingUser } = useUserContext();
-  const { get, post, delete: del } = useApi();
-  const { success, error: showError } = useToast();
-  
+export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> = ({children}) => {
+  const {user, isLoading: isLoadingUser} = useUserContext();
+  const {get, post, delete: del} = useApi();
+  const {success, error: showError} = useToast();
+
   // Estado para perfiles favoritos
   const [favorites, setFavorites] = useState<FavoriteProfile[]>([]);
-  
+
   // Estado de carga
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Cargar la lista de perfiles favoritos
   const refreshFavorites = async () => {
     if (!user.isSignedIn) {
@@ -64,7 +64,7 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
       setIsLoading(false);
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const response = await get<FavoriteProfile[]>('/api/lol/favorites');
@@ -77,32 +77,32 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
       setIsLoading(false);
     }
   };
-  
+
   // Añadir perfil favorito
   const addFavorite = async (request: AddFavoriteProfileRequest): Promise<boolean> => {
     try {
       // Procesar el nombre y el tagline correctamente
       let summonerName = request.summonerName;
       let tagline = request.tagline;
-      
+
       // Si el nombre contiene un # pero no hay tagline, separarlos
       if (summonerName.includes('#') && !tagline) {
         const parts = summonerName.split('#');
         summonerName = parts[0];
         tagline = parts[1] || '';
       }
-      
-      console.log('Guardando favorito:', { region: request.region, summonerName, tagline });
-      
+
+      console.log('Guardando favorito:', {region: request.region, summonerName, tagline});
+
       // Convertir a Record<string, unknown> para satisfacer el tipo esperado por post
       const requestData: Record<string, unknown> = {
         region: request.region,
         summonerName: summonerName,
         tagline: tagline
       };
-      
+
       const response = await post<FavoriteProfile>('/api/lol/favorites', requestData);
-      
+
       if (response.ok && response.data) {
         success('Perfil añadido', `${request.summonerName} ha sido añadido a tus favoritos`);
         refreshFavorites();
@@ -117,12 +117,12 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
       return false;
     }
   };
-  
+
   // Eliminar perfil favorito
   const deleteFavorite = async (id: string): Promise<boolean> => {
     try {
       const response = await del(`/api/lol/favorites/${id}`);
-      
+
       if (response.ok) {
         const deletedProfile = favorites.find(fav => fav.id === id);
         const profileName = deletedProfile ? deletedProfile.summonerName : 'El perfil';
@@ -139,12 +139,12 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
       return false;
     }
   };
-  
+
   // Cargar perfiles favoritos al iniciar o cuando cambia el usuario
   useEffect(() => {
     refreshFavorites();
   }, [user.isSignedIn]);
-  
+
   // Valor del contexto
   const value: FavoriteProfilesContextType = {
     favorites,
@@ -153,7 +153,7 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
     deleteFavorite,
     refreshFavorites
   };
-  
+
   return (
     <FavoriteProfilesContext.Provider value={value}>
       {children}

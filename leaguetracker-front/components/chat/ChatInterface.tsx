@@ -11,23 +11,23 @@ interface ChatInterfaceProps {
   recipientUsername: string;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
   const [message, setMessage] = useState('');
-  const { messages, sendMessage, activeChat, setActiveChat, loadingHistory, loadChatHistory } = useChatContext();
+  const {messages, sendMessage, activeChat, setActiveChat, loadingHistory, loadChatHistory} = useChatContext();
   const userContext = useUserContext();
   const currentUsername = userContext.user.username;
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   // Activar el chat al montar el componente
   useEffect(() => {
     // Establecer el chat activo
     setActiveChat(recipientUsername);
-    
+
     return () => {
       setActiveChat(null);
     };
   }, [recipientUsername, setActiveChat]);
-  
+
   // Extract complex expression to a separate variable
   const currentChatMessages = messages[recipientUsername];
   const hasMessages = currentChatMessages && currentChatMessages.length > 0;
@@ -60,7 +60,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
 
   // Scroll al último mensaje
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
   }, [currentChatMessages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -80,8 +80,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
       {/* Cabecera del chat */}
       <div className="py-4 px-4 border-b border-[#1e293b] bg-[#0f172a]/80 flex items-center">
         <Avatar className="h-10 w-10 mr-3 border border-[#1e293b]">
-          <AvatarImage src={`https://avatar.vercel.sh/${recipientUsername}`} />
-          <AvatarFallback className="bg-[#1e293b] text-blue-400">{recipientUsername.charAt(0).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={`https://avatar.vercel.sh/${recipientUsername}`}/>
+          <AvatarFallback
+            className="bg-[#1e293b] text-blue-400">{recipientUsername.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div>
           <h2 className="text-lg font-semibold text-white">{recipientUsername}</h2>
@@ -112,28 +113,33 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
               const messageDate = new Date(msg.timestamp);
 
               return (
-                <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2 w-full`}>
+                <div key={index}
+                     className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2 w-full`}>
                   <div className="flex items-end gap-2 max-w-[70%]">
                     {!isMe && (
                       <Avatar className="h-7 w-7 mb-0.5 flex-shrink-0">
-                        <AvatarImage src={`https://avatar.vercel.sh/${msg.senderUsername}`} />
+                        <AvatarImage src={`https://avatar.vercel.sh/${msg.senderUsername}`}/>
                         <AvatarFallback>{msg.senderUsername.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                     )}
                     <div className="break-words overflow-hidden max-w-full">
-                      <div className={`rounded-lg px-3 py-2 break-all hyphens-auto ${isMe 
-                        ? 'bg-blue-600 text-white rounded-tr-none' 
+                      <div className={`rounded-lg px-3 py-2 break-all hyphens-auto ${isMe
+                        ? 'bg-blue-600 text-white rounded-tr-none'
                         : 'bg-[#1e293b] text-white rounded-tl-none'
                       }`}>
-                        <span className="whitespace-pre-wrap overflow-wrap-anywhere">{msg.content}</span>
+                                                <span
+                                                  className="whitespace-pre-wrap overflow-wrap-anywhere">{msg.content}</span>
                       </div>
                       <div className="text-xs text-gray-400 mt-0.5 px-1 text-right">
-                        {messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {messageDate.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
                       </div>
                     </div>
                     {isMe && (
                       <Avatar className="h-7 w-7 mb-0.5 flex-shrink-0">
-                        <AvatarImage src={`https://avatar.vercel.sh/${currentUsername}`} />
+                        <AvatarImage src={`https://avatar.vercel.sh/${currentUsername}`}/>
                         <AvatarFallback>{currentUsername.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                     )}
@@ -141,7 +147,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
                 </div>
               );
             })}
-            <div ref={messagesEndRef} className="h-1" />
+            <div ref={messagesEndRef} className="h-1"/>
           </div>
         )}
       </div>

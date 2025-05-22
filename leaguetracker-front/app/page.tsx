@@ -11,17 +11,17 @@ export default function Home() {
   const [region, setRegion] = useState("euw");
   const [summonerName, setSummonerName] = useState("");
   const [tagline, setTagline] = useState("");
-  
+
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!summonerName.trim()) return;
-    
+
     const formattedTagline = tagline.startsWith("#") ? tagline.substring(1) : tagline;
-    
+
     router.push(`/summoner/${region}/${encodeURIComponent(summonerName)}/${formattedTagline}`);
   };
-  
+
   return (
     <div className="flex flex-col items-center justify-center w-full py-8">
       {/* Hero Section */}
@@ -32,9 +32,10 @@ export default function Home() {
             <span className="text-white">Tracker</span>
           </h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            Información acerca de tus partidas de League of Legends y las de tus amigos y oponentes en un solo lugar.
+            Información acerca de tus partidas de League of Legends y las de tus amigos y oponentes en un
+            solo lugar.
           </p>
-          
+
           {/* Search Form */}
           <div className="w-full max-w-xl mx-auto mt-8">
             <Card className="bg-[#1e293b]/70 border-blue-900/30">
@@ -42,7 +43,7 @@ export default function Home() {
                 <form onSubmit={handleSearch} className="flex flex-col space-y-4">
                   <div className="flex space-x-2">
                     <div className="w-1/4">
-                      <select 
+                      <select
                         value={region}
                         onChange={(e) => setRegion(e.target.value)}
                         className="w-full h-10 px-3 rounded-md bg-[#0f172a] border border-blue-900/30 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -55,21 +56,21 @@ export default function Home() {
                       </select>
                     </div>
                     <div className="w-1/2">
-                      <Input 
-                        type="text" 
+                      <Input
+                        type="text"
                         value={summonerName}
                         onChange={(e) => setSummonerName(e.target.value)}
-                        placeholder="Nombre de invocador..." 
+                        placeholder="Nombre de invocador..."
                         className="h-10 bg-[#0f172a] border-blue-900/30 focus:ring-blue-500 text-white"
                         required
                       />
                     </div>
                     <div className="w-1/4">
-                      <Input 
-                        type="text" 
+                      <Input
+                        type="text"
                         value={tagline}
                         onChange={(e) => setTagline(e.target.value)}
-                        placeholder="#0000" 
+                        placeholder="#0000"
                         className="h-10 bg-[#0f172a] border-blue-900/30 focus:ring-blue-500 text-white"
                         required
                       />
@@ -91,19 +92,22 @@ export default function Home() {
           {/* Feature 1 */}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6">
             <h3 className="text-xl font-bold text-white mb-4">Estadísticas detalladas</h3>
-            <p className="text-gray-300">Accede a estadísticas completas de tus partidas y rendimiento con diferentes campeones.</p>
+            <p className="text-gray-300">Accede a estadísticas completas de tus partidas y rendimiento con
+              diferentes campeones.</p>
           </div>
-          
+
           {/* Feature 2 */}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6">
             <h3 className="text-xl font-bold text-white mb-4">Seguimiento de amigos</h3>
-            <p className="text-gray-300">Añade a tus amigos y sigue su progreso, compara estadísticas y celebra sus victorias.</p>
+            <p className="text-gray-300">Añade a tus amigos y sigue su progreso, compara estadísticas y
+              celebra sus victorias.</p>
           </div>
-          
+
           {/* Feature 3 */}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6">
             <h3 className="text-xl font-bold text-white mb-4">Análisis de partidas</h3>
-            <p className="text-gray-300">Revisa tus partidas pasadas con análisis detallado para mejorar tu juego.</p>
+            <p className="text-gray-300">Revisa tus partidas pasadas con análisis detallado para mejorar tu
+              juego.</p>
           </div>
         </div>
       </div>

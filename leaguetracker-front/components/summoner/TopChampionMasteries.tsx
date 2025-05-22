@@ -15,13 +15,13 @@ interface TopChampionMasteriesProps {
 /**
  * Componente que muestra las 3 mejores maestrías de campeones de un invocador
  */
-const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({ 
-  summonerName, 
-  tagline, 
-  region 
-}) => {
-  const { getTopMasteries, isLoading } = useChampionMastery();
-  const { getChampionById, currentVersion } = useDDragon();
+const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
+                                                                     summonerName,
+                                                                     tagline,
+                                                                     region
+                                                                   }) => {
+  const {getTopMasteries, isLoading} = useChampionMastery();
+  const {getChampionById, currentVersion} = useDDragon();
   const [masteries, setMasteries] = useState<ChampionMasteryDTO[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,30 +57,39 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
   // Obtener color según nivel de maestría
   const getMasteryColor = (level: number): string => {
     switch (level) {
-      case 7: return 'text-purple-500';
-      case 6: return 'text-pink-500';
-      case 5: return 'text-red-500';
-      case 4: return 'text-orange-500';
-      case 3: return 'text-yellow-500';
-      case 2: return 'text-blue-500';
-      case 1: return 'text-gray-500';
-      default: return 'text-gray-500';
+      case 7:
+        return 'text-purple-500';
+      case 6:
+        return 'text-pink-500';
+      case 5:
+        return 'text-red-500';
+      case 4:
+        return 'text-orange-500';
+      case 3:
+        return 'text-yellow-500';
+      case 2:
+        return 'text-blue-500';
+      case 1:
+        return 'text-gray-500';
+      default:
+        return 'text-gray-500';
     }
   };
 
   if (isLoading) {
     return (
       <div className="bg-[#1e293b] rounded-lg p-4 shadow-md">
-        <h2 className="text-lg font-semibold text-white mb-4 text-center sm:text-left">Campeones más jugados</h2>
+        <h2 className="text-lg font-semibold text-white mb-4 text-center sm:text-left">Campeones más
+          jugados</h2>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-[#0f172a] p-3 rounded-md flex items-center">
-              <Skeleton className="w-12 h-12 rounded-full mr-3 bg-blue-900/20" />
+              <Skeleton className="w-12 h-12 rounded-full mr-3 bg-blue-900/20"/>
               <div className="flex-1">
-                <Skeleton className="h-4 w-24 bg-blue-900/20 mb-1" />
-                <Skeleton className="h-3 w-16 bg-blue-900/20" />
+                <Skeleton className="h-4 w-24 bg-blue-900/20 mb-1"/>
+                <Skeleton className="h-3 w-16 bg-blue-900/20"/>
               </div>
-              <Skeleton className="h-4 w-16 bg-blue-900/20" />
+              <Skeleton className="h-4 w-16 bg-blue-900/20"/>
             </div>
           ))}
         </div>
@@ -91,7 +100,8 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
   if (error || masteries.length === 0) {
     return (
       <div className="bg-[#1e293b] rounded-lg p-4 shadow-md">
-        <h2 className="text-lg font-semibold text-white mb-4 text-center sm:text-left">Campeones más jugados</h2>
+        <h2 className="text-lg font-semibold text-white mb-4 text-center sm:text-left">Campeones más
+          jugados</h2>
         <div className="text-center py-6 text-gray-400">
           <p>No hay información de maestría disponible</p>
         </div>
@@ -106,21 +116,22 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
         {masteries.map((mastery) => {
           const champion = getChampionById(mastery.championId.toString());
           const championName = champion?.name || 'Desconocido';
-          const championImage = champion ? 
-            `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champion.image.full}` : 
+          const championImage = champion ?
+            `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champion.image.full}` :
             '/placeholder.png';
-          
+
           return (
             <div key={mastery.championId} className="bg-[#0f172a] p-3 rounded-md flex items-center">
               <div className="relative mr-3 flex-shrink-0">
-                <Image 
-                  src={championImage} 
-                  alt={championName} 
-                  width={48} 
-                  height={48} 
+                <Image
+                  src={championImage}
+                  alt={championName}
+                  width={48}
+                  height={48}
                   className="rounded-full object-cover border-2 border-blue-900/50"
                 />
-                <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#0f172a] flex items-center justify-center text-xs font-semibold ${getMasteryColor(mastery.championLevel)} border border-blue-900/50`}>
+                <div
+                  className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#0f172a] flex items-center justify-center text-xs font-semibold ${getMasteryColor(mastery.championLevel)} border border-blue-900/50`}>
                   {mastery.championLevel}
                 </div>
               </div>
