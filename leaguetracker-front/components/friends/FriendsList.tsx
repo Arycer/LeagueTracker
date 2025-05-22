@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {FriendMainAccount, useFriends} from '@/contexts/FriendsContext';
+import Link from "next/link";
 
 interface FriendsListProps {
   friends: string[];
@@ -75,12 +76,12 @@ const FriendsList: React.FC<FriendsListProps> = ({
         <p className="text-sm text-gray-300 mb-4">
           Añade amigos para ver su estado y jugar juntos.
         </p>
-        <button
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
-          onClick={() => document.querySelector('[data-tab="add"]')?.dispatchEvent(new MouseEvent('click'))}
+        <Link
+          href="/friends"
+          className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
         >
-          Añadir amigos
-        </button>
+          Ir a amigos
+        </Link>
       </div>
     );
   }
