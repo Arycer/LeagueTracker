@@ -32,6 +32,7 @@ class LolProfileCacheService(
                 objectMapper.readValue(cached.leagueEntriesJson, Array<LeagueEntryDTO>::class.java).toList()
             return SummonerProfileDTO(
                 name = cached.summonerName,
+                tagline = tagline,
                 puuid = puuid,
                 summonerLevel = cached.summonerLevel,
                 profileIconId = cached.profileIconId,
@@ -76,7 +77,8 @@ class LolProfileCacheService(
         lolProfileCacheRepository.save(cacheEntity)
 
         return SummonerProfileDTO(
-            name = summoner.name ?: "$summonerName#$tagline",
+            name = summonerName,
+            tagline = tagline,
             puuid = puuid,
             summonerLevel = summoner.summonerLevel,
             profileIconId = summoner.profileIconId,

@@ -4,6 +4,7 @@ import me.arycer.leaguetracker.dto.league.LeagueEntryDTO
 
 data class SummonerProfileDTO(
     val name: String,
+    val tagline: String,
     val puuid: String,
     val summonerLevel: Long,
     val profileIconId: Int,
