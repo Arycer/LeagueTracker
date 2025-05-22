@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useMatches } from "@/hooks/useMatches";
-import { MatchSummary } from "@/types/match";
+import { MatchSummary, MatchDto } from "@/types/match";
 import { useDDragon } from "@/contexts/DDragonContext";
+import { useApi } from "@/hooks/useApi";
+import { useToast } from "@/hooks/useToast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
@@ -9,6 +11,9 @@ import { Region } from "@/constants/regions";
 import { Button } from "@/components/ui/button";
 import { Loader2, RefreshCw } from "lucide-react";
 import { ItemIcon } from "../ddragon";
+import MatchDetailsModal from "./MatchDetailsModal";
+import { useModal } from "@/contexts/ModalContext";
+import { QUEUE_TYPES } from "@/constants/queueTypes";
 
 interface MatchHistoryProps {
   puuid: string;
@@ -16,16 +21,7 @@ interface MatchHistoryProps {
   summonerName: string;
 }
 
-// Mapeo de queueId a nombre de cola
-const QUEUE_TYPES: Record<number, string> = {
-  400: "Normal",
-  420: "Clasificatoria Solo/Dúo",
-  430: "Normal",
-  440: "Clasificatoria Flexible",
-  450: "ARAM",
-  700: "Clash",
-  1700: "Arena",
-};
+// El mapeo de queueId a nombre de cola se ha movido a constants/queueTypes.ts
 
 // Convierte segundos a formato mm:ss
 const formatGameDuration = (durationInSeconds: number): string => {
@@ -57,9 +53,17 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     );
 
   const { getChampionIcon, getItemIcon } = useDDragon();
+  const { get } = useApi();
+  const toast = useToast();
+  const { openModal, closeModal } = useModal();
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
+  
+  // Estados para el modal
+  const [selectedMatch, setSelectedMatch] = useState<MatchSummary | null>(null);
+  const [matchDetails, setMatchDetails] = useState<MatchDto | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   // Log para debugging
   useEffect(() => {
@@ -266,7 +270,8 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     return (
       <div
         key={uniqueKey}
-        className={`${bgColor} border rounded-lg p-3 sm:p-4 shadow-md transition-all hover:shadow-lg hover:scale-[1.01] duration-200 overflow-hidden`}
+        className={`${bgColor} border rounded-lg p-3 sm:p-4 shadow-md transition-all hover:shadow-lg hover:scale-[1.01] duration-200 overflow-hidden cursor-pointer`}
+        onClick={() => handleOpenMatchDetails(match)}
       >
         {/* Versión móvil y tablet */}
         <div className="flex flex-col space-y-3 md:hidden">
@@ -507,27 +512,51 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     );
   }
 
+  // Función para abrir el modal con detalles de la partida
+  const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
+    setSelectedMatch(match);
+    setLoadingDetails(true);
+    
+    try {
+      // Cargar los detalles completos de la partida
+      const response = await get<MatchDto>(
+        `/api/lol/match/match/${match.matchId}?region=${region}`,
+        {supressErrorToast: true}
+      );
+      
+      if (response.ok && response.data) {
+        setMatchDetails(response.data);
+        // Abrir el modal con el componente MatchDetailsModal como contenido
+        openModal(
+          <MatchDetailsModal
+            match={match}
+            matchDetails={response.data}
+            onClose={closeModal}
+            region={region}
+            summonerName={summonerName}
+          />
+        );
+      } else {
+        setMatchDetails(null);
+        console.log(`No se pudieron cargar los detalles completos para ${match.matchId}`);
+        toast.error("Error al cargar detalles", "No se pudieron cargar los detalles completos de la partida");
+      }
+    } catch (error) {
+      console.error('Error al cargar detalles de partida:', error);
+      toast.error('Error al cargar detalles', 'No se pudieron cargar los detalles completos de la partida');
+    } finally {
+      setLoadingDetails(false);
+    }
+  }, [get, region, toast, openModal, closeModal, summonerName]);
+
   return (
     <div className="space-y-4 min-w-0">
+      
       <div className="bg-slate-800 rounded-lg p-4 sm:p-6 shadow-md">
         <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
           <h2 className="text-lg sm:text-xl font-bold text-white min-w-0 flex-1">
             🎮 Historial de Partidas
           </h2>
-          <Button
-            onClick={handleRefresh}
-            disabled={isRefreshing || isLoading}
-            size="sm"
-            variant="outline"
-            className="text-slate-400 border-slate-600 hover:bg-slate-700 shrink-0"
-          >
-            {isRefreshing ? (
-              <Loader2 className="w-4 h-4 animate-spin sm:mr-2" />
-            ) : (
-              <RefreshCw className="w-4 h-4 sm:mr-2" />
-            )}
-            <span className="hidden sm:inline">Actualizar</span>
-          </Button>
         </div>
 
         {/* Lista de partidas */}

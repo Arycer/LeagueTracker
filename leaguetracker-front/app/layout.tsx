@@ -10,6 +10,8 @@ import { FriendsProvider } from "../contexts/FriendsContext";
 import { ChatProvider } from "../contexts/ChatContext";
 import { FavoriteProfilesProvider } from "../contexts/FavoriteProfilesContext";
 import { LinkedAccountsProvider } from "../contexts/LinkedAccountsContext";
+import { ModalProvider } from "@/contexts/ModalContext";
+import Modal from "@/components/ui/modal";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -43,26 +45,31 @@ export default function RootLayout({
             <DDragonProvider>
               <WebSocketProvider>
                 <FriendsProvider>
-                  <ChatProvider>
-                    <FavoriteProfilesProvider>
-                      <LinkedAccountsProvider>
-                        <MainLayout>{children}</MainLayout>
-                      </LinkedAccountsProvider>
-                    </FavoriteProfilesProvider>
-                    <Toaster 
-                      position="top-right" 
-                      toastOptions={{
-                        style: {
-                          background: '#0f172a',
-                          color: '#ffffff',
-                          border: '1px solid rgba(59, 130, 246, 0.3)',
-                          fontWeight: '500',
-                        },
-                        className: 'dark-toast',
-                        descriptionClassName: 'text-white',
-                      }}
-                    />
-                  </ChatProvider>
+                  <ModalProvider>
+                    <ChatProvider>
+                      <FavoriteProfilesProvider>
+                        <LinkedAccountsProvider>
+                          <ModalProvider>
+                            <MainLayout>{children}</MainLayout>
+                            <Modal />
+                          </ModalProvider>
+                        </LinkedAccountsProvider>
+                      </FavoriteProfilesProvider>
+                      <Toaster
+                        position="top-right"
+                        toastOptions={{
+                          style: {
+                            background: "#0f172a",
+                            color: "#ffffff",
+                            border: "1px solid rgba(59, 130, 246, 0.3)",
+                            fontWeight: "500",
+                          },
+                          className: "dark-toast",
+                          descriptionClassName: "text-white",
+                        }}
+                      />
+                    </ChatProvider>
+                  </ModalProvider>
                 </FriendsProvider>
               </WebSocketProvider>
             </DDragonProvider>
