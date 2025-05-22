@@ -64,15 +64,6 @@ const AddFriend: React.FC = () => {
           {isSubmitting ? 'Enviando...' : 'Enviar solicitud'}
         </button>
       </form>
-
-      <div className="mt-6">
-        <h4 className="text-sm font-medium text-gray-300 mb-2">¿Cómo funciona?</h4>
-        <ol className="text-sm text-gray-400 space-y-2 list-decimal pl-5">
-          <li>Introduce el nombre de usuario exacto de la persona que quieres añadir.</li>
-          <li>Envía la solicitud y espera a que la otra persona la acepte.</li>
-          <li>Una vez aceptada, podrás ver su estado online y jugar juntos.</li>
-        </ol>
-      </div>
     </div>
   );
 };
