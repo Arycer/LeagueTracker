@@ -81,11 +81,24 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
   // Añadir perfil favorito
   const addFavorite = async (request: AddFavoriteProfileRequest): Promise<boolean> => {
     try {
+      // Procesar el nombre y el tagline correctamente
+      let summonerName = request.summonerName;
+      let tagline = request.tagline;
+      
+      // Si el nombre contiene un # pero no hay tagline, separarlos
+      if (summonerName.includes('#') && !tagline) {
+        const parts = summonerName.split('#');
+        summonerName = parts[0];
+        tagline = parts[1] || '';
+      }
+      
+      console.log('Guardando favorito:', { region: request.region, summonerName, tagline });
+      
       // Convertir a Record<string, unknown> para satisfacer el tipo esperado por post
       const requestData: Record<string, unknown> = {
         region: request.region,
-        summonerName: request.summonerName,
-        tagline: request.tagline
+        summonerName: summonerName,
+        tagline: tagline
       };
       
       const response = await post<FavoriteProfile>('/api/lol/favorites', requestData);

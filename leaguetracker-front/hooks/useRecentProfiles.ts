@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // Tipo para los perfiles recientes
 export interface RecentProfile {
@@ -47,17 +47,42 @@ export const useRecentProfiles = () => {
   
   // Guardar perfiles en localStorage cuando cambian
   useEffect(() => {
-    if (!isLoading && typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(recentProfiles));
+    // Solo guardar si ya se ha completado la carga inicial y no estamos en SSR
+    if (!isLoading && typeof window !== 'undefined' && recentProfiles.length > 0) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(recentProfiles));
+      } catch (error) {
+        console.error('Error al guardar perfiles recientes:', error);
+      }
     }
   }, [recentProfiles, isLoading]);
+  
+  // Usar useRef para evitar dependencias circulares
+  const profilesRef = useRef(recentProfiles);
+  
+  // Actualizar la referencia cuando cambian los perfiles
+  useEffect(() => {
+    profilesRef.current = recentProfiles;
+  }, [recentProfiles]);
   
   /**
    * Añadir un perfil a la lista de recientes
    * Si ya existe, lo mueve al principio y actualiza su timestamp
    */
-  const addRecentProfile = (profile: Omit<RecentProfile, 'timestamp'>) => {
+  const addRecentProfile = useCallback((profile: Omit<RecentProfile, 'timestamp'>) => {
+    // Evitar actualizaciones durante SSR
+    if (typeof window === 'undefined') return;
+    
     setRecentProfiles(prevProfiles => {
+      // Verificar si el perfil es igual al último añadido para evitar actualizaciones innecesarias
+      if (
+        prevProfiles.length > 0 &&
+        prevProfiles[0].region === profile.region &&
+        prevProfiles[0].summonerName === profile.summonerName
+      ) {
+        return prevProfiles;
+      }
+      
       // Crear una copia de los perfiles actuales
       const updatedProfiles = [...prevProfiles];
       
@@ -80,23 +105,23 @@ export const useRecentProfiles = () => {
       // Limitar a MAX_RECENT_PROFILES perfiles
       return updatedProfiles.slice(0, MAX_RECENT_PROFILES);
     });
-  };
+  }, []);
   
   /**
    * Eliminar un perfil de la lista de recientes
    */
-  const removeRecentProfile = (profileId: string) => {
+  const removeRecentProfile = useCallback((profileId: string) => {
     setRecentProfiles(prevProfiles => 
       prevProfiles.filter(profile => profile.id !== profileId)
     );
-  };
+  }, []);
   
   /**
    * Limpiar todos los perfiles recientes
    */
-  const clearRecentProfiles = () => {
+  const clearRecentProfiles = useCallback(() => {
     setRecentProfiles([]);
-  };
+  }, []);
   
   return {
     recentProfiles,

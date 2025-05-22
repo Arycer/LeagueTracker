@@ -58,7 +58,7 @@ const RecentProfiles: React.FC = () => {
           {recentProfiles.map((profile) => (
             <Link 
               key={profile.id} 
-              href={`/summoner/${profile.region}/${profile.summonerName}`}
+              href={`/summoner/${profile.region.toLowerCase()}/${encodeURIComponent(profile.summonerName)}/${profile.tagline || ''}`}
               className="flex items-center justify-between p-2 rounded hover:bg-blue-900/20 text-gray-300 hover:text-white transition-colors group"
             >
               <div className="flex items-center overflow-hidden">

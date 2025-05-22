@@ -32,7 +32,7 @@ const ItemIcon: React.FC<ItemIconProps> = ({
     return (
       <div 
         className={cn(
-          'bg-blue-900/20 flex items-center justify-center rounded-md',
+          'bg-blue-900/90 flex items-center justify-center rounded-md',
           withBorder && 'border border-blue-900/30',
           emptySlot && 'opacity-30',
           className
@@ -46,7 +46,7 @@ const ItemIcon: React.FC<ItemIconProps> = ({
     <div 
       className={cn(
         'relative overflow-hidden rounded-md',
-        withBorder && 'border border-blue-900/30',
+        withBorder && 'border border-blue-900/100',
         className
       )}
       style={{ width: size, height: size }}

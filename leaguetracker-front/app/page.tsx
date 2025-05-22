@@ -19,7 +19,7 @@ export default function Home() {
     
     const formattedTagline = tagline.startsWith("#") ? tagline.substring(1) : tagline;
     
-    router.push(`/summoner/${region}/${encodeURIComponent(summonerName)}?tagline=${formattedTagline}`);
+    router.push(`/summoner/${region}/${encodeURIComponent(summonerName)}/${formattedTagline}`);
   };
   
   return (

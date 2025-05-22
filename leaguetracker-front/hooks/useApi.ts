@@ -18,6 +18,7 @@ export type ApiOptions = {
   skipAuth?: boolean;
   cache?: RequestCache;
   signal?: AbortSignal;
+  supressErrorToast?: boolean;
 };
 
 export const BASE_URL = 'http://localhost:8080';
@@ -52,7 +53,7 @@ export function useApi() {
     try {
       // Construir la URL completa
       const url = `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
-      console.log("Realizando solicitud a: " + url);
+      console.log("Realizando solicitud a: " + url + " con opciones: " + JSON.stringify(options));
       
       // Configurar los headers por defecto
       const headers: Record<string, string> = {
@@ -117,11 +118,13 @@ export function useApi() {
         setError(errorMessage);
         
         // Mostrar toast de error con información adicional
-        showErrorToast(
-          'Error en la solicitud', 
-          `${errorMessage}${endpoint ? ` (${endpoint})` : ''}`,
-          { duration: 6000 }
-        );
+        if (!options.supressErrorToast) {
+          showErrorToast(
+            'Error en la solicitud', 
+            `${errorMessage}${endpoint ? ` (${endpoint})` : ''}`,
+            { duration: 6000 }
+          );
+        }
       }
       
       return apiResponse;
@@ -130,11 +133,13 @@ export function useApi() {
       setError(errorMessage);
       
       // Mostrar toast de error
-      showErrorToast(
-        'Error de conexión', 
-        `No se pudo conectar con el servidor: ${errorMessage}`,
-        { duration: 6000 }
-      );
+      if (!options.supressErrorToast) {
+        showErrorToast(
+          'Error de conexión', 
+          `No se pudo conectar con el servidor: ${errorMessage}`,
+          { duration: 6000 }
+        );
+      }
       
       // Devolver una respuesta de error
       return {
