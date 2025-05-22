@@ -3,8 +3,8 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState} from 'react';
 import {useApi} from '@/hooks/useApi';
 import {useToast} from '@/hooks/useToast';
-import {useDDragon} from './DDragonContext';
 import {Region} from '@/constants/regions';
+import {useUserContext} from "@/contexts/UserContext";
 
 // Definición de tipos
 export interface LolAccount {
@@ -97,7 +97,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
   // Hooks
   const {get, post, delete: del} = useApi();
   const {success, error: showError, info} = useToast();
-  const {currentVersion} = useDDragon();
+  const {user} = useUserContext();
 
   // Obtener cuentas vinculadas
   const fetchAccounts = useCallback(async () => {
@@ -384,8 +384,10 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
 
   // Cargar datos iniciales al montar el componente
   useEffect(() => {
-    refreshAll();
-  }, [refreshAll]);
+    if (user.isSignedIn) {
+      refreshAll();
+    }
+  }, [refreshAll, user.isSignedIn]);
 
   return (
     <LinkedAccountsContext.Provider

@@ -47,7 +47,7 @@ interface FavoriteProfilesProviderProps {
  * Gestiona la lista de perfiles favoritos del usuario
  */
 export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> = ({children}) => {
-  const {user, isLoading: isLoadingUser} = useUserContext();
+  const {user} = useUserContext();
   const {get, post, delete: del} = useApi();
   const {success, error: showError} = useToast();
 
@@ -141,9 +141,7 @@ export const FavoriteProfilesProvider: React.FC<FavoriteProfilesProviderProps> =
   };
 
   useEffect(() => {
-    if (!isLoadingUser && user.isSignedIn) {
-      refreshFavorites();
-    }
+    refreshFavorites();
   }, [user.isSignedIn]);
 
   // Valor del contexto
