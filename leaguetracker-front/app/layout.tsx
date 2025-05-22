@@ -3,13 +3,15 @@ import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layout/main-layout";
 import {ClerkProvider} from "@clerk/nextjs";
-import {DDragonProvider} from "../contexts/DDragonContext";
-import {WebSocketProvider} from "../contexts/WebSocketContext";
-import {UserProvider} from "../contexts/UserContext";
-import {FriendsProvider} from "../contexts/FriendsContext";
-import {ChatProvider} from "../contexts/ChatContext";
-import {FavoriteProfilesProvider} from "../contexts/FavoriteProfilesContext";
-import {LinkedAccountsProvider} from "../contexts/LinkedAccountsContext";
+import {DDragonProvider} from "@/contexts/DDragonContext";
+import {WebSocketProvider} from "@/contexts/WebSocketContext";
+import {UserProvider} from "@/contexts/UserContext";
+import {FriendsProvider} from "@/contexts/FriendsContext";
+import {ChatProvider} from "@/contexts/ChatContext";
+import {FavoriteProfilesProvider} from "@/contexts/FavoriteProfilesContext";
+import {LinkedAccountsProvider} from "@/contexts/LinkedAccountsContext";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import {ModalProvider} from "@/contexts/ModalContext";
 import Modal from "@/components/ui/modal";
 import {Toaster} from "sonner";
@@ -40,6 +42,8 @@ export default function RootLayout({
     <body
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
+    <Analytics />
+    <SpeedInsights />
     <ClerkProvider>
       <UserProvider>
         <DDragonProvider>
