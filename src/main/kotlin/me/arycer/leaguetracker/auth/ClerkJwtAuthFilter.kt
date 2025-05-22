@@ -20,9 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.io.IOException
 import java.net.URL
-import java.text.ParseException
 import java.time.Instant
 import java.util.*
 
@@ -34,91 +32,86 @@ class ClerkJwtAuthFilter(
     private val jwkSetUrl = URL("https://clerk.lt.arycer.me/.well-known/jwks.json")
     private val jwkSet = RemoteJWKSet<SecurityContext>(jwkSetUrl)
 
-    @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val token = getTokenFromRequest(request)
+        val token = extractToken(request)
         if (token == null) {
             filterChain.doFilter(request, response)
             return
         }
 
-        try {
-            val signedJWT = SignedJWT.parse(token)
-
-            val kid = signedJWT.header.keyID
-            val jwkMatches = jwkSet.get(JWKSelector(JWKMatcher.forJWSHeader(signedJWT.header)), null)
-
-            val matchingKey = jwkMatches.firstOrNull() as? JWK
-                ?: throw JOSEException("No matching JWK found for kid: $kid")
-
-            val publicKey = matchingKey.toRSAKey().toRSAPublicKey()
-            val verifier: JWSVerifier = RSASSAVerifier(publicKey)
-
-            if (!signedJWT.verify(verifier)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature")
-                return
-            }
-
-            val claims = signedJWT.jwtClaimsSet
-            val now = Date.from(Instant.now())
-
-            val exp = claims.expirationTime
-            if (exp == null || exp.before(now)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired")
-                return
-            }
-
-            val userId = claims.subject ?: throw JOSEException("No subject in JWT")
-            val usernameClaim = claims.getStringClaim("username")
-
-            if (usernameClaim != null) {
-                val existingUser = userRepository.findById(userId).orElse(null)
-                if (existingUser == null) {
-                    createUserIfNotExists(usernameClaim, userId)
-                } else if (existingUser.username != usernameClaim) {
-                    updateUsernameEverywhere(userId, usernameClaim)
-                }
-            }
-
-            val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
-            val authentication = UsernamePasswordAuthenticationToken(userId, null, authorities)
-            SecurityContextHolder.getContext().authentication = authentication
-
-            filterChain.doFilter(request, response)
-        } catch (_: ParseException) {
+        val jwt = runCatching { SignedJWT.parse(token) }.getOrElse {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Malformed JWT")
-        } catch (e: JOSEException) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT verification failed: ${e.message}")
+            return
         }
+
+        val isValid = verifyToken(jwt)
+
+        if (!isValid) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature")
+            return
+        }
+
+        val claims = jwt.jwtClaimsSet
+        val now = Date.from(Instant.now())
+
+        if (claims.expirationTime?.before(now) != false) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired")
+            return
+        }
+
+        val userId = claims.subject ?: run {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No subject in JWT")
+            return
+        }
+
+        val username = claims.getStringClaim("username")
+        handleUserSync(userId, username)
+
+        val auth = UsernamePasswordAuthenticationToken(userId, null, listOf(SimpleGrantedAuthority("ROLE_USER")))
+        SecurityContextHolder.getContext().authentication = auth
+
+        filterChain.doFilter(request, response)
     }
 
-    @Synchronized
-    private fun createUserIfNotExists(usernameClaim: String, userId: String) {
-        val username = usernameClaim
-        val user = User(userId, username)
-        userRepository.save(user)
-    }
-
-    @Synchronized
-    private fun updateUsernameEverywhere(userId: String, newUsername: String) {
-        val user = userRepository.findById(userId).orElseThrow()
-        user.username = newUsername
-        userRepository.save(user)
-    }
-
-
-    private fun getTokenFromRequest(request: HttpServletRequest): String? {
-        request.cookies?.firstOrNull { it.name == "__session" }?.value?.let { return it }
-
+    private fun extractToken(request: HttpServletRequest): String? {
         val authHeader = request.getHeader("Authorization")
-        if (authHeader?.startsWith("Bearer ") == true) {
-            return authHeader.removePrefix("Bearer ")
+        return if (authHeader?.startsWith("Bearer ") == true) {
+            authHeader.removePrefix("Bearer ")
+        } else null
+    }
+
+    private fun verifyToken(jwt: SignedJWT): Boolean {
+        val jwk = runCatching {
+            jwkSet.get(JWKSelector(JWKMatcher.forJWSHeader(jwt.header)), null)
+                .firstOrNull() as? JWK
+        }.getOrNull() ?: return false
+
+        val publicKey = runCatching { jwk.toRSAKey().toRSAPublicKey() }.getOrNull() ?: return false
+        val verifier: JWSVerifier = RSASSAVerifier(publicKey)
+
+        return runCatching { jwt.verify(verifier) }.getOrElse { false }
+    }
+
+    @Synchronized
+    private fun handleUserSync(userId: String, username: String?) {
+        if (username == null) {
+            println("No username found in JWT claims for userId: $userId")
+            return
         }
 
-        return null
+        val existingUser = userRepository.findById(userId).orElse(null)
+
+        if (existingUser == null) {
+            println("Creating new user: $username ($userId)")
+            userRepository.save(User(userId, username))
+        } else if (existingUser.username != username) {
+            println("Updating username from ${existingUser.username} to $username")
+            existingUser.username = username
+            userRepository.save(existingUser)
+        }
     }
 }
