@@ -1,29 +1,25 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import {useSearchParams} from 'next/navigation';
-import ChatList from './ChatList';
-import ChatInterface from './ChatInterface';
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import ChatList from "./ChatList";
+import ChatInterface from "./ChatInterface";
 
-const ChatContainer: React.FC = () => {
-  const [selectedChat, setSelectedChat] = useState<string | null>(null);
+const ChatContainerContent: React.FC<{ selectedChat: string | null; setSelectedChat: React.Dispatch<React.SetStateAction<string | null>> }> = ({ selectedChat, setSelectedChat }) => {
   const searchParams = useSearchParams();
-  
-  // Efecto para detectar el parámetro de consulta username
+
   useEffect(() => {
-    const username = searchParams.get('username');
+    const username = searchParams.get("username");
     if (username) {
       setSelectedChat(username);
     }
-  }, [searchParams]);
-  
+  }, [searchParams, setSelectedChat]);
+
   return (
     <div className="flex h-full w-full overflow-hidden">
-      {/* Panel lateral de chats - ancho fijo con scroll propio */}
       <div className="w-72 h-full border-r border-[#1e293b]">
         <ChatList onSelectChat={setSelectedChat} />
       </div>
-      
-      {/* Área de chat - ocupa el resto del espacio disponible */}
+
       <div className="flex-1 h-full overflow-hidden">
         {selectedChat ? (
           <ChatInterface recipientUsername={selectedChat} />
@@ -37,6 +33,16 @@ const ChatContainer: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const ChatContainer: React.FC = () => {
+  const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+  return (
+    <Suspense fallback={<div>Cargando chats...</div>}>
+      <ChatContainerContent selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
+    </Suspense>
   );
 };
 

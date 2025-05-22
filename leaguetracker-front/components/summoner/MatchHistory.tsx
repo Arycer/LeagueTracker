@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useMatches} from "@/hooks/useMatches";
 import {MatchDto, MatchSummary} from "@/types/match";
-import {useDDragon} from "@/contexts/DDragonContext";
 import {useApi} from "@/hooks/useApi";
 import {useToast} from "@/hooks/useToast";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -14,6 +13,7 @@ import {ItemIcon} from "../ddragon";
 import MatchDetailsModal from "./MatchDetailsModal";
 import {useModal} from "@/contexts/ModalContext";
 import {QUEUE_TYPES} from "@/constants/queueTypes";
+import {ChampionIcon} from "@/components/ddragon";
 
 interface MatchHistoryProps {
   puuid: string;
@@ -52,7 +52,6 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
       hasValidData ? summonerName : ""
     );
 
-  const { getChampionIcon, getItemIcon } = useDDragon();
   const { get } = useApi();
   const toast = useToast();
   const { openModal, closeModal } = useModal();
@@ -60,11 +59,6 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
   
-  // Estados para el modal
-  const [selectedMatch, setSelectedMatch] = useState<MatchSummary | null>(null);
-  const [matchDetails, setMatchDetails] = useState<MatchDto | null>(null);
-  const [loadingDetails, setLoadingDetails] = useState(false);
-
   // Log para debugging
   useEffect(() => {
     console.log("📊 MatchHistory estado actualizado:", {
@@ -144,6 +138,35 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
       setIsRefreshing(false);
     }
   }, [isLoading, hasValidData, refreshMatches]);
+
+    const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
+    try {
+      // Cargar los detalles completos de la partida
+      const response = await get<MatchDto>(
+        `/api/lol/match/match/${match.matchId}?region=${region}`,
+        {supressErrorToast: true}
+      );
+
+      if (response.ok && response.data) {
+        // Abrir el modal con el componente MatchDetailsModal como contenido
+        openModal(
+          <MatchDetailsModal
+            match={match}
+            matchDetails={response.data}
+            onClose={closeModal}
+            region={region}
+            summonerName={summonerName}
+          />
+        );
+      } else {
+        console.log(`No se pudieron cargar los detalles completos para ${match.matchId}`);
+        toast.error("Error al cargar detalles", "No se pudieron cargar los detalles completos de la partida");
+      }
+    } catch (error) {
+      console.error('Error al cargar detalles de partida:', error);
+      toast.error('Error al cargar detalles', 'No se pudieron cargar los detalles completos de la partida');
+    }
+  }, [get, region, toast, openModal, closeModal, summonerName]);
 
   // Renderizar un esqueleto de carga para cada partida
   const renderMatchSkeleton = (index: number) => (
@@ -279,17 +302,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           <div className="flex items-center justify-between gap-2 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="relative shrink-0">
-                <img
-                  src={getChampionIcon(participant.championName)}
-                  alt={participant.championName}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-600"
-                  onError={(e) => {
-                    console.warn(
-                      `⚠️ Error cargando ícono del campeón: ${participant.championName}`
-                    );
-                    e.currentTarget.src = "/api/placeholder/48/48";
-                  }}
-                />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-600 overflow-hidden">
+                  <ChampionIcon championId={participant.championName} size={48} />
+                </div>
                 <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center border border-slate-600">
                   <span className="text-xs">{participant.champLevel}</span>
                 </div>
@@ -355,14 +370,12 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                 className="w-6 h-6 sm:w-7 sm:h-7 bg-slate-800 rounded overflow-hidden border border-slate-600 shrink-0"
               >
                 {itemId && itemId > 0 && (
-                  <img
-                    src={getItemIcon(itemId.toString())}
-                    alt={`Item ${itemId}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) =>
-                      (e.currentTarget.src = "/api/placeholder/32/32")
-                    }
-                  />
+                <ItemIcon
+                  itemId={itemId.toString()}
+                  className="w-full h-full"
+                  withBorder={false}
+                  alt={`Item ${itemId}`}
+                />
                 )}
               </div>
             ))}
@@ -374,17 +387,15 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           {/* Sección del campeón */}
           <div className="flex items-center gap-3 w-48 shrink-0">
             <div className="relative">
-              <img
-                src={getChampionIcon(participant.championName)}
-                alt={participant.championName}
-                className="w-12 h-12 rounded-full border-2 border-slate-600"
-                onError={(e) => {
-                  console.warn(
-                    `⚠️ Error cargando ícono del campeón: ${participant.championName}`
-                  );
-                  e.currentTarget.src = "/api/placeholder/48/48";
-                }}
-              />
+<ChampionIcon
+  championId={participant.championName}
+  size={48}
+  className="rounded-full border-2 border-slate-600"
+  alt={participant.championName}
+  withBorder={false}
+  withTooltip={false}
+/>
+
               <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
                 {participant.champLevel}
               </div>
@@ -511,43 +522,6 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
       </div>
     );
   }
-
-  // Función para abrir el modal con detalles de la partida
-  const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
-    setSelectedMatch(match);
-    setLoadingDetails(true);
-    
-    try {
-      // Cargar los detalles completos de la partida
-      const response = await get<MatchDto>(
-        `/api/lol/match/match/${match.matchId}?region=${region}`,
-        {supressErrorToast: true}
-      );
-      
-      if (response.ok && response.data) {
-        setMatchDetails(response.data);
-        // Abrir el modal con el componente MatchDetailsModal como contenido
-        openModal(
-          <MatchDetailsModal
-            match={match}
-            matchDetails={response.data}
-            onClose={closeModal}
-            region={region}
-            summonerName={summonerName}
-          />
-        );
-      } else {
-        setMatchDetails(null);
-        console.log(`No se pudieron cargar los detalles completos para ${match.matchId}`);
-        toast.error("Error al cargar detalles", "No se pudieron cargar los detalles completos de la partida");
-      }
-    } catch (error) {
-      console.error('Error al cargar detalles de partida:', error);
-      toast.error('Error al cargar detalles', 'No se pudieron cargar los detalles completos de la partida');
-    } finally {
-      setLoadingDetails(false);
-    }
-  }, [get, region, toast, openModal, closeModal, summonerName]);
 
   return (
     <div className="space-y-4 min-w-0">

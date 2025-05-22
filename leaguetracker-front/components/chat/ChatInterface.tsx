@@ -28,17 +28,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
     };
   }, [recipientUsername, setActiveChat]);
   
+  // Extract complex expression to a separate variable
+  const currentChatMessages = messages[recipientUsername];
+  const hasMessages = currentChatMessages && currentChatMessages.length > 0;
+
   // Cargar el historial solo cuando cambia el chat activo
   // y solo si no tenemos mensajes para ese chat
   useEffect(() => {
     // Usamos una variable para rastrear si ya se ha cargado el historial
     // para evitar bucles infinitos
     let isMounted = true;
-    
+
     const loadHistory = async () => {
       // Solo cargar si es el chat activo, no tenemos mensajes, y el componente sigue montado
-      if (isMounted && activeChat === recipientUsername && 
-          (!messages[recipientUsername] || messages[recipientUsername].length === 0)) {
+      if (isMounted && activeChat === recipientUsername && !hasMessages) {
         try {
           await loadChatHistory(recipientUsername);
         } catch (error) {
@@ -46,32 +49,32 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
         }
       }
     };
-    
+
     loadHistory();
-    
+
     // Función de limpieza para evitar actualizaciones de estado en componentes desmontados
     return () => {
       isMounted = false;
     };
-  }, [activeChat, recipientUsername, loadChatHistory]); // Quitamos 'messages' de las dependencias para evitar el bucle
-  
+  }, [activeChat, recipientUsername, loadChatHistory, hasMessages]);
+
   // Scroll al último mensaje
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages[recipientUsername]]);
-  
+  }, [currentChatMessages]);
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    
+
     const success = await sendMessage(recipientUsername, message.trim());
     if (success) {
       setMessage('');
     }
   };
-  
+
   const chatMessages = messages[recipientUsername] || [];
-  
+
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
       {/* Cabecera del chat */}
@@ -107,7 +110,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
             {chatMessages.map((msg, index) => {
               const isMe = msg.senderUsername === currentUsername;
               const messageDate = new Date(msg.timestamp);
-              
+
               return (
                 <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2 w-full`}>
                   <div className="flex items-end gap-2 max-w-[70%]">
@@ -152,8 +155,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ recipientUsername }) => {
             onChange={(e) => setMessage(e.target.value)}
             className="flex-1 bg-[#0f172a] border-[#1e293b] text-white h-10 px-4 rounded-full"
           />
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={!message.trim()}
             className="bg-blue-600 hover:bg-blue-700 text-white transition-colors rounded-full h-10 px-5 flex items-center justify-center"
           >

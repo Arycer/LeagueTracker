@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 
 export default function FriendsPage() {
   const router = useRouter();
-  const { user, isLoading: isLoadingUser } = useUserContext();
+  const { user} = useUserContext();
   const { 
     friends, 
     friendsStatus, 
@@ -28,10 +28,8 @@ export default function FriendsPage() {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [newFriendUsername, setNewFriendUsername] = useState('');
-  const [activeTab, setActiveTab] = useState('friends');
-  
-  // Filtrar amigos por término de búsqueda
-  const filteredFriends = friends.filter(friend => 
+
+  const filteredFriends = friends.filter(friend =>
     friend.toLowerCase().includes(searchTerm.toLowerCase())
   );
   

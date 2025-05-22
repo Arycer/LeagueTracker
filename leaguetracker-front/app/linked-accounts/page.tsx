@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import {LolAccount, PendingLolAccount, useLinkedAccounts} from '@/contexts/LinkedAccountsContext';
-import {useDDragon} from '@/contexts/DDragonContext';
 import {Button} from '@/components/ui/button';
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
 import {Spinner} from '@/components/ui/spinner';
@@ -28,8 +27,6 @@ export default function LinkedAccountsPage() {
     verifyPendingAccount,
     refreshAll
   } = useLinkedAccounts();
-  
-  const { currentVersion } = useDDragon();
   
   // Renderizar una cuenta vinculada
   const renderAccount = (account: LolAccount) => {

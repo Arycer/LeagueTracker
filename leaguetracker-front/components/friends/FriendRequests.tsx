@@ -1,7 +1,6 @@
 "use client";
 import React, {useState} from 'react';
 import {FriendRequestDto, useFriends} from '@/contexts/FriendsContext';
-import {useToast} from '@/hooks/useToast';
 
 interface FriendRequestsProps {
   incomingRequests: FriendRequestDto[];
@@ -20,7 +19,6 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
   isLoadingOutgoing
 }) => {
   const { acceptFriendRequest, rejectFriendRequest } = useFriends();
-  const { success } = useToast();
   const [activeTab, setActiveTab] = useState<'incoming' | 'outgoing'>('incoming');
   
   // Renderizar un esqueleto de carga

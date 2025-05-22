@@ -1,11 +1,10 @@
 import React from "react";
 import {X} from "lucide-react";
 import {MatchDto, MatchSummary} from "@/types/match";
-import {useDDragon} from "@/contexts/DDragonContext";
 import {formatDistanceToNow} from "date-fns";
 import {es} from "date-fns/locale";
 import {Button} from "@/components/ui/button";
-import {ItemIcon} from "@/components/ddragon";
+import {ChampionIcon, ItemIcon} from "@/components/ddragon";
 import Link from "next/link";
 import {Region} from "@/constants/regions";
 import {QUEUE_TYPES} from "@/constants/queueTypes";
@@ -40,10 +39,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
   matchDetails,
   onClose,
   region,
-  summonerName,
 }) => {
-  const { getChampionIcon } = useDDragon();
-
   if (!match) return null;
 
   const { participant, gameCreation, gameDuration, queueId } = match;
@@ -80,14 +76,12 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
       >
         <div className="flex items-center gap-3">
           <div className="relative">
-            <img
-              src={getChampionIcon(participant.championName)}
-              alt={participant.championName}
-              className="w-12 h-12 rounded-full border-2 border-slate-600"
-              onError={(e) => {
-                e.currentTarget.src = "/api/placeholder/48/48";
-              }}
-            />
+<ChampionIcon
+  championId={participant.championName}
+  size={48}
+  className="rounded-full border-2 border-slate-600"
+/>
+
             <div className="absolute -bottom-1 -right-1 bg-slate-800 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center border border-slate-600">
               {participant.champLevel}
             </div>
@@ -247,14 +241,12 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                       key={player.summonerId}
                       className="flex items-center gap-2 p-2 rounded-md hover:bg-slate-700/50"
                     >
-                      <img
-                        src={getChampionIcon(player.championName)}
-                        alt={player.championName}
-                        className="w-8 h-8 rounded-full border border-slate-600"
-                        onError={(e) => {
-                          e.currentTarget.src = "/api/placeholder/32/32";
-                        }}
-                      />
+<ChampionIcon
+  championId={player.championName}
+  size={32}
+  className="rounded-full border border-slate-600"
+/>
+
                       <div className="min-w-0 flex-1">
                         <Link
                           href={`/summoner/${region}/${player.riotIdGameName}/${player.riotIdTagline}`}
@@ -289,14 +281,12 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                       key={player.summonerId}
                       className="flex items-center gap-2 p-2 rounded-md hover:bg-slate-700/50"
                     >
-                      <img
-                        src={getChampionIcon(player.championName)}
-                        alt={player.championName}
-                        className="w-8 h-8 rounded-full border border-slate-600"
-                        onError={(e) => {
-                          e.currentTarget.src = "/api/placeholder/32/32";
-                        }}
-                      />
+<ChampionIcon
+  championId={player.championName}
+  size={32}
+  className="rounded-full border border-slate-600"
+/>
+
                       <div className="min-w-0 flex-1">
                         <Link
                           href={`/summoner/${region}/${player.riotIdGameName}/${player.riotIdTagline}`}

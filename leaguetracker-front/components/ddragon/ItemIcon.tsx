@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import {useDDragon} from '../../contexts/DDragonContext';
+import {useDDragon} from '@/contexts/DDragonContext';
 import {cn} from '@/lib/utils';
 
 export interface ItemIconProps {
@@ -26,24 +26,27 @@ const ItemIcon: React.FC<ItemIconProps> = ({
   emptySlot = false,
 }) => {
   const { getItemIcon, isLoading } = useDDragon();
-  
-  // Placeholder para cuando está cargando o no hay ID
+
+  // Si quieres que el tamaño pueda ser controlado vía CSS, permite size opcional y que si se pasa className con w/h, respete eso.
+  // Por eso ponemos tamaño fijo pero con estilos css para que pueda adaptarse.
+
   if (isLoading || !itemId || itemId === '0') {
     return (
-      <div 
+      <div
         className={cn(
           'bg-blue-900/90 flex items-center justify-center rounded-md',
           withBorder && 'border border-blue-900/30',
           emptySlot && 'opacity-30',
           className
-        )} 
+        )}
         style={{ width: size, height: size }}
+        title={withTooltip ? `Item ${itemId}` : undefined}
       />
     );
   }
-  
+
   return (
-    <div 
+    <div
       className={cn(
         'relative overflow-hidden rounded-md',
         withBorder && 'border border-blue-900/100',
@@ -62,5 +65,6 @@ const ItemIcon: React.FC<ItemIconProps> = ({
     </div>
   );
 };
+
 
 export default ItemIcon;

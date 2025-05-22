@@ -5,7 +5,6 @@ import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 import {LinkRequest, useLinkedAccounts} from '@/contexts/LinkedAccountsContext';
 import {useToast} from '@/hooks/useToast';
-import {useDDragon} from '@/contexts/DDragonContext';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
@@ -25,10 +24,9 @@ type LinkingStep = 'search' | 'verify' | 'success';
  */
 export default function LinkingPage() {
   const router = useRouter();
-  const { linkAccount, verifyAccount, isLoading: contextLoading, error: contextError } = useLinkedAccounts();
-  const { success, error: showError, info } = useToast();
-  const { currentVersion } = useDDragon();
-  
+  const { linkAccount, verifyAccount, isLoading: contextLoading} = useLinkedAccounts();
+  const {error: showError} = useToast();
+
   // Estado
   const [step, setStep] = useState<LinkingStep>('search');
   const [region, setRegion] = useState<Region>('EUW');
@@ -237,7 +235,7 @@ export default function LinkingPage() {
                 <li>Busca y selecciona el icono mostrado arriba</li>
                 <li>Guarda los cambios</li>
                 <li>Espera unos minutos a que se actualice</li>
-                <li>Haz clic en "Verificar" abajo</li>
+                <li>Haz clic en &quot;Verificar&quot; abajo</li>
               </ol>
             </div>
           </div>

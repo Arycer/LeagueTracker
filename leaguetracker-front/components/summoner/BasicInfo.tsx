@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import {SummonerProfileDTO} from '@/hooks/useProfiles';
-import {useDDragon} from '@/contexts/DDragonContext';
 import {useUserContext} from '@/contexts/UserContext';
 import {AddFavoriteProfileRequest, useFavoriteProfiles} from '@/contexts/FavoriteProfilesContext';
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
@@ -20,7 +19,6 @@ interface BasicInfoProps {
  * Componente que muestra la información básica de un invocador
  */
 const BasicInfo: React.FC<BasicInfoProps> = ({ profile, onRefresh, isRefreshing = false }) => {
-  const { currentVersion } = useDDragon();
   const { user } = useUserContext();
   const { favorites, addFavorite, deleteFavorite, isLoading: isLoadingFavorites } = useFavoriteProfiles();
   const { info } = useToast();

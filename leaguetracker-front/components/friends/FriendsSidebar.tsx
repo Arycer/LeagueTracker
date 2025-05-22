@@ -1,7 +1,6 @@
 "use client";
 import React, {useState} from 'react';
 import {useUserContext} from '@/contexts/UserContext';
-import {useToast} from '@/hooks/useToast';
 import AddFriend from './AddFriend';
 import FriendRequests from './FriendRequests';
 import FriendsList from './FriendsList';
@@ -21,8 +20,7 @@ const FriendsSidebar: React.FC = () => {
     isLoadingIncoming,
     isLoadingOutgoing
   } = useFriends();
-  const { info } = useToast();
-  
+
   // Estado para la pestaña activa
   const [activeTab, setActiveTab] = useState<'friends' | 'requests' | 'add'>('friends');
   

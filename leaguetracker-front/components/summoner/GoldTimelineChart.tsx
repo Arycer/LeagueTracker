@@ -17,6 +17,13 @@ interface ChartDataPoint {
   goldDiff: number;
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { value: number }[];
+  label?: string | number;
+}
+
+
 export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, region }) => {
   const { get } = useApi();
   const [timeline, setTimeline] = useState<TimelineDto | null>(null);
@@ -119,26 +126,27 @@ export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({ matchId, r
     );
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const blueGold = payload[0].value;
-      const redGold = payload[1].value;
-      const diff = blueGold - redGold;
-      const isBlueAhead = diff > 0;
-      
-      return (
-        <div className="bg-[#0f172a] p-3 border border-gray-700 rounded shadow-lg">
-          <p className="text-gray-300 text-sm mb-1">{`Tiempo: ${label}`}</p>
-          <p className="text-blue-400 text-sm">{`Equipo Azul: ${blueGold.toLocaleString()}`}</p>
-          <p className="text-red-400 text-sm">{`Equipo Rojo: ${redGold.toLocaleString()}`}</p>
-          <p className={`text-sm ${isBlueAhead ? 'text-blue-400' : 'text-red-400'}`}>
-            {`Diferencia: ${Math.abs(diff).toLocaleString()} ${isBlueAhead ? '(Azul)' : '(Rojo)'}`}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const blueGold = payload[0].value;
+    const redGold = payload[1].value;
+    const diff = blueGold - redGold;
+    const isBlueAhead = diff > 0;
+
+    return (
+      <div className="bg-[#0f172a] p-3 border border-gray-700 rounded shadow-lg">
+        <p className="text-gray-300 text-sm mb-1">{`Tiempo: ${label}`}</p>
+        <p className="text-blue-400 text-sm">{`Equipo Azul: ${blueGold.toLocaleString()}`}</p>
+        <p className="text-red-400 text-sm">{`Equipo Rojo: ${redGold.toLocaleString()}`}</p>
+        <p className={`text-sm ${isBlueAhead ? 'text-blue-400' : 'text-red-400'}`}>
+          {`Diferencia: ${Math.abs(diff).toLocaleString()} ${isBlueAhead ? '(Azul)' : '(Rojo)'}`}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 
   const maxGold = Math.max(...chartData.map(data => Math.max(data.blueTeamGold, data.redTeamGold)));
   const yAxisDomain = [0, Math.ceil(maxGold / 10000) * 10000];

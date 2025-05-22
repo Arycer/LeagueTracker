@@ -2,7 +2,6 @@
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {FriendMainAccount, useFriends} from '@/contexts/FriendsContext';
-import {useToast} from '@/hooks/useToast';
 
 interface FriendsListProps {
   friends: string[];
@@ -17,7 +16,6 @@ interface FriendsListProps {
 const FriendsList: React.FC<FriendsListProps> = ({ friends, friendsStatus, isLoading, friendsMainAccounts: propMainAccounts }) => {
   const router = useRouter();
   const { removeFriend, getFriendMainAccount, friendsMainAccounts: contextMainAccounts } = useFriends();
-  const { success, info } = useToast();
   const [expandedFriend, setExpandedFriend] = useState<string | null>(null);
   const [loadingMainAccounts, setLoadingMainAccounts] = useState<Record<string, boolean>>({});
   
@@ -179,7 +177,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ friends, friendsStatus, isLoa
                     const mainAccount = friendsMainAccounts[friend];
                     if (mainAccount) {
                       // Navegar al perfil usando los datos de la cuenta principal
-                      router.push(`/profile/${mainAccount.region}/${mainAccount.summonerName}-${mainAccount.tagline}`);
+                      router.push(`/summoner/${mainAccount.region}/${mainAccount.summonerName}/${mainAccount.tagline}`);
                       // Cerrar el panel expandido
                       setExpandedFriend(null);
                     }
