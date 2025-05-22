@@ -26,6 +26,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
 
     return () => {
       setActiveChat(null);
+      setCheckedNoMessages(false);
     };
   }, [recipientUsername, setActiveChat]);
 
