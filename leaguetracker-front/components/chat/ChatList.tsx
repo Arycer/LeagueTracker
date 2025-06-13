@@ -26,7 +26,7 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
   
   const onlineFriends = friends.filter((friend: string) => {
     const status = friendsStatus as Record<string, boolean>;
-    return status[friend] === true;
+    return status[friend];
   });
 
   
