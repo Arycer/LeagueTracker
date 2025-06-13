@@ -13,12 +13,10 @@ class ChatWebSocketController(
     private val messagingTemplate: SimpMessagingTemplate
 ) {
 
-    // Recibe mensajes desde el cliente en /app/chat.sendMessage
     @MessageMapping("/chat.sendMessage")
     fun sendMessage(@Payload chatMessageDTO: ChatMessageDTO) {
         println("Received message: $chatMessageDTO")
 
-        // Guardar el mensaje en base de datos
         val savedMessage = chatService.saveMessage(
             chatMessageDTO.senderUsername,
             chatMessageDTO.recipientUsername,
@@ -27,7 +25,6 @@ class ChatWebSocketController(
 
         println("Sending to /queue/messages-${savedMessage.recipient.username}")
 
-        // Enviar mensaje al destinatario suscrito a /queue/messages-{recipientId}
         messagingTemplate.convertAndSend(
             "/queue/messages-${savedMessage.recipient.username}",
             ChatMessageDTO(

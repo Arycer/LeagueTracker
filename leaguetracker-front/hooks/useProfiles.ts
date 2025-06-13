@@ -5,7 +5,6 @@ import {useApi} from './useApi';
 import {useToast} from './useToast';
 import {Region} from '@/constants/regions';
 
-// Interfaces para la respuesta de la API
 export interface MiniSeriesDTO {
   losses: number;
   progress: string;
@@ -39,18 +38,12 @@ export interface SummonerProfileDTO {
   region: Region;
 }
 
-/**
- * Hook para gestionar perfiles de invocador
- */
 export const useProfiles = () => {
   const {get, post} = useApi();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Obtiene un perfil de invocador
-   */
   const getProfile = useCallback(async (
     region: Region,
     name: string,
@@ -60,7 +53,6 @@ export const useProfiles = () => {
     setError(null);
 
     try {
-      // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
       console.log(`Obteniendo perfil: ${upperRegion}/${name}/${tagline}`);
 
@@ -87,9 +79,6 @@ export const useProfiles = () => {
     }
   }, [get, toast]);
 
-  /**
-   * Actualiza un perfil de invocador
-   */
   const refreshProfile = useCallback(async (
     region: Region,
     name: string,
@@ -99,7 +88,6 @@ export const useProfiles = () => {
     setError(null);
 
     try {
-      // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
       console.log(`Actualizando perfil: ${upperRegion}/${name}/${tagline}`);
 

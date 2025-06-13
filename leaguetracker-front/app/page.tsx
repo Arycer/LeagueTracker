@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center w-full py-8 px-4">
-      {/* Hero Section */}
+      {}
       <div className="w-full max-w-6xl mx-auto text-center mb-12">
         <div className="flex flex-col items-center justify-center space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold">
@@ -36,7 +36,7 @@ export default function Home() {
             solo lugar.
           </p>
 
-          {/* Search Form */}
+          {}
           <div className="w-full max-w-xl mx-auto mt-8">
             <Card className="bg-[#1e293b]/70 border-blue-900/30">
               <CardContent className="p-4">
@@ -86,24 +86,24 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Features Section */}
+      {}
       <div className="w-full max-w-6xl mx-auto mt-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1 */}
+          {}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6 text-center">
             <h3 className="text-xl font-bold text-white mb-4">Estadísticas detalladas</h3>
             <p className="text-gray-300">Accede a estadísticas completas de tus partidas y rendimiento con
               diferentes campeones.</p>
           </div>
 
-          {/* Feature 2 */}
+          {}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6 text-center">
             <h3 className="text-xl font-bold text-white mb-4">Seguimiento de amigos</h3>
             <p className="text-gray-300">Añade a tus amigos y sigue su progreso, compara estadísticas y
               celebra sus victorias.</p>
           </div>
 
-          {/* Feature 3 */}
+          {}
           <div className="bg-[#1e293b]/70 border border-blue-900/30 rounded-lg p-6 text-center">
             <h3 className="text-xl font-bold text-white mb-4">Análisis de partidas</h3>
             <p className="text-gray-300">Revisa tus partidas pasadas con análisis detallado para mejorar tu
@@ -112,7 +112,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Version info */}
+      {}
       <div className="mt-12 text-xs text-gray-500 text-center">
         Versión de la app: v0.1 - ©2025
       </div>

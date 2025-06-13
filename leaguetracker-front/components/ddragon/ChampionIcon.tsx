@@ -12,9 +12,6 @@ export interface ChampionIconProps {
   alt?: string;
 }
 
-/**
- * Componente para mostrar el icono de un campeón
- */
 const ChampionIcon: React.FC<ChampionIconProps> = ({
                                                      championId,
                                                      size = 40,
@@ -25,7 +22,7 @@ const ChampionIcon: React.FC<ChampionIconProps> = ({
                                                    }) => {
   const {getChampionIcon, isLoading} = useDDragon();
 
-  // Placeholder para cuando está cargando o no hay ID
+  
   if (isLoading || !championId) {
     return (
       <div
@@ -39,10 +36,10 @@ const ChampionIcon: React.FC<ChampionIconProps> = ({
     );
   }
 
-  // Nombre formateado para el tooltip
+  
   const formattedName = championId
-    .replace(/([A-Z])/g, ' $1') // Añade espacios antes de mayúsculas
-    .replace(/^./, (str) => str.toUpperCase()) // Primera letra mayúscula
+    .replace(/([A-Z])/g, ' $1') 
+    .replace(/^./, (str) => str.toUpperCase()) 
     .trim();
 
   return (
@@ -61,7 +58,7 @@ const ChampionIcon: React.FC<ChampionIconProps> = ({
         width={size}
         height={size}
         className="object-cover"
-        priority={size > 64} // Prioriza la carga para iconos grandes
+        priority={size > 64}
       />
     </div>
   );

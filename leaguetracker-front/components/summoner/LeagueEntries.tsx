@@ -7,7 +7,7 @@ interface LeagueEntriesProps {
   entries: LeagueEntryDTO[];
 }
 
-// Mapeo de tipos de cola a nombres legibles
+
 const queueTypeNames: Record<string, string> = {
   'RANKED_SOLO_5x5': 'Solo/Dúo',
   'RANKED_FLEX_SR': 'Flexible',
@@ -16,11 +16,8 @@ const queueTypeNames: Record<string, string> = {
   'RANKED_TFT_TURBO': 'TFT Hiperoll'
 };
 
-/**
- * Componente que muestra las entradas de liga de un invocador
- */
 const LeagueEntries: React.FC<LeagueEntriesProps> = ({entries}) => {
-  // Ordenar las entradas: primero Solo/Dúo, luego Flex, luego TFT
+  
   const sortedEntries = [...entries].sort((a, b) => {
     const queueOrder: Record<string, number> = {
       'RANKED_SOLO_5x5': 1,
@@ -64,15 +61,12 @@ interface LeagueEntryCardProps {
   entry: LeagueEntryDTO;
 }
 
-/**
- * Tarjeta que muestra la información de una entrada de liga
- */
 const LeagueEntryCard: React.FC<LeagueEntryCardProps> = ({entry}) => {
   const {tier, rank, leaguePoints, wins = 0, losses = 0, queueType} = entry;
   const totalGames = wins + losses;
   const winRate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
 
-  // Determinar el color del borde según la liga
+  
   const getBorderColor = (tier: string | null) => {
     if (!tier) return 'border-gray-500';
 

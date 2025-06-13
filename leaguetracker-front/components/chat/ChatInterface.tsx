@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useChatContext} from '@/contexts/ChatContext';
 import {useUserContext} from '@/contexts/UserContext';
 
-// Componentes de Shadcn
+
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -19,9 +19,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
   const currentUsername = userContext.user.username;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Activar el chat al montar el componente
+  
   useEffect(() => {
-    // Establecer el chat activo
+    
     setActiveChat(recipientUsername);
 
     return () => {
@@ -30,7 +30,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
     };
   }, [recipientUsername, setActiveChat]);
 
-  // Extract complex expression to a separate variable
+  
   const currentChatMessages = messages[recipientUsername];
   const hasMessages = currentChatMessages && currentChatMessages.length > 0;
 
@@ -38,11 +38,11 @@ useEffect(() => {
   let isMounted = true;
 
     const loadHistory = async () => {
-      // Solo cargar si:
-      // - componente montado
-      // - chat activo es el correcto
-      // - no hay mensajes
-      // - no está cargando el historial actualmente
+      
+      
+      
+      
+      
       if (isMounted && activeChat === recipientUsername && !loadingHistory && (!hasMessages && !checkedNoMessages)) {
         try {
           await loadChatHistory(recipientUsername);
@@ -61,7 +61,7 @@ useEffect(() => {
   }, [activeChat, recipientUsername, loadChatHistory, hasMessages, loadingHistory]);
 
 
-  // Scroll al último mensaje
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
   }, [currentChatMessages]);
@@ -80,7 +80,7 @@ useEffect(() => {
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
-      {/* Cabecera del chat */}
+      {}
       <div className="py-4 px-4 border-b border-[#1e293b] bg-[#0f172a]/80 flex items-center">
         <Avatar className="h-10 w-10 mr-3 border border-[#1e293b]">
           <AvatarImage src={`https://avatar.vercel.sh/${recipientUsername}`}/>
@@ -96,7 +96,7 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Área de mensajes */}
+      {}
       <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-3">
         {loadingHistory ? (
           <div className="flex justify-center items-center h-full">
@@ -155,7 +155,7 @@ useEffect(() => {
         )}
       </div>
 
-      {/* Área de entrada de mensaje */}
+      {}
       <div className="p-3 border-t border-[#1e293b]">
         <form onSubmit={handleSendMessage} className="flex items-center w-full gap-2">
           <Input

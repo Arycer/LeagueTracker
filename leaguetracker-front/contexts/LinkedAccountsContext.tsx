@@ -6,7 +6,7 @@ import {useToast} from '@/hooks/useToast';
 import {Region} from '@/constants/regions';
 import {useUserContext} from "@/contexts/UserContext";
 
-// Definición de tipos
+
 export interface LolAccount {
   id: string;
   summonerName: string;
@@ -34,21 +34,21 @@ export type PendingActionState = {
   };
 };
 
-// Definir el tipo del contexto
-// Interfaz para la solicitud de vinculación
+
+
 export interface LinkRequest {
   summonerName: string;
   tagline: string;
   region: Region;
 }
 
-// Interfaz para la respuesta de la solicitud de vinculación
+
 export interface LinkResponse {
   requiredIcon: number;
 }
 
 interface LinkedAccountsContextType {
-  // Estado
+  
   accounts: LolAccount[];
   pendingAccounts: PendingLolAccount[];
   mainAccountId: string | null;
@@ -57,7 +57,7 @@ interface LinkedAccountsContextType {
   actionLoading: string | null;
   pendingActionState: PendingActionState;
 
-  // Acciones
+  
   fetchAccounts: () => Promise<void>;
   fetchPendingAccounts: () => Promise<void>;
   fetchMainAccount: () => Promise<void>;
@@ -67,25 +67,21 @@ interface LinkedAccountsContextType {
   verifyPendingAccount: (id: string) => Promise<boolean>;
   refreshAll: () => Promise<void>;
 
-  // Acciones de vinculación
+  
   linkAccount: (request: LinkRequest) => Promise<LinkResponse | null>;
   verifyAccount: () => Promise<boolean>;
 }
 
-// Crear el contexto
+
 const LinkedAccountsContext = createContext<LinkedAccountsContextType | undefined>(undefined);
 
-// Props del proveedor
+
 interface LinkedAccountsProviderProps {
   children: ReactNode;
 }
 
-/**
- * Proveedor del contexto de cuentas vinculadas
- * Gestiona el estado y las operaciones relacionadas con las cuentas de LoL vinculadas
- */
 export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({children}) => {
-  // Estado
+  
   const [accounts, setAccounts] = useState<LolAccount[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<PendingLolAccount[]>([]);
   const [mainAccountId, setMainAccountId] = useState<string | null>(null);
@@ -94,12 +90,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [pendingActionState, setPendingActionState] = useState<PendingActionState>({});
 
-  // Hooks
+  
   const {get, post, delete: del} = useApi();
   const {success, error: showError, info} = useToast();
   const {user} = useUserContext();
 
-  // Obtener cuentas vinculadas
+  
   const fetchAccounts = useCallback(async () => {
     console.log("Obteniendo cuentas vinculadas...");
     try {
@@ -108,7 +104,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
       console.log("Respuesta completa de cuentas vinculadas:", res);
 
       if (res.ok) {
-        // Si la respuesta es exitosa pero no hay datos, asumimos una lista vacía
+        
         if (!res.data) {
           console.log("No hay cuentas vinculadas disponibles");
           setAccounts([]);
@@ -116,7 +112,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
           setAccounts(Array.isArray(res.data) ? res.data : []);
           console.log("Cuentas vinculadas obtenidas:", res.data);
         }
-        // Limpiar cualquier error previo
+        
         setError(null);
       } else {
         console.error("Error al obtener cuentas vinculadas:", res.error, "Respuesta completa:", res);
@@ -128,7 +124,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [get]);
 
-  // Obtener cuenta principal
+  
   const fetchMainAccount = useCallback(async () => {
     console.log("Obteniendo cuenta principal...");
     try {
@@ -137,7 +133,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
       console.log("Respuesta completa de cuenta principal:", res);
 
       if (res.ok) {
-        // Si la respuesta es exitosa pero no hay datos, no hay cuenta principal
+        
         if (!res.data) {
           console.log("No hay cuenta principal configurada");
           setMainAccountId(null);
@@ -155,7 +151,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [get]);
 
-  // Establecer cuenta principal
+  
   const setMainAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Estableciendo cuenta ${id} como principal...`);
@@ -176,7 +172,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [post, fetchAccounts, fetchMainAccount, success, showError]);
 
-  // Obtener cuentas pendientes
+  
   const fetchPendingAccounts = useCallback(async () => {
     console.log("Obteniendo cuentas pendientes...");
     const res = await get('/api/lol/accounts/pending');
@@ -189,7 +185,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [get]);
 
-  // Desvincular cuenta
+  
   const unlinkAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Desvinculando cuenta ${id}...`);
@@ -210,7 +206,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [del, fetchAccounts, success, showError]);
 
-  // Cancelar cuenta pendiente
+  
   const cancelPendingAccount = useCallback(async (id: string) => {
     setActionLoading(id);
     console.log(`Cancelando cuenta pendiente ${id}...`);
@@ -231,7 +227,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [del, fetchPendingAccounts, success, showError]);
 
-  // Verificar cuenta pendiente
+  
   const verifyPendingAccount = useCallback(async (id: string) => {
     setPendingActionState((prev) => ({
       ...prev,
@@ -270,7 +266,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [post, fetchPendingAccounts, fetchAccounts, success, showError]);
 
-  // Actualizar todos los datos
+  
   const refreshAll = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -290,13 +286,13 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [fetchAccounts, fetchPendingAccounts, fetchMainAccount]);
 
-  // Iniciar proceso de vinculación
+  
   const linkAccount = useCallback(async (request: LinkRequest): Promise<LinkResponse | null> => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Convertir a Record<string, unknown> para satisfacer el tipo esperado por post
+      
       const requestData: Record<string, unknown> = {
         summonerName: request.summonerName,
         tagline: request.tagline,
@@ -312,12 +308,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
         info('Cuenta encontrada', 'Sigue las instrucciones para verificar que eres el propietario');
         return response;
       } else {
-        // Extraer el mensaje de error de la respuesta
+        
         let errorMessage = 'Error desconocido al vincular la cuenta';
 
         if (res.error) {
           try {
-            // Intentar parsear el error si es un string JSON
+            
             if (typeof res.error === 'string' && res.error.startsWith('{')) {
               const parsedError = JSON.parse(res.error);
               if (parsedError.error) {
@@ -327,12 +323,12 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
               errorMessage = res.error;
             }
           } catch {
-            // Si no se puede parsear, usar el error tal cual
+            
             errorMessage = res.error;
           }
         }
 
-        // Mostrar el error como toast en lugar de en la consola
+        
         showError('Error de vinculación', errorMessage);
 
         setError(errorMessage);
@@ -348,7 +344,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [post, info, showError]);
 
-  // Verificar cuenta (sin ID específico)
+  
   const verifyAccount = useCallback(async (): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
@@ -382,7 +378,7 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
     }
   }, [post, fetchPendingAccounts, fetchAccounts, success, showError]);
 
-  // Cargar datos iniciales al montar el componente
+  
   useEffect(() => {
     if (user.isSignedIn) {
       refreshAll();
@@ -416,10 +412,6 @@ export const LinkedAccountsProvider: React.FC<LinkedAccountsProviderProps> = ({c
   );
 };
 
-/**
- * Hook personalizado para acceder al contexto de cuentas vinculadas
- * @returns Información y acciones relacionadas con las cuentas vinculadas
- */
 export const useLinkedAccounts = () => {
   const context = useContext(LinkedAccountsContext);
   if (context === undefined) {

@@ -10,7 +10,6 @@ import LeagueEntries from '@/components/summoner/LeagueEntries';
 import TopChampionMasteries from '@/components/summoner/TopChampionMasteries';
 import MatchHistory from '@/components/summoner/MatchHistory';
 
-// Tipos para los parámetros de la URL
 type SummonerPageParams = {
   [key: string]: string;
   region: string;
@@ -18,10 +17,9 @@ type SummonerPageParams = {
   tagline: string;
 }
 
-// Datos de ejemplo para el perfil (fallback)
 const mockProfile: SummonerProfileDTO = {
   name: "Ejemplo",
-  tagline: "0000", // Añadido el campo tagline requerido
+  tagline: "0000",
   puuid: "12345678-1234-5678-1234-567812345678",
   summonerLevel: 250,
   profileIconId: 29,
@@ -61,31 +59,24 @@ const mockProfile: SummonerProfileDTO = {
 };
 
 export default function SummonerPage() {
-  // Obtener parámetros de la URL
   const params = useParams<SummonerPageParams>();
   const {region, name, tagline} = params;
 
-  // Decodificar parámetros (pueden contener caracteres especiales)
   const decodedName = decodeURIComponent(name);
   const decodedTagline = decodeURIComponent(tagline);
 
-  // Estados
   const [profile, setProfile] = useState<SummonerProfileDTO | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Referencias para controlar el ciclo de vida
   const isMounted = useRef(true);
   const initialLoadDone = useRef(false);
 
-  // Hooks
   const {getProfile, refreshProfile, isLoading, error} = useProfiles();
 
-  // Cargar el perfil del invocador
   useEffect(() => {
     const loadProfile = async () => {
-      // Evitar múltiples cargas
       if (initialLoadDone.current) return;
       initialLoadDone.current = true;
 
@@ -93,7 +84,6 @@ export default function SummonerPage() {
         console.log(`Intentando cargar perfil: ${region}/${decodedName}/${decodedTagline}`);
         const data = await getProfile(region as Region, decodedName, decodedTagline);
 
-        // Verificar que el componente sigue montado
         if (!isMounted.current) return;
 
         console.log('Respuesta de API:', data);
@@ -105,7 +95,7 @@ export default function SummonerPage() {
           setErrorMessage(null);
         } else {
           console.warn('getProfile devolvió null, usando datos de ejemplo');
-          // Usar el perfil mock si no hay datos
+          
           const mockData = {
             ...mockProfile,
             name: decodedName,
@@ -121,7 +111,7 @@ export default function SummonerPage() {
         console.error('Error al cargar el perfil:', err);
         if (!isMounted.current) return;
 
-        // Usar el perfil mock en caso de error
+        
         const mockData = {
           ...mockProfile,
           name: decodedName,
@@ -134,17 +124,17 @@ export default function SummonerPage() {
       }
     };
 
-    // Inicializar el estado
+    
     isMounted.current = true;
     loadProfile();
 
-    // Limpiar al desmontar
+    
     return () => {
       isMounted.current = false;
     };
   }, [region, decodedName, decodedTagline, getProfile]);
 
-  // Refrescar el perfil del invocador
+  
   const handleRefresh = async () => {
     if (isRefreshing) return;
 
@@ -179,7 +169,7 @@ export default function SummonerPage() {
     }
   };
 
-  // Añadir logs para depuración
+  
   useEffect(() => {
     console.log('Estado actual:', {
       profile,
@@ -190,7 +180,7 @@ export default function SummonerPage() {
     });
   }, [profile, isLoading, error, isError, errorMessage]);
 
-  // Renderizar el componente
+  
   const renderContent = () => {
     if (isLoading && !profile) {
       return (
@@ -214,7 +204,7 @@ export default function SummonerPage() {
 
     return (
       <div className="space-y-6">
-        {/* Header con BasicInfo */}
+        {}
         <div className="w-full">
           <BasicInfo
             profile={profile}
@@ -232,13 +222,13 @@ export default function SummonerPage() {
           </div>
         )}
 
-        {/* Contenido principal con grid */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Sidebar izquierdo */}
+          {}
           <div className="md:col-span-1 space-y-6">
             <LeagueEntries entries={profile.leagueEntries}/>
 
-            {/* Componente de maestrías de campeones */}
+            {}
             <TopChampionMasteries
               summonerName={profile.name}
               tagline={profile.tagline}
@@ -246,7 +236,7 @@ export default function SummonerPage() {
             />
           </div>
 
-          {/* Contenido principal */}
+          {}
           <div className="md:col-span-3 space-y-6">
             {profile && (
               <MatchHistory
@@ -263,7 +253,7 @@ export default function SummonerPage() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      {/* Componente invisible que registra la visita al perfil */}
+      {}
       <ProfileVisitTracker
         summonerName={decodedName}
         region={region}

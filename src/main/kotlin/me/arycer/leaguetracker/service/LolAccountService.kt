@@ -141,7 +141,6 @@ class LolAccountService(
             throw IllegalStateException("Solo se pueden establecer como principal cuentas verificadas.")
         }
 
-        // Desmarcar todas las demás cuentas del usuario
         val allAccounts = accountRepo.findAllByUserId(userId)
         allAccounts.forEach {
             if (it.isMain) {
@@ -150,7 +149,6 @@ class LolAccountService(
             }
         }
 
-        // Marcar la nueva como principal
         account.isMain = true
         accountRepo.save(account)
     }

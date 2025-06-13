@@ -1,4 +1,4 @@
-// Mapeo de queueId a nombre de cola
+
 export const QUEUE_TYPES: Record<number, string> = {
   400: 'Normal',
   420: 'Clasificatoria Solo/Dúo',

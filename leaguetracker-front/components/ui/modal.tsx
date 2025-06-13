@@ -6,7 +6,7 @@ import {AnimatePresence, motion} from "framer-motion";
 export const Modal: React.FC = () => {
   const {isOpen, closeModal, modalContent} = useModal();
 
-  // Manejar cierre con tecla Escape
+  
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -23,7 +23,7 @@ export const Modal: React.FC = () => {
     };
   }, [isOpen, closeModal]);
 
-  // Manejar cierre al hacer clic fuera del contenido modal
+  
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       closeModal();

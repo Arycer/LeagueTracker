@@ -12,9 +12,6 @@ export interface SummonerSpellIconProps {
   alt?: string;
 }
 
-/**
- * Componente para mostrar el icono de un hechizo de invocador
- */
 const SummonerSpellIcon: React.FC<SummonerSpellIconProps> = ({
                                                                spellId,
                                                                size = 24,
@@ -25,7 +22,7 @@ const SummonerSpellIcon: React.FC<SummonerSpellIconProps> = ({
                                                              }) => {
   const {getSummonerSpellIcon, isLoading} = useDDragon();
 
-  // Placeholder para cuando está cargando o no hay ID
+  
   if (isLoading || !spellId) {
     return (
       <div

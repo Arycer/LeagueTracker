@@ -15,22 +15,19 @@ interface BasicInfoProps {
   isRefreshing?: boolean;
 }
 
-/**
- * Componente que muestra la información básica de un invocador
- */
 const BasicInfo: React.FC<BasicInfoProps> = ({profile, onRefresh, isRefreshing = false}) => {
   const {user} = useUserContext();
   const {favorites, addFavorite, deleteFavorite, isLoading: isLoadingFavorites} = useFavoriteProfiles();
   const {info} = useToast();
 
-  // Comprobar si el perfil está en favoritos
+  
   const isFavorite = favorites.some(
     fav => fav.region.toLowerCase() === profile.region.toLowerCase() &&
       fav.summonerName.toLowerCase() === profile.name.toLowerCase() &&
       fav.tagline === profile.tagline
   );
 
-  // Obtener el ID del favorito si existe
+  
   const favoriteId = isFavorite ?
     favorites.find(
       fav => fav.region.toLowerCase() === profile.region.toLowerCase() &&
@@ -39,7 +36,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({profile, onRefresh, isRefreshing =
     )?.id :
     null;
 
-  // Manejar el clic en el botón de favoritos
+  
   const handleFavoriteClick = async () => {
     if (!user.isSignedIn) {
       info('Inicia sesión', 'Debes iniciar sesión para añadir perfiles a favoritos');

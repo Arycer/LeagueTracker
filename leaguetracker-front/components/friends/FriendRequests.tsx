@@ -9,9 +9,6 @@ interface FriendRequestsProps {
   isLoadingOutgoing: boolean;
 }
 
-/**
- * Componente que muestra las solicitudes de amistad entrantes y salientes
- */
 const FriendRequests: React.FC<FriendRequestsProps> = ({
                                                          incomingRequests,
                                                          outgoingRequests,
@@ -21,7 +18,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
   const {acceptFriendRequest, rejectFriendRequest} = useFriends();
   const [activeTab, setActiveTab] = useState<'incoming' | 'outgoing'>('incoming');
 
-  // Renderizar un esqueleto de carga
+  
   const renderSkeleton = () => (
     <div className="p-4">
       {Array.from({length: 3}).map((_, index) => (
@@ -36,7 +33,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
     </div>
   );
 
-  // Renderizar mensaje cuando no hay solicitudes
+  
   const renderEmptyState = (type: 'incoming' | 'outgoing') => (
     <div className="flex flex-col items-center justify-center p-4 text-center h-48">
       <div className="text-muted-foreground mb-4">
@@ -59,7 +56,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
     </div>
   );
 
-  // Renderizar solicitudes entrantes
+  
   const renderIncomingRequests = () => {
     if (isLoadingIncoming) return renderSkeleton();
     if (incomingRequests.length === 0) return renderEmptyState('incoming');
@@ -100,7 +97,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
     );
   };
 
-  // Renderizar solicitudes salientes
+  
   const renderOutgoingRequests = () => {
     if (isLoadingOutgoing) return renderSkeleton();
     if (outgoingRequests.length === 0) return renderEmptyState('outgoing');
@@ -132,7 +129,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
 
   return (
     <div>
-      {/* Pestañas para alternar entre solicitudes entrantes y salientes */}
+      {}
       <div className="flex border-b border-[#1e293b]">
         <button
           className={`flex-1 py-2 text-sm font-medium ${
@@ -172,7 +169,7 @@ const FriendRequests: React.FC<FriendRequestsProps> = ({
         </button>
       </div>
 
-      {/* Contenido según la pestaña activa */}
+      {}
       <div className="overflow-y-auto custom-scrollbar">
         {activeTab === 'incoming' ? renderIncomingRequests() : renderOutgoingRequests()}
       </div>

@@ -19,7 +19,7 @@ class ChampionMasteryCacheService(
     private val riotService: RiotService,
 ) {
 
-    private val cacheCooldownMillis = 5 * 60 * 1000L // 5 minutos
+    private val cacheCooldownMillis = 5 * 60 * 1000L 
 
     @Transactional
     fun getTop3ChampionMasteries(puuid: String, region: Region): List<ChampionMasteryDto> {
@@ -27,11 +27,11 @@ class ChampionMasteryCacheService(
         val cached = championMasteryCacheRepository.findByPuuid(puuid)
 
         if (cached != null && (now - cached.lastUpdated) < cacheCooldownMillis) {
-            // Cache válido
+            
             return objectMapper.readValue(cached.masteryJson, Array<ChampionMasteryDto>::class.java).take(3)
         }
 
-        // Cache no válido o no existe: pedir a Riot y guardar
+        
         val url =
             "https://${region.apiName}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/$puuid/top"
         val response =

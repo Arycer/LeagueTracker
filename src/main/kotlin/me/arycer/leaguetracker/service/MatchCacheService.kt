@@ -38,6 +38,5 @@ class MatchCacheService(
         return match
     }
 
-    // Inyectado después para evitar dependencia circular
     lateinit var riotService: RiotService
 }

@@ -6,9 +6,6 @@ export interface SpinnerProps {
   className?: string;
 }
 
-/**
- * Componente Spinner para indicar estados de carga
- */
 export const Spinner: React.FC<SpinnerProps> = ({
                                                   size = 'md',
                                                   className

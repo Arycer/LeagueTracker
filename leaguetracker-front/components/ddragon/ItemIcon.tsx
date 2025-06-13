@@ -13,9 +13,6 @@ export interface ItemIconProps {
   emptySlot?: boolean;
 }
 
-/**
- * Componente para mostrar el icono de un ítem
- */
 const ItemIcon: React.FC<ItemIconProps> = ({
                                              itemId,
                                              size = 32,
@@ -27,8 +24,8 @@ const ItemIcon: React.FC<ItemIconProps> = ({
                                            }) => {
   const {getItemIcon, isLoading} = useDDragon();
 
-  // Si quieres que el tamaño pueda ser controlado vía CSS, permite size opcional y que si se pasa className con w/h, respete eso.
-  // Por eso ponemos tamaño fijo pero con estilos css para que pueda adaptarse.
+  
+  
 
   if (isLoading || !itemId || itemId === '0') {
     return (

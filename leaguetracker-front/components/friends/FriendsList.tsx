@@ -11,9 +11,6 @@ interface FriendsListProps {
   friendsMainAccounts?: Record<string, FriendMainAccount | null>;
 }
 
-/**
- * Componente que muestra la lista de amigos y su estado online
- */
 const FriendsList: React.FC<FriendsListProps> = ({
                                                    friends,
                                                    friendsStatus,
@@ -25,14 +22,14 @@ const FriendsList: React.FC<FriendsListProps> = ({
   const [expandedFriend, setExpandedFriend] = useState<string | null>(null);
   const [loadingMainAccounts, setLoadingMainAccounts] = useState<Record<string, boolean>>({});
 
-  // Usar las cuentas principales proporcionadas como prop o las del contexto
+  
   const friendsMainAccounts = propMainAccounts || contextMainAccounts;
 
-  // Cargar la cuenta principal cuando se expande un amigo
+  
   useEffect(() => {
     if (expandedFriend) {
       const loadMainAccount = async () => {
-        // Si no tenemos la cuenta principal de este amigo, intentar cargarla
+        
         if (friendsMainAccounts[expandedFriend] === undefined) {
           setLoadingMainAccounts(prev => ({...prev, [expandedFriend]: true}));
           await getFriendMainAccount(expandedFriend);
@@ -44,7 +41,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
     }
   }, [expandedFriend, friendsMainAccounts, getFriendMainAccount]);
 
-  // Si está cargando, mostrar un esqueleto de carga
+  
   if (isLoading) {
     return (
       <div className="p-4">
@@ -61,7 +58,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
     );
   }
 
-  // Si no hay amigos, mostrar mensaje
+  
   if (friends.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4 text-center">
@@ -86,14 +83,14 @@ const FriendsList: React.FC<FriendsListProps> = ({
     );
   }
 
-  // Ordenar amigos: primero los que están online
+  
   const sortedFriends = [...friends].sort((a, b) => {
     if (friendsStatus[a] && !friendsStatus[b]) return -1;
     if (!friendsStatus[a] && friendsStatus[b]) return 1;
     return a.localeCompare(b);
   });
 
-  // Manejar la eliminación de un amigo
+  
   const handleRemoveFriend = async (username: string) => {
     const confirmed = window.confirm(`¿Estás seguro de que quieres eliminar a ${username} de tu lista de amigos?`);
     if (confirmed) {
@@ -114,7 +111,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
             }`}
             onClick={() => setExpandedFriend(expandedFriend === friend ? null : friend)}
           >
-            {/* Avatar y estado online */}
+            {}
             <div className="relative mr-3">
               <div
                 className="w-10 h-10 rounded-full bg-blue-600/30 flex items-center justify-center text-lg font-medium text-white">
@@ -127,7 +124,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
               ></div>
             </div>
 
-            {/* Nombre y estado */}
+            {}
             <div className="flex-1">
               <div className="font-medium text-white">{friend}</div>
               <div className="text-xs text-gray-300">
@@ -135,7 +132,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
               </div>
             </div>
 
-            {/* Flecha para expandir */}
+            {}
             <div className="text-gray-400">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,16 +148,16 @@ const FriendsList: React.FC<FriendsListProps> = ({
             </div>
           </div>
 
-          {/* Panel expandido con acciones */}
+          {}
           {expandedFriend === friend && (
             <div className="bg-[#1e293b]/20 rounded-md mt-1 p-2 flex flex-col space-y-2">
 
               <button
                 className="flex items-center text-sm py-1 px-2 hover:bg-[#1e293b]/40 rounded-md text-gray-300 hover:text-white"
                 onClick={() => {
-                  // Abrir el chat con este amigo usando parámetros de consulta
+                  
                   router.push(`/chat?username=${encodeURIComponent(friend)}`);
-                  // Cerrar el panel expandido
+                  
                   setExpandedFriend(null);
                 }}
               >
@@ -172,7 +169,7 @@ const FriendsList: React.FC<FriendsListProps> = ({
                 Enviar mensaje
               </button>
 
-              {/* Botón para visitar perfil (solo si tiene cuenta principal) */}
+              {}
               {loadingMainAccounts[friend] ? (
                 <div className="flex items-center text-sm py-1 px-2 text-gray-400">
                   <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg"
@@ -190,9 +187,9 @@ const FriendsList: React.FC<FriendsListProps> = ({
                   onClick={() => {
                     const mainAccount = friendsMainAccounts[friend];
                     if (mainAccount) {
-                      // Navegar al perfil usando los datos de la cuenta principal
+                      
                       router.push(`/summoner/${mainAccount.region}/${mainAccount.summonerName}/${mainAccount.tagline}`);
-                      // Cerrar el panel expandido
+                      
                       setExpandedFriend(null);
                     }
                   }}

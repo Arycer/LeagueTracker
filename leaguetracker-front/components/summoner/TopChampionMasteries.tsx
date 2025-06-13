@@ -12,9 +12,6 @@ interface TopChampionMasteriesProps {
   region: Region;
 }
 
-/**
- * Componente que muestra las 3 mejores maestrías de campeones de un invocador
- */
 const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
                                                                      summonerName,
                                                                      tagline,
@@ -25,7 +22,7 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
   const [masteries, setMasteries] = useState<ChampionMasteryDTO[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Cargar las maestrías al montar el componente
+  
   useEffect(() => {
     const loadMasteries = async () => {
       try {
@@ -44,7 +41,7 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
     loadMasteries();
   }, [getTopMasteries, region, summonerName, tagline]);
 
-  // Formatear número de puntos de maestría
+  
   const formatPoints = (points: number): string => {
     if (points >= 1000000) {
       return `${(points / 1000000).toFixed(1)}M`;
@@ -54,7 +51,7 @@ const TopChampionMasteries: React.FC<TopChampionMasteriesProps> = ({
     return points.toString();
   };
 
-  // Obtener color según nivel de maestría
+  
   const getMasteryColor = (level: number): string => {
     switch (level) {
       case 7:

@@ -39,7 +39,6 @@ class RiotService(
         return response.body?.puuid ?: throw RuntimeException("Summoner not found")
     }
 
-    // 2. Obtener el profileIconId actual
     fun getCurrentProfileIconId(summonerName: String, tagline: String, region: Region): Int {
         val puuid = getSummonerId(summonerName, tagline, region)
         val url = "https://${region.apiName}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/$puuid"
@@ -103,7 +102,6 @@ class RiotService(
     }
 
 
-    // 3. Elegir un icono predeterminado aleatorio
     fun pickRandomDefaultIcon(): Int {
         val defaultIcons = listOf(
             0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 13, 14, 15, 16, 17, 18
@@ -136,7 +134,7 @@ class RiotService(
         println("Fetching match IDs for puuid: $puuid, region: $region, page: $page, pageSize: $pageSize")
 
         val start = page * pageSize
-        val count = pageSize.coerceAtMost(100 - start) // para no pasar de 100 partidas máximo
+        val count = pageSize.coerceAtMost(100 - start)
 
         if (count <= 0) return emptyList()
 

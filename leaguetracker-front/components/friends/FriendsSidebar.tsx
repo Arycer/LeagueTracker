@@ -6,9 +6,6 @@ import FriendRequests from './FriendRequests';
 import FriendsList from './FriendsList';
 import {useFriends} from '@/contexts/FriendsContext';
 
-/**
- * Sidebar derecho que muestra la lista de amigos y su estado online
- */
 const FriendsSidebar: React.FC = () => {
   const {user, isLoading: isLoadingUser} = useUserContext();
   const {
@@ -21,13 +18,13 @@ const FriendsSidebar: React.FC = () => {
     isLoadingOutgoing
   } = useFriends();
 
-  // Estado para la pestaña activa
+  
   const [activeTab, setActiveTab] = useState<'friends' | 'requests' | 'add'>('friends');
 
-  // Contar amigos online
+  
   const onlineFriendsCount = Object.values(friendsStatus).filter(Boolean).length;
 
-  // Si el usuario no está autenticado, mostrar mensaje
+  
   if (!user.isSignedIn && !isLoadingUser) {
     return (
       <div className="hidden lg:flex flex-col w-64 h-full border-l border-[#1e293b] bg-[#0f172a]">
@@ -50,7 +47,7 @@ const FriendsSidebar: React.FC = () => {
 
   return (
     <div className="hidden lg:flex flex-col w-64 h-full border-l border-[#1e293b] bg-[#0f172a]">
-      {/* Cabecera */}
+      {}
       <div className="p-4 border-b border-[#1e293b]">
         <h2 className="text-lg font-semibold text-white">Amigos</h2>
         <p className="text-sm text-blue-400">
@@ -58,7 +55,7 @@ const FriendsSidebar: React.FC = () => {
         </p>
       </div>
 
-      {/* Pestañas */}
+      {}
       <div className="flex border-b border-[#1e293b]">
         <button
           className={`flex-1 py-2 text-sm font-medium ${
@@ -103,7 +100,7 @@ const FriendsSidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Contenido según la pestaña activa */}
+      {}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {activeTab === 'friends' && (
           <FriendsList

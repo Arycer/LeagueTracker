@@ -64,8 +64,8 @@ export const GoldTimelineChart: React.FC<GoldTimelineChartProps> = ({matchId, re
     if (!timelineData?.info?.frames) return;
 
     const processedData: ChartDataPoint[] = [];
-    const blueTeamIds = [1, 2, 3, 4, 5]; // IDs 1-5 son equipo azul
-    const redTeamIds = [6, 7, 8, 9, 10]; // IDs 6-10 son equipo rojo
+    const blueTeamIds = [1, 2, 3, 4, 5]; 
+    const redTeamIds = [6, 7, 8, 9, 10]; 
 
     timelineData.info.frames.forEach((frame) => {
       const minutes = Math.floor(frame.timestamp / 60000);

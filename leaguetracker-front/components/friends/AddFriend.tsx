@@ -3,20 +3,17 @@ import React, {useState} from 'react';
 import {useFriends} from '@/contexts/FriendsContext';
 import {useToast} from '@/hooks/useToast';
 
-/**
- * Componente para añadir amigos mediante nombre de usuario
- */
 const AddFriend: React.FC = () => {
   const {sendFriendRequest} = useFriends();
   const {error: showError} = useToast();
   const [username, setUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Manejar el envío del formulario
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar el nombre de usuario
+    
     if (!username.trim()) {
       showError('Error', 'Debes introducir un nombre de usuario');
       return;
@@ -25,7 +22,7 @@ const AddFriend: React.FC = () => {
     setIsSubmitting(true);
     try {
       await sendFriendRequest(username.trim());
-      setUsername(''); // Limpiar el campo después de enviar
+      setUsername(''); 
     } catch (err) {
       console.error('Error al enviar solicitud:', err);
     } finally {

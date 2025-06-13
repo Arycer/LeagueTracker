@@ -16,8 +16,8 @@ class LolProfileCacheService(
     private val objectMapper: ObjectMapper
 ) {
 
-    private val cacheCooldownMillis = 5 * 60 * 1000L // 5 minutos
-    private val refreshCooldownMillis = 30 * 1000L // 30 segundos
+    private val cacheCooldownMillis = 5 * 60 * 1000L 
+    private val refreshCooldownMillis = 30 * 1000L 
 
     @Transactional
     fun getProfile(region: Region, summonerName: String, tagline: String): SummonerProfileDTO {
@@ -27,7 +27,6 @@ class LolProfileCacheService(
         val cached = lolProfileCacheRepository.findByKey(key)
 
         if (cached != null && (now - cached.lastUpdated) < cacheCooldownMillis) {
-            // Cache válido, devolver desde BD
             val leagueEntries =
                 objectMapper.readValue(cached.leagueEntriesJson, Array<LeagueEntryDTO>::class.java).toList()
             return SummonerProfileDTO(
@@ -41,7 +40,6 @@ class LolProfileCacheService(
             )
         }
 
-        // Cache no válido o no existe → obtener nuevo perfil y guardar
         println("Cache no válido o no existe. Obteniendo nuevo perfil...")
         return refreshProfile(region, summonerName, tagline, force = true)
     }

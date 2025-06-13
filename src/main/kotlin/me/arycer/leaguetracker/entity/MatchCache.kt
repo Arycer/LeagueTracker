@@ -16,5 +16,5 @@ data class MatchCache(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var region: Region = Region.EUW // Usa un valor por defecto válido
+    var region: Region = Region.EUW
 )

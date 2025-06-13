@@ -5,25 +5,18 @@ import {useApi} from './useApi';
 import {Region} from '@/constants/regions';
 import {useDDragon} from '@/contexts/DDragonContext';
 
-// Interfaces para la respuesta de la API
 export interface ChampionMasteryDTO {
   championId: number;
   championLevel: number;
   championPoints: number;
 }
 
-/**
- * Hook para gestionar las maestrías de campeones
- */
 export const useChampionMastery = () => {
   const {get} = useApi();
   const {getChampionById} = useDDragon();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Obtiene las 3 mejores maestrías de campeones de un invocador
-   */
   const getTopMasteries = useCallback(async (
     region: Region,
     name: string,
@@ -33,18 +26,14 @@ export const useChampionMastery = () => {
     setError(null);
 
     try {
-      // Asegurar que la región está en mayúsculas
       const upperRegion = region.toUpperCase();
 
-      // Procesar el nombre y tagline para evitar duplicación
       let summonerName = name;
       let summonerTagline = tagline;
 
-      // Si el nombre ya incluye el tagline (formato 'name#tagline'), lo separamos
       if (summonerName.includes('#')) {
         const parts = summonerName.split('#');
         summonerName = parts[0];
-        // Usamos el tagline del nombre solo si no se proporcionó un tagline por separado
         if (!summonerTagline && parts.length > 1) {
           summonerTagline = parts[1];
         }

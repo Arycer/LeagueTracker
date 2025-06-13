@@ -21,7 +21,6 @@ data class LolProfileCache(
 
     val lastUpdated: Long
 ) {
-    // Constructor vacío necesario para Hibernate
     constructor() : this(
         "", "", 0, 0, "", Region.EUW, 0L
     )

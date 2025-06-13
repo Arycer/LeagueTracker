@@ -13,21 +13,13 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import ProfileIcon from '@/components/ddragon/ProfileIcon';
 import {Region, REGIONS} from '@/constants/regions';
 
-// Estados del proceso de vinculación
-
-// Estados del proceso de vinculación
 type LinkingStep = 'search' | 'verify' | 'success';
 
-/**
- * Página de vinculación de cuentas
- * Permite a los usuarios vincular una nueva cuenta de League of Legends
- */
 export default function LinkingPage() {
   const router = useRouter();
   const {linkAccount, verifyAccount, isLoading: contextLoading} = useLinkedAccounts();
   const {error: showError} = useToast();
 
-  // Estado
   const [step, setStep] = useState<LinkingStep>('search');
   const [region, setRegion] = useState<Region>('EUW');
   const [summonerName, setSummonerName] = useState<string>('');
@@ -36,7 +28,6 @@ export default function LinkingPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Iniciar proceso de vinculación
   const handleLinkRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -54,21 +45,16 @@ export default function LinkingPage() {
     setError(null);
 
     try {
-      // Normalizar el tagline (eliminar # si está presente)
       const normalizedTagline = tagline.startsWith('#') ? tagline.substring(1) : tagline;
-
-      // Preparar la solicitud
       const request: LinkRequest = {
         summonerName: summonerName.trim(),
         tagline: normalizedTagline.trim(),
         region
       };
 
-      // Usar la función del contexto para iniciar la vinculación
       const response = await linkAccount(request);
 
       if (response) {
-        // Guardar el icono requerido para la verificación
         setRequiredIcon(response.requiredIcon);
         setStep('verify');
       } else {
@@ -82,7 +68,6 @@ export default function LinkingPage() {
     }
   };
 
-  // Verificar cuenta
   const handleVerify = async () => {
     if (!requiredIcon) return;
 
@@ -90,7 +75,6 @@ export default function LinkingPage() {
     setError(null);
 
     try {
-      // Usar la función del contexto para verificar la cuenta
       const verified = await verifyAccount();
 
       if (verified) {
@@ -106,12 +90,10 @@ export default function LinkingPage() {
     }
   };
 
-  // Ir a la página de cuentas vinculadas
   const handleGoToAccounts = () => {
     router.push('/linked-accounts');
   };
 
-  // Renderizar el paso de búsqueda
   const renderSearchStep = () => (
     <Card className="w-full max-w-md bg-[#1e293b]/70 border-blue-900/40">
       <CardHeader>
@@ -196,7 +178,6 @@ export default function LinkingPage() {
     </Card>
   );
 
-  // Renderizar el paso de verificación
   const renderVerifyStep = () => {
     if (!requiredIcon) return null;
 
@@ -278,7 +259,6 @@ export default function LinkingPage() {
     );
   };
 
-  // Renderizar el paso de éxito
   const renderSuccessStep = () => (
     <Card className="w-full max-w-md bg-[#1e293b]/70 border-blue-900/40">
       <CardHeader>
@@ -310,7 +290,6 @@ export default function LinkingPage() {
     </Card>
   );
 
-  // Renderizar el paso actual
   const renderCurrentStep = () => {
     switch (step) {
       case 'search':

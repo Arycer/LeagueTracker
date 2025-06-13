@@ -10,14 +10,14 @@ const RecentProfiles: React.FC = () => {
   const {recentProfiles, isLoading, removeRecentProfile, clearRecentProfiles} = useRecentProfiles();
   const {info} = useToast();
 
-  // Manejar eliminación de perfil reciente
+  
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
     removeRecentProfile(id);
   };
 
-  // Manejar limpieza de todos los perfiles recientes
+  
   const handleClearAll = (e: React.MouseEvent) => {
     e.preventDefault();
     clearRecentProfiles();

@@ -21,9 +21,9 @@ interface MatchHistoryProps {
   summonerName: string;
 }
 
-// El mapeo de queueId a nombre de cola se ha movido a constants/queueTypes.ts
 
-// Convierte segundos a formato mm:ss
+
+
 const formatGameDuration = (durationInSeconds: number): string => {
   const minutes = Math.floor(durationInSeconds / 60);
   const seconds = durationInSeconds % 60;
@@ -41,10 +41,10 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     summonerName,
   });
 
-  // Validar que tenemos los datos necesarios
+  
   const hasValidData = Boolean(puuid && region && summonerName);
 
-  // Usar el hook con validación
+  
   const {matches, isLoading, error, hasMore, loadMore, refreshMatches} =
     useMatches(
       hasValidData ? puuid : undefined,
@@ -59,7 +59,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
 
-  // Log para debugging
+  
   useEffect(() => {
     console.log("📊 MatchHistory estado actualizado:", {
       hasValidData,
@@ -70,7 +70,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     });
   }, [hasValidData, matches.length, isLoading, hasMore, error]);
 
-  // Efecto para manejar la carga inicial
+  
   useEffect(() => {
     if (
       hasValidData &&
@@ -94,14 +94,14 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     refreshMatches,
   ]);
 
-  // Efecto para resetear el estado cuando cambian los datos del invocador
+  
   useEffect(() => {
     if (hasValidData) {
       setHasInitiallyLoaded(false);
     }
   }, [puuid, region, summonerName, hasValidData]);
 
-  // Manejar la carga manual de más partidas
+  
   const handleLoadMore = useCallback(async () => {
     if (isLoading || isLoadingMore || !hasMore || !hasValidData) {
       console.log("⏭️ Saltando carga manual:", {
@@ -124,7 +124,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     }
   }, [isLoading, isLoadingMore, hasMore, hasValidData, loadMore]);
 
-  // Manejar refresh manual
+  
   const handleRefresh = useCallback(async () => {
     if (isLoading || !hasValidData) return;
 
@@ -141,14 +141,14 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
 
   const handleOpenMatchDetails = useCallback(async (match: MatchSummary) => {
     try {
-      // Cargar los detalles completos de la partida
+      
       const response = await get<MatchDto>(
         `/api/lol/match/match/${match.matchId}?region=${region}`,
         {supressErrorToast: true}
       );
 
       if (response.ok && response.data) {
-        // Abrir el modal con el componente MatchDetailsModal como contenido
+        
         openModal(
           <MatchDetailsModal
             match={match}
@@ -168,15 +168,15 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     }
   }, [get, region, toast, openModal, closeModal, summonerName]);
 
-  // Renderizar un esqueleto de carga para cada partida
+  
   const renderMatchSkeleton = (index: number) => (
     <div
       key={`skeleton-${index}`}
       className="bg-slate-800 rounded-lg p-3 sm:p-4 shadow-md animate-pulse"
     >
-      {/* Versión móvil */}
+      {}
       <div className="flex flex-col space-y-3 md:hidden">
-        {/* Encabezado con campeón e info básica */}
+        {}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-700 shrink-0"/>
@@ -191,7 +191,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           </div>
         </div>
 
-        {/* Estadísticas */}
+        {}
         <div className="grid grid-cols-3 gap-2 text-center py-2">
           <div>
             <Skeleton className="w-12 h-4 mb-1 mx-auto bg-slate-700"/>
@@ -207,7 +207,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           </div>
         </div>
 
-        {/* Ítems */}
+        {}
         <div className="flex justify-center gap-1 overflow-hidden">
           {Array(7)
             .fill(0)
@@ -220,9 +220,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
         </div>
       </div>
 
-      {/* Versión desktop */}
+      {}
       <div className="hidden md:flex items-center gap-4 overflow-hidden">
-        {/* Sección del campeón */}
+        {}
         <div className="flex items-center gap-3 w-48 shrink-0">
           <Skeleton className="w-12 h-12 rounded-full bg-slate-700"/>
           <div className="min-w-0 flex-1">
@@ -231,7 +231,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           </div>
         </div>
 
-        {/* Estadísticas */}
+        {}
         <div className="flex-1 flex items-center justify-between gap-4 min-w-0">
           <div className="flex items-center gap-6 min-w-0 flex-1">
             <div className="min-w-0">
@@ -248,7 +248,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           </div>
 
-          {/* Ítems */}
+          {}
           <div className="flex gap-1 shrink-0">
             {Array(7)
               .fill(0)
@@ -261,7 +261,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     </div>
   );
 
-  // Renderizar una partida
+  
   const renderMatch = (match: MatchSummary, index: number) => {
     const {participant, gameCreation, gameDuration, queueId} = match;
     const gameDate = new Date(gameCreation);
@@ -273,10 +273,10 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     const statusColor = isWin ? "text-blue-400" : "text-red-400";
     const statusText = isWin ? "Victoria" : "Derrota";
 
-    // Crear una clave única combinando matchId, gameCreation e index
+    
     const uniqueKey = `${match.matchId}-${gameCreation}-${index}`;
 
-    // Formateamos el KDA
+    
     const kdaRatio =
       participant.deaths === 0
         ? "Perfect"
@@ -285,7 +285,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           participant.deaths
         ).toFixed(2);
 
-    // Calculamos el CS total
+    
     const totalCS =
       (participant.totalMinionsKilled || 0) +
       (participant.neutralMinionsKilled || 0);
@@ -296,9 +296,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
         className={`${bgColor} border rounded-lg p-3 sm:p-4 shadow-md transition-all hover:shadow-lg hover:scale-[1.01] duration-200 overflow-hidden cursor-pointer`}
         onClick={() => handleOpenMatchDetails(match)}
       >
-        {/* Versión móvil y tablet */}
+        {}
         <div className="flex flex-col space-y-3 md:hidden">
-          {/* Encabezado con campeón y resultado */}
+          {}
           <div className="flex items-center justify-between gap-2 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="relative shrink-0">
@@ -323,7 +323,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
               </div>
             </div>
 
-            {/* Tiempo de la partida */}
+            {}
             <div className="text-right shrink-0">
               <div className="text-slate-400 text-xs mb-1">
                 {formatDistanceToNow(gameDate, {addSuffix: true, locale: es})}
@@ -334,7 +334,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           </div>
 
-          {/* Estadísticas en grid para móvil/tablet */}
+          {}
           <div className="grid grid-cols-3 gap-1 text-center border-t border-b border-slate-700 py-2">
             <div className="min-w-0">
               <div
@@ -357,7 +357,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           </div>
 
-          {/* Ítems en vista móvil */}
+          {}
           <div className="flex justify-center gap-1 overflow-hidden">
             {[
               participant.item0,
@@ -385,9 +385,9 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           </div>
         </div>
 
-        {/* Versión desktop */}
+        {}
         <div className="hidden md:flex items-center gap-4 overflow-hidden">
-          {/* Sección del campeón */}
+          {}
           <div className="flex items-center gap-3 w-48 shrink-0">
             <div className="relative">
               <ChampionIcon
@@ -414,11 +414,11 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           </div>
 
-          {/* Estadísticas y contenido principal */}
+          {}
           <div className="flex-1 flex items-center justify-between gap-4 min-w-0">
-            {/* Contenedor de estadísticas */}
+            {}
             <div className="flex items-center gap-6 min-w-0 flex-1">
-              {/* KDA */}
+              {}
               <div className="min-w-0">
                 <div className="text-white font-medium">
                   {`${participant.kills}/${participant.deaths}/${participant.assists}`}
@@ -430,7 +430,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                 </div>
               </div>
 
-              {/* Información de la partida */}
+              {}
               <div className="min-w-0 flex-1">
                 <div className="text-white text-sm truncate" title={queueName}>
                   {queueName}
@@ -443,7 +443,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                 </div>
               </div>
 
-              {/* CS y duración */}
+              {}
               <div className="min-w-0">
                 <div className="text-white text-sm">{totalCS} CS</div>
                 <div className="text-slate-400 text-xs">
@@ -452,7 +452,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
               </div>
             </div>
 
-            {/* Ítems - Solo en desktop grande */}
+            {}
             <div className="hidden lg:flex gap-1 shrink-0">
               {[
                 participant.item0,
@@ -479,7 +479,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     );
   };
 
-  // Si no tenemos datos válidos, mostrar mensaje de error
+  
   if (!hasValidData) {
     return (
       <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 shadow-md">
@@ -495,7 +495,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
     );
   }
 
-  // Si hay error en la carga
+  
   if (error) {
     return (
       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 shadow-md">
@@ -537,12 +537,12 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
           </h2>
         </div>
 
-        {/* Lista de partidas */}
+        {}
         <div className="space-y-3 sm:space-y-4">
-          {/* Partidas cargadas */}
+          {}
           {matches.map((match, index) => renderMatch(match, index))}
 
-          {/* Estado de carga inicial */}
+          {}
           {isLoading && matches.length === 0 && (
             <>
               <div className="flex flex-col items-center justify-center py-8">
@@ -554,14 +554,14 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
                   Esto puede tardar unos segundos
                 </p>
               </div>
-              {/* Mostrar algunos skeletons mientras carga */}
+              {}
               {Array(3)
                 .fill(0)
                 .map((_, idx) => renderMatchSkeleton(idx))}
             </>
           )}
 
-          {/* Estado de carga de más partidas */}
+          {}
           {(isLoadingMore || (isLoading && matches.length > 0)) && (
             <div className="space-y-3 sm:space-y-4">
               {Array(3)
@@ -573,7 +573,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           )}
 
-          {/* Botón para cargar más partidas - solo mostrar si no está cargando */}
+          {}
           {hasMore && matches.length > 0 && !isLoading && !isLoadingMore && (
             <div className="flex justify-center mt-6">
               <Button
@@ -586,14 +586,14 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
             </div>
           )}
 
-          {/* Mensaje cuando no hay más partidas */}
+          {}
           {!isLoading && !hasMore && matches.length > 0 && (
             <div className="text-center text-slate-400 py-4 border-t border-slate-700">
               📭 No hay más partidas para mostrar
             </div>
           )}
 
-          {/* Resto del código se mantiene igual... */}
+          {}
         </div>
       </div>
     </div>

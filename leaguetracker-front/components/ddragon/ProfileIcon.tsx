@@ -12,9 +12,6 @@ export interface ProfileIconProps {
   alt?: string;
 }
 
-/**
- * Componente para mostrar el icono de perfil de un invocador
- */
 const ProfileIcon: React.FC<ProfileIconProps> = ({
                                                    iconId,
                                                    size = 64,
@@ -25,7 +22,7 @@ const ProfileIcon: React.FC<ProfileIconProps> = ({
                                                  }) => {
   const {getProfileIcon, isLoading} = useDDragon();
 
-  // Placeholder para cuando está cargando o no hay ID
+  
   if (isLoading || !iconId) {
     return (
       <div
@@ -55,11 +52,11 @@ const ProfileIcon: React.FC<ProfileIconProps> = ({
           width={size}
           height={size}
           className="object-cover"
-          priority={size > 64} // Prioriza la carga para iconos grandes
+          priority={size > 64} 
         />
       </div>
 
-      {/* Nivel del invocador (opcional) */}
+      {}
       {withLevel !== null && (
         <div
           className="absolute bottom-0 right-0 bg-blue-500 text-white text-xs font-bold rounded-full flex items-center justify-center border border-[#0f172a]"

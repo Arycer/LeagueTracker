@@ -8,10 +8,6 @@ interface ProfileVisitTrackerProps {
   tagline: string;
 }
 
-/**
- * Componente invisible que registra la visita a un perfil
- * Se debe incluir en la página de perfil de invocador
- */
 const ProfileVisitTracker: React.FC<ProfileVisitTrackerProps> = ({
                                                                    summonerName,
                                                                    region,
@@ -33,10 +29,10 @@ const ProfileVisitTracker: React.FC<ProfileVisitTrackerProps> = ({
         tagline
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
-  // Este componente no renderiza nada visible
+  
   return null;
 };
 

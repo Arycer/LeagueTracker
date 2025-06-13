@@ -8,10 +8,6 @@ import ProfileIcon from '@/components/ddragon/ProfileIcon';
 import {Spinner} from '@/components/ui/spinner';
 import {getRegionLabel} from '@/constants/regions';
 
-/**
- * Página de cuentas vinculadas
- * Muestra las cuentas de LoL vinculadas al usuario y permite gestionar las cuentas pendientes
- */
 export default function LinkedAccountsPage() {
   const {
     accounts,
@@ -28,7 +24,6 @@ export default function LinkedAccountsPage() {
     refreshAll
   } = useLinkedAccounts();
 
-  // Renderizar una cuenta vinculada
   const renderAccount = (account: LolAccount) => {
     const isMain = account.id === mainAccountId;
 
@@ -39,7 +34,7 @@ export default function LinkedAccountsPage() {
           isMain ? 'ring-2 ring-blue-500' : ''
         }`}
       >
-        {/* Icono de perfil */}
+        {}
         <div className="flex-shrink-0">
           <ProfileIcon
             iconId={account.profileIconId}
@@ -49,7 +44,7 @@ export default function LinkedAccountsPage() {
           />
         </div>
 
-        {/* Información de la cuenta */}
+        {}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-white flex items-center gap-2 truncate">
             {account.summonerName}#{account.tagline}
@@ -64,7 +59,7 @@ export default function LinkedAccountsPage() {
           </div>
         </div>
 
-        {/* Botones de acción */}
+        {}
         <div className="flex flex-col gap-2 items-end">
           {account.verified && !isMain && (
             <Button
@@ -91,7 +86,6 @@ export default function LinkedAccountsPage() {
     );
   };
 
-  // Renderizar una cuenta pendiente
   const renderPendingAccount = (pending: PendingLolAccount) => {
     const pendingState = pendingActionState[pending.id] || {
       verifying: false,
@@ -103,7 +97,7 @@ export default function LinkedAccountsPage() {
         key={pending.id}
         className="flex flex-row items-center gap-4 p-4 border-b border-blue-900/40 bg-[#1e293b]/70 rounded-md"
       >
-        {/* Icono requerido */}
+        {}
         <div className="flex-shrink-0">
           <ProfileIcon
             iconId={pending.profileIconId}
@@ -114,7 +108,7 @@ export default function LinkedAccountsPage() {
           />
         </div>
 
-        {/* Información de la cuenta pendiente */}
+        {}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-white truncate">
             {pending.summonerName}#{pending.tagline}
@@ -137,7 +131,7 @@ export default function LinkedAccountsPage() {
           )}
         </div>
 
-        {/* Botones de acción */}
+        {}
         <div className="flex flex-col gap-2 items-end">
           <Button
             variant="default"
@@ -174,7 +168,7 @@ export default function LinkedAccountsPage() {
 
       {!isLoading && (
         <div className="w-full max-w-2xl flex flex-col gap-8">
-          {/* Encabezado */}
+          {}
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-bold text-white">Cuentas vinculadas</h1>
             <p className="text-gray-300">
@@ -183,7 +177,7 @@ export default function LinkedAccountsPage() {
             </p>
           </div>
 
-          {/* Cuentas vinculadas */}
+          {}
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-white">
@@ -210,14 +204,10 @@ export default function LinkedAccountsPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {/* Ordenar las cuentas para que la principal aparezca primero */}
                 {[...accounts]
                   .sort((a, b) => {
-                    // Si a es la cuenta principal, debe ir primero
                     if (a.id === mainAccountId) return -1;
-                    // Si b es la cuenta principal, debe ir primero
                     if (b.id === mainAccountId) return 1;
-                    // Si ninguna es principal o ambas lo son, mantener el orden original
                     return 0;
                   })
                   .map(renderAccount)}
@@ -225,7 +215,7 @@ export default function LinkedAccountsPage() {
             )}
           </div>
 
-          {/* Cuentas pendientes */}
+          {}
           {pendingAccounts.length > 0 && (
             <div>
               <h2 className="text-xl font-bold text-white mb-4">
@@ -237,7 +227,7 @@ export default function LinkedAccountsPage() {
             </div>
           )}
 
-          {/* Mensaje de error */}
+          {}
           {error && (
             <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-md text-red-300">
               {error}

@@ -11,7 +11,7 @@ data class FavoriteProfile(
     val id: UUID? = null,
 
     @Column(nullable = false)
-    val userId: String, // ID del usuario propietario (auth)
+    val userId: String,
 
     @Column(nullable = false)
     val region: String,
@@ -22,7 +22,6 @@ data class FavoriteProfile(
     @Column(nullable = false)
     val tagline: String
 ) {
-    // Constructor vacío necesario para Hibernate
     constructor() : this(
         null, "", "", "", ""
     )

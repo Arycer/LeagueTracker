@@ -33,7 +33,6 @@ export default function FriendsPage() {
     friend.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Manejar envío de solicitud de amistad
   const handleSendRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newFriendUsername.trim()) {
@@ -51,13 +50,11 @@ export default function FriendsPage() {
       });
   };
 
-  // Iniciar chat con un amigo
   const startChat = (username: string) => {
     router.push(`/chat?user=${username}`);
   };
 
 
-  // Si el usuario no ha iniciado sesión, mostrar mensaje
   if (!user.isSignedIn) {
     return (
       <div className="container mx-auto max-w-4xl py-8">
@@ -113,7 +110,7 @@ export default function FriendsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Lista de amigos */}
+          {}
           <Card className="md:col-span-2 bg-[#0f172a] border-[#1e293b]">
             <CardHeader className="pb-3">
               <div className="flex items-center">
@@ -186,7 +183,7 @@ export default function FriendsPage() {
             </CardContent>
           </Card>
 
-          {/* Solicitudes */}
+          {}
           <Card className="bg-[#0f172a] border-[#1e293b]">
             <CardHeader className="pb-3">
               <div className="flex items-center">

@@ -6,7 +6,7 @@ import {useApi} from '@/hooks/useApi';
 import {useToast} from '@/hooks/useToast';
 import {Region} from '@/constants/regions';
 
-// Tipos para las solicitudes de amistad
+
 export interface FriendRequest {
   id: string;
   requesterUsername: string;
@@ -23,13 +23,13 @@ export interface FriendRequestDto {
   createdAt: string;
 }
 
-// Tipo para el estado de presencia
+
 export interface PresenceStatus {
   username: string;
   online: boolean;
 }
 
-// Tipo para la cuenta principal de un amigo
+
 export interface FriendMainAccount {
   summonerName: string;
   tagline: string;
@@ -37,64 +37,60 @@ export interface FriendMainAccount {
   profileIconId: number;
 }
 
-// Tipo para el contexto
+
 interface FriendsContextType {
-  // Amigos
+  
   friends: string[];
   friendsStatus: Record<string, boolean>;
   friendsMainAccounts: Record<string, FriendMainAccount | null>;
   incomingRequests: FriendRequestDto[];
   outgoingRequests: FriendRequestDto[];
 
-  // Estado de carga
+  
   isLoading: boolean;
   isLoadingIncoming: boolean;
   isLoadingOutgoing: boolean;
 
-  // Acciones
+  
   sendFriendRequest: (username: string) => Promise<boolean>;
   acceptFriendRequest: (username: string) => Promise<boolean>;
   rejectFriendRequest: (username: string) => Promise<boolean>;
   removeFriend: (username: string) => Promise<boolean>;
   getFriendMainAccount: (username: string) => Promise<FriendMainAccount | null>;
 
-  // Actualizaciones
+  
   refreshFriends: () => Promise<void>;
   refreshIncomingRequests: () => Promise<void>;
   refreshOutgoingRequests: () => Promise<void>;
 }
 
-// Crear el contexto
+
 export const FriendsContext = createContext<FriendsContextType | undefined>(undefined);
 
-// Props para el proveedor
+
 interface FriendsProviderProps {
   children: ReactNode;
 }
 
-/**
- * Proveedor del contexto de amigos
- * Gestiona la lista de amigos, solicitudes y estado de presencia
- */
 export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
   const {user, isLoading: isLoadingUser} = useUserContext();
   const {connected, subscribe, unsubscribe} = useWebSocket();
   const {get, post, delete: del} = useApi();
   const {success, error: showError, info} = useToast();
 
-  // Estado para amigos y solicitudes
+  
   const [friends, setFriends] = useState<string[]>([]);
   const [friendsStatus, setFriendsStatus] = useState<Record<string, boolean>>({});
   const [friendsMainAccounts, setFriendsMainAccounts] = useState<Record<string, FriendMainAccount | null>>({});
   const [incomingRequests, setIncomingRequests] = useState<FriendRequestDto[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<FriendRequestDto[]>([]);
 
-  // Estado de carga
+  
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingIncoming, setIsLoadingIncoming] = useState(true);
   const [isLoadingOutgoing, setIsLoadingOutgoing] = useState(true);
 
-  // Cargar la lista de amigos
+  
   const refreshFriends = async () => {
     if (!user.isSignedIn) return;
 
@@ -104,12 +100,12 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
       if (response.ok && response.data) {
         setFriends(response.data);
 
-        // Inicializar el estado de presencia para todos los amigos
+        
         const initialStatus: Record<string, boolean> = {};
         for (const friend of response.data) {
           initialStatus[friend] = false;
 
-          // Consultar el estado de presencia de cada amigo
+          
           const presenceResponse = await get<PresenceStatus>(`/api/presence/is-online/${friend}`);
           if (presenceResponse.ok && presenceResponse.data) {
             initialStatus[friend] = presenceResponse.data.online;
@@ -125,7 +121,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Cargar solicitudes entrantes
+  
   const refreshIncomingRequests = async () => {
     if (!user.isSignedIn) return;
 
@@ -142,7 +138,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Cargar solicitudes salientes
+  
   const refreshOutgoingRequests = async () => {
     if (!user.isSignedIn) return;
 
@@ -159,13 +155,13 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Enviar solicitud de amistad
+  
   const sendFriendRequest = async (username: string): Promise<boolean> => {
     try {
-      // Mostrar mensaje de depuración
+      
       console.log(`Enviando solicitud a: ${username}`);
 
-      // Enviar solicitud a la API
+      
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}`);
 
       if (response.ok) {
@@ -183,13 +179,13 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Aceptar solicitud de amistad
+  
   const acceptFriendRequest = async (username: string): Promise<boolean> => {
     try {
-      // Mostrar mensaje de depuración
+      
       console.log(`Aceptando solicitud de: ${username}`);
 
-      // Enviar solicitud a la API usando query params
+      
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}/respond?accept=true`);
 
       if (response.ok) {
@@ -208,13 +204,13 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Rechazar solicitud de amistad
+  
   const rejectFriendRequest = async (username: string): Promise<boolean> => {
     try {
-      // Mostrar mensaje de depuración
+      
       console.log(`Rechazando solicitud de: ${username}`);
 
-      // Enviar solicitud a la API usando query params
+      
       const response = await post<FriendRequestDto>(`/api/friends/requests/${username}/respond?accept=false`);
 
       if (response.ok) {
@@ -232,13 +228,13 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Eliminar amigo
+  
   const removeFriend = async (username: string): Promise<boolean> => {
     try {
-      // Mostrar mensaje de depuración
+      
       console.log(`Eliminando amigo: ${username}`);
 
-      // Enviar solicitud a la API usando el endpoint correcto
+      
       const response = await del(`/api/friends/delete/${username}`);
 
       if (response.ok) {
@@ -256,26 +252,26 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Obtener la cuenta principal de un amigo
+  
   const getFriendMainAccount = async (username: string): Promise<FriendMainAccount | null> => {
     try {
-      // Si ya tenemos la cuenta principal en caché, devolverla
+      
       if (friendsMainAccounts[username] !== undefined) {
         return friendsMainAccounts[username];
       }
 
-      // Obtener la cuenta principal del amigo
+      
       const response = await get<FriendMainAccount>(`/api/lol/accounts/main/${username}`);
 
       if (response.ok && response.data) {
-        // Guardar en caché
+        
         setFriendsMainAccounts(prev => ({
           ...prev,
           [username]: response.data
         }));
         return response.data;
       } else {
-        // Guardar null en caché para evitar peticiones repetidas
+        
         setFriendsMainAccounts(prev => ({
           ...prev,
           [username]: null
@@ -288,7 +284,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     }
   };
 
-  // Suscribirse a actualizaciones de presencia
+  
   useEffect(() => {
     if (!connected || !user.isSignedIn) return;
 
@@ -319,7 +315,7 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
     };
   }, [connected, user.isSignedIn, friends, subscribe, unsubscribe, info]);
 
-  // Cargar datos iniciales cuando el usuario esté autenticado
+  
   useEffect(() => {
     if (user.isSignedIn && !isLoadingUser) {
       refreshFriends();
@@ -354,9 +350,6 @@ export const FriendsProvider: React.FC<FriendsProviderProps> = ({children}) => {
   );
 };
 
-/**
- * Hook personalizado para acceder al contexto de amigos
- */
 export const useFriends = () => {
   const context = useContext(FriendsContext);
   if (context === undefined) {

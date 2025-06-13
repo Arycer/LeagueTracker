@@ -107,7 +107,7 @@ class LolAccountController(
 
         val friends = friendRequestService.getFriends(username)
         if (!friends.contains(friendUsername)) {
-            return ResponseEntity.status(403).build() // Forbidden, no es amigo
+            return ResponseEntity.status(403).build() 
         }
 
         val friendUser = userService.getUserByUsername(friendUsername)

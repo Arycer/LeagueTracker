@@ -17,14 +17,14 @@ interface MatchDetailsModalProps {
   summonerName: string;
 }
 
-// Convierte segundos a formato mm:ss
+
 const formatGameDuration = (durationInSeconds: number): string => {
   const minutes = Math.floor(durationInSeconds / 60);
   const seconds = durationInSeconds % 60;
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-// Calcula el KDA
+
 const calculateKDA = (
   kills: number,
   deaths: number,
@@ -51,7 +51,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
   const statusBg = isWin ? "bg-blue-500/20" : "bg-red-500/20";
   const statusBorder = isWin ? "border-blue-500/30" : "border-red-500/30";
 
-  // Calcular stats de la partida
+  
   const totalCs =
     (participant.totalMinionsKilled || 0) +
     (participant.neutralMinionsKilled || 0);
@@ -62,7 +62,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
     participant.assists
   );
 
-  // Si hay detalles completos de la partida, preparar los equipos
+  
   const blueTeam =
     matchDetails?.info.participants.filter((p) => p.teamId === 100) || [];
   const redTeam =
@@ -70,7 +70,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
 
   return (
     <div className="bg-slate-800 rounded-lg w-full shadow-xl border border-slate-700">
-      {/* Cabecera */}
+      {}
       <div
         className={`p-4 flex items-center justify-between ${statusBg} ${statusBorder} border-b`}
       >
@@ -131,9 +131,9 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
         </div>
       </div>
 
-      {/* Contenido principal */}
+      {}
       <div className="p-4 space-y-6">
-        {/* Información general */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-slate-700/50 p-3 rounded-lg">
             <div className="text-slate-400 text-sm mb-1">Puntuación KDA</div>
@@ -162,9 +162,9 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
           </div>
         </div>
 
-        {/* Items y Estadísticas - en layout lado a lado */}
+        {}
         <div className="mt-4 flex flex-col sm:flex-row gap-4">
-          {/* Items */}
+          {}
           <div className="bg-slate-700/50 rounded-lg p-4 sm:w-1/2">
             <h4 className="text-white font-medium mb-3">Ítems</h4>
             <div className="grid grid-cols-3 gap-2">
@@ -187,7 +187,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
             </div>
           </div>
 
-          {/* Estadísticas detalladas */}
+          {}
           <div className="bg-slate-700/50 rounded-lg p-4 sm:w-1/2">
             <h4 className="text-white font-medium mb-3">
               Estadísticas detalladas
@@ -222,13 +222,13 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
           </div>
         </div>
 
-        {/* Jugadores (solo si tenemos detalles completos) */}
+        {}
         {(blueTeam.length > 0 || redTeam.length > 0) && (
           <div className="bg-slate-700/30 p-4 rounded-lg">
             <h4 className="text-white font-medium mb-3">Jugadores</h4>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Equipo Azul */}
+              {}
               <div>
                 <div
                   className="text-blue-400 font-medium mb-2 text-center bg-blue-500/20 py-1 rounded-md">
@@ -269,7 +269,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
                 </div>
               </div>
 
-              {/* Equipo Rojo */}
+              {}
               <div>
                 <div
                   className="text-red-400 font-medium mb-2 text-center bg-red-500/20 py-1 rounded-md">
@@ -313,7 +313,7 @@ const MatchDetailsModal: React.FC<MatchDetailsModalProps> = ({
           </div>
         )}
 
-        {/* El enlace a la página detallada se ha movido a la cabecera */}
+        {}
       </div>
     </div>
   );

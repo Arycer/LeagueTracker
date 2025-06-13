@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="border-b border-blue-900/20 bg-[#0f172a]/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 relative">
-        {/* Enlaces a la izquierda (solo para usuarios autenticados) */}
+        {}
         <div className="w-[250px] flex items-center justify-start">
           <SignedIn>
             <nav className="flex items-center space-x-4 whitespace-nowrap">
@@ -52,7 +52,7 @@ const Header = () => {
           </SignedIn>
         </div>
 
-        {/* Logo centrado */}
+        {}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
           <Link href="/" className="flex items-center">
             <h1 className="text-2xl font-bold text-blue-500">
@@ -62,9 +62,9 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Botones a la derecha */}
+        {}
         <div className="flex items-center gap-4 justify-end w-[200px]">
-          {/* Autenticación con Clerk */}
+          {}
           <div className="hidden md:flex items-center gap-2">
             <SignedOut>
               <SignInButton mode="modal">

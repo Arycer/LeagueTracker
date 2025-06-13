@@ -12,14 +12,12 @@ import {useToast} from '@/hooks/useToast';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {GoldTimelineChart} from '@/components/summoner/GoldTimelineChart';
 
-// Convierte segundos a formato mm:ss
 const formatGameDuration = (durationInSeconds: number): string => {
   const minutes = Math.floor(durationInSeconds / 60);
   const seconds = durationInSeconds % 60;
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-// Calcula el KDA
 const calculateKDA = (kills: number, deaths: number, assists: number): string => {
   if (deaths === 0) return 'Perfect';
   return ((kills + assists) / deaths).toFixed(2);
@@ -61,7 +59,7 @@ export default function MatchDetailsPage() {
     };
 
     fetchMatchDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [region, matchId]);
 
   if (loading) {
@@ -106,7 +104,6 @@ export default function MatchDetailsPage() {
   const blueTeamWin = info.teams[0].win;
   const redTeamWin = info.teams[1].win;
 
-  // Calcular estadísticas del equipo
   const blueTeamKills = blueTeam.reduce((sum, p) => sum + p.kills, 0);
   const blueTeamDeaths = blueTeam.reduce((sum, p) => sum + p.deaths, 0);
   const blueTeamAssists = blueTeam.reduce((sum, p) => sum + p.assists, 0);
@@ -119,7 +116,7 @@ export default function MatchDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white pb-12">
-      {/* Cabecera de la partida */}
+      {}
       <div className="bg-slate-800 border-b border-slate-700 py-6 mb-8 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -154,9 +151,9 @@ export default function MatchDetailsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4">
-        {/* Resumen de la partida */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Equipo Azul */}
+          {}
           <div
             className={`${blueTeamWin ? 'bg-blue-500/10 border-blue-500/30' : 'bg-slate-700/30 border-slate-600/30'} border rounded-lg overflow-hidden`}>
             <div className="bg-blue-500/20 py-3 px-4 border-b border-blue-500/30">
@@ -179,7 +176,7 @@ export default function MatchDetailsPage() {
                 {blueTeam.map((player) => (
                   <div key={player.summonerId} className="p-4 hover:bg-blue-500/5">
                     <div className="flex items-center gap-4">
-                      {/* Información básica del jugador */}
+                      {}
                       <div className="relative">
                         <ChampionIcon
                           championId={player.championName}
@@ -209,14 +206,14 @@ export default function MatchDetailsPage() {
                         </div>
                       </div>
 
-                      {/* Estadísticas */}
+                      {}
                       <div className="text-right hidden lg:block">
                         <div
                           className="text-slate-300">{player.totalDamageDealtToChampions.toLocaleString()}</div>
                         <div className="text-slate-400 text-sm">Daño</div>
                       </div>
 
-                      {/* Items */}
+                      {}
                       <div className="hidden md:flex gap-1">
                         {[
                           player.item0,
@@ -238,7 +235,7 @@ export default function MatchDetailsPage() {
                       </div>
                     </div>
 
-                    {/* Vista móvil para items y estadísticas adicionales */}
+                    {}
                     <div className="mt-3 md:hidden">
                       <div className="grid grid-cols-7 gap-1 mb-2">
                         {[
@@ -269,7 +266,7 @@ export default function MatchDetailsPage() {
             </ScrollArea>
           </div>
 
-          {/* Equipo Rojo */}
+          {}
           <div
             className={`${redTeamWin ? 'bg-red-500/10 border-red-500/30' : 'bg-slate-700/30 border-slate-600/30'} border rounded-lg overflow-hidden`}>
             <div className="bg-red-500/20 py-3 px-4 border-b border-red-500/30">
@@ -292,7 +289,7 @@ export default function MatchDetailsPage() {
                 {redTeam.map((player) => (
                   <div key={player.summonerId} className="p-4 hover:bg-red-500/5">
                     <div className="flex items-center gap-4">
-                      {/* Información básica del jugador */}
+                      {}
                       <div className="relative">
                         <ChampionIcon
                           championId={player.championName}
@@ -324,14 +321,14 @@ export default function MatchDetailsPage() {
                         </div>
                       </div>
 
-                      {/* Estadísticas */}
+                      {}
                       <div className="text-right hidden lg:block">
                         <div
                           className="text-slate-300">{player.totalDamageDealtToChampions.toLocaleString()}</div>
                         <div className="text-slate-400 text-sm">Daño</div>
                       </div>
 
-                      {/* Items */}
+                      {}
                       <div className="hidden md:flex gap-1">
                         {[
                           player.item0,
@@ -353,7 +350,7 @@ export default function MatchDetailsPage() {
                       </div>
                     </div>
 
-                    {/* Vista móvil para items y estadísticas adicionales */}
+                    {}
                     <div className="mt-3 md:hidden">
                       <div className="grid grid-cols-7 gap-1 mb-2">
                         {[
@@ -385,7 +382,7 @@ export default function MatchDetailsPage() {
           </div>
         </div>
 
-        {/* Gráfico de evolución del oro */}
+        {}
         <div className="mb-8">
           <GoldTimelineChart
             matchId={matchId as string}
@@ -393,7 +390,7 @@ export default function MatchDetailsPage() {
           />
         </div>
 
-        {/* Estadísticas detalladas */}
+        {}
         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 mb-8">
           <h2 className="text-xl font-bold mb-6">Estadísticas detalladas</h2>
 
@@ -410,7 +407,7 @@ export default function MatchDetailsPage() {
               </tr>
               </thead>
               <tbody>
-              {/* Equipo Azul */}
+              {}
               {blueTeam.map((player) => (
                 <tr key={`stats-${player.summonerId}`}
                     className="border-b border-slate-700/50 hover:bg-slate-700/20">
@@ -439,12 +436,12 @@ export default function MatchDetailsPage() {
                 </tr>
               ))}
 
-              {/* Separador */}
+              {}
               <tr className="h-6 bg-slate-700/10">
                 <td colSpan={6}></td>
               </tr>
 
-              {/* Equipo Rojo */}
+              {}
               {redTeam.map((player) => (
                 <tr key={`stats-${player.summonerId}`}
                     className="border-b border-slate-700/50 hover:bg-slate-700/20">
@@ -476,7 +473,7 @@ export default function MatchDetailsPage() {
           </div>
         </div>
 
-        {/* Información adicional */}
+        {}
         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>

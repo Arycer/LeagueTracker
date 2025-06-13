@@ -38,7 +38,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({children}) 
         setConnected(false);
       }
 
-      // Obtener token fresco
+      
       let token: string | null = null;
       try {
         token = await getToken({template: 'DefaultJWT'});
@@ -113,12 +113,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({children}) 
   }, [getToken]);
 
   useEffect(() => {
-    // Iniciar la conexión WebSocket
+    
     createClient();
 
-    // Función de limpieza
+    
     return () => {
-      // La limpieza se maneja dentro de createClient cuando se desactiva
+      
       if (clientRef.current) {
         clientRef.current.deactivate();
         clientRef.current = null;

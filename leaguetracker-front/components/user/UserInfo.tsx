@@ -2,9 +2,6 @@
 import React from 'react';
 import {useUserContext} from '@/contexts/UserContext';
 
-/**
- * Componente que muestra la información del usuario actual
- */
 const UserInfo = () => {
   const {user, isLoading} = useUserContext();
 

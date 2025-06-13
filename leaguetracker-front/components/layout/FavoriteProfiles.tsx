@@ -8,7 +8,7 @@ import {Button} from '../ui/button';
 const FavoriteProfiles: React.FC = () => {
   const {favorites, isLoading, deleteFavorite} = useFavoriteProfiles();
 
-  // Manejar eliminación de favorito
+  
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();

@@ -2,9 +2,6 @@ import React from 'react';
 import {Card, CardContent} from '@/components/ui/card';
 import {ChampionIcon, DDragonVersionDisplay, ItemIcon, ProfileIcon, SummonerSpellIcon} from './';
 
-/**
- * Componente de demostración que muestra todos los componentes de DDragon
- */
 const DDragonDemo: React.FC = () => {
   return (
     <Card className="bg-[#1e293b]/70 border-blue-900/30 w-full max-w-2xl mx-auto">
@@ -15,7 +12,7 @@ const DDragonDemo: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          {/* Sección de iconos de campeones */}
+          {}
           <div>
             <h3 className="text-lg font-medium text-blue-400 mb-2">Iconos de campeones</h3>
             <div className="flex flex-wrap gap-2">
@@ -26,18 +23,18 @@ const DDragonDemo: React.FC = () => {
             </div>
           </div>
 
-          {/* Sección de iconos de ítems */}
+          {}
           <div>
             <h3 className="text-lg font-medium text-blue-400 mb-2">Iconos de ítems</h3>
             <div className="flex flex-wrap gap-2">
-              <ItemIcon itemId="3006" withTooltip/> {/* Berserker's Greaves */}
-              <ItemIcon itemId="3031" withTooltip/> {/* Infinity Edge */}
-              <ItemIcon itemId="3036" size={40} withTooltip/> {/* Lord Dominik's Regards */}
-              <ItemIcon itemId="0" emptySlot/> {/* Slot vacío */}
+              <ItemIcon itemId="3006" withTooltip/> {}
+              <ItemIcon itemId="3031" withTooltip/> {}
+              <ItemIcon itemId="3036" size={40} withTooltip/> {}
+              <ItemIcon itemId="0" emptySlot/> {}
             </div>
           </div>
 
-          {/* Sección de iconos de hechizos */}
+          {}
           <div>
             <h3 className="text-lg font-medium text-blue-400 mb-2">Hechizos de invocador</h3>
             <div className="flex flex-wrap gap-2">
@@ -48,7 +45,7 @@ const DDragonDemo: React.FC = () => {
             </div>
           </div>
 
-          {/* Sección de iconos de perfil */}
+          {}
           <div>
             <h3 className="text-lg font-medium text-blue-400 mb-2">Iconos de perfil</h3>
             <div className="flex flex-wrap gap-4">

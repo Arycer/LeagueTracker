@@ -1,7 +1,7 @@
 "use client";
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 
-// Definición de tipos para la API de DDragon
+
 interface ChampionImage {
   full: string;
   sprite: string;
@@ -23,7 +23,7 @@ interface ChampionsData {
   data: Record<string, ChampionData>;
 }
 
-// Definición de tipos para el contexto
+
 interface DDragonContextType {
   currentVersion: string | null;
   isLoading: boolean;
@@ -36,7 +36,7 @@ interface DDragonContextType {
   getChampionById: (championId: string) => ChampionData | null;
 }
 
-// Valores por defecto del contexto
+
 const defaultContext: DDragonContextType = {
   currentVersion: null,
   isLoading: false,
@@ -50,29 +50,25 @@ const defaultContext: DDragonContextType = {
   getChampionById: () => null,
 };
 
-// Creación del contexto
+
 const DDragonContext = createContext<DDragonContextType>(defaultContext);
 
-// URL base de Data Dragon
+
 const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com';
 const VERSIONS_URL = `${DDRAGON_BASE_URL}/api/versions.json`;
 
-// Props para el proveedor del contexto
+
 interface DDragonProviderProps {
   children: ReactNode;
 }
 
-/**
- * Proveedor del contexto DDragon
- * Gestiona la obtención y almacenamiento de la versión actual del parche de LoL
- */
 export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
   const [currentVersion, setCurrentVersion] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [championsData, setChampionsData] = useState<ChampionsData | null>(null);
 
-  // Función para obtener la versión actual del parche
+  
   const fetchCurrentVersion = async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
@@ -86,7 +82,7 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
 
       const versions: string[] = await response.json();
 
-      // La primera versión en el array es la más reciente
+      
       if (versions && versions.length > 0) {
         setCurrentVersion(versions[0]);
         console.log(`✅ Versión de DDragon obtenida: ${versions[0]}`);
@@ -102,7 +98,7 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
     }
   };
 
-  // Función para cargar los datos de campeones
+  
   const fetchChampionsData = async (version: string): Promise<void> => {
     try {
       const response = await fetch(`${DDRAGON_BASE_URL}/cdn/${version}/data/es_ES/champion.json`);
@@ -120,7 +116,7 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
     }
   };
 
-  // Cargar la versión y los datos de campeones al montar el componente
+  
   useEffect(() => {
     const initData = async () => {
       await fetchCurrentVersion();
@@ -132,47 +128,47 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
     initData();
   }, []);
 
-  // Cargar los datos de campeones cuando la versión cambia
+  
   useEffect(() => {
     if (currentVersion) {
       fetchChampionsData(currentVersion);
     }
   }, [currentVersion]);
 
-  // Función para obtener la URL del icono de un campeón
+  
   const getChampionIcon = (championId: string): string => {
     if (!currentVersion) return '';
     return `${DDRAGON_BASE_URL}/cdn/${currentVersion}/img/champion/${championId}.png`;
   };
 
-  // Función para obtener la URL del icono de un ítem
+  
   const getItemIcon = (itemId: string): string => {
     if (!currentVersion) return '';
     return `${DDRAGON_BASE_URL}/cdn/${currentVersion}/img/item/${itemId}.png`;
   };
 
-  // Función para obtener la URL del icono de un hechizo de invocador
+  
   const getSummonerSpellIcon = (spellId: string): string => {
     if (!currentVersion) return '';
     return `${DDRAGON_BASE_URL}/cdn/${currentVersion}/img/spell/${spellId}.png`;
   };
 
-  // Función para obtener la URL del icono de perfil
+  
   const getProfileIcon = (iconId: number): string => {
     if (!currentVersion) return '';
     return `${DDRAGON_BASE_URL}/cdn/${currentVersion}/img/profileicon/${iconId}.png`;
   };
 
-  // Función para obtener la información de un campeón por su ID
+  
   const getChampionById = (championId: string): ChampionData | null => {
     if (!championsData || !championId) return null;
 
-    // Primero intentamos buscar directamente por el ID (nombre del campeón)
+    
     if (championsData.data[championId]) {
       return championsData.data[championId];
     }
 
-    // Si no lo encontramos, buscamos por el key (número de ID)
+    
     const champion = Object.values(championsData.data).find(
       (champ) => champ.key === championId
     );
@@ -180,7 +176,7 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
     return champion || null;
   };
 
-  // Valor del contexto
+  
   const contextValue: DDragonContextType = {
     currentVersion,
     isLoading,
@@ -200,10 +196,6 @@ export const DDragonProvider: React.FC<DDragonProviderProps> = ({children}) => {
   );
 };
 
-/**
- * Hook personalizado para acceder al contexto DDragon
- * @returns Contexto DDragon con la versión actual y funciones de utilidad
- */
 export const useDDragon = (): DDragonContextType => {
   const context = useContext(DDragonContext);
 

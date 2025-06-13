@@ -15,60 +15,60 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
   const {activeChat, messages, setActiveChat, unreadMessages} = useChatContext();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Sincronizar el cambio de chat activo con el contexto global
+  
   useEffect(() => {
     if (activeChat) {
-      // Si hay un chat activo en el contexto, asegurarse de que esté seleccionado en la lista
+      
       onSelectChat(activeChat);
     }
   }, [activeChat, onSelectChat]);
 
-  // Determinar amigos en línea
+  
   const onlineFriends = friends.filter((friend: string) => {
     const status = friendsStatus as Record<string, boolean>;
     return status[friend] === true;
   });
 
-  // Filtrar amigos por término de búsqueda
+  
   const filteredFriends = friends.filter((friend: string) =>
     friend.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Ordenar amigos: primero los que tienen mensajes no leídos, luego los que tienen mensajes, luego los que están online
+  
   const sortedFriends = [...filteredFriends].sort((a: string, b: string) => {
-    // Primero los que tienen mensajes no leídos
+    
     const aUnreadCount = unreadMessages[a] || 0;
     const bUnreadCount = unreadMessages[b] || 0;
 
     if (aUnreadCount > 0 && bUnreadCount === 0) return -1;
     if (aUnreadCount === 0 && bUnreadCount > 0) return 1;
 
-    // Si ambos tienen mensajes no leídos, el que tenga más primero
+    
     if (aUnreadCount > 0 && bUnreadCount > 0) {
       return bUnreadCount - aUnreadCount;
     }
 
-    // Luego los que tienen mensajes
+    
     const aHasMessages = Boolean(messages[a]?.length);
     const bHasMessages = Boolean(messages[b]?.length);
 
     if (aHasMessages && !bHasMessages) return -1;
     if (!aHasMessages && bHasMessages) return 1;
 
-    // Luego los que están online
+    
     const aIsOnline = onlineFriends.includes(a);
     const bIsOnline = onlineFriends.includes(b);
 
     if (aIsOnline && !bIsOnline) return -1;
     if (!aIsOnline && bIsOnline) return 1;
 
-    // Finalmente por orden alfabético
+    
     return a.localeCompare(b);
   });
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
-      {/* Cabecera con título y búsqueda */}
+      {}
       <div className="py-4 px-4 border-b border-[#1e293b] bg-[#0f172a]/80">
         <h2 className="text-lg font-semibold text-white mb-3 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-400" viewBox="0 0 20 20"
@@ -90,7 +90,7 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
         </div>
       </div>
 
-      {/* Lista de chats */}
+      {}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {sortedFriends.length === 0 ? (
           <div className="p-4 text-center">
@@ -114,7 +114,7 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
                     : 'hover:bg-[#1e293b]/50 border-l-4 border-l-transparent hover:border-l-blue-400/50'
                   }`}
                   onClick={() => {
-                    // Actualizar tanto el estado local como el contexto global
+                    
                     onSelectChat(friend);
                     setActiveChat(friend);
                   }}
@@ -136,7 +136,7 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
                         <div className="flex items-center">
                                                     <span
                                                       className={`font-medium truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>{friend}</span>
-                          {/* Indicador de mensajes no leídos */}
+                          {}
                           {unreadMessages[friend] > 0 && (
                             <span
                               className="ml-2 bg-blue-500 text-white text-xs font-medium rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">

@@ -17,15 +17,15 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({children}) => 
   const openModal = (content: ReactNode) => {
     setModalContent(content);
     setIsOpen(true);
-    // Desactivar el scroll del body cuando el modal está abierto
+    
     document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    // Reactivar el scroll del body cuando el modal se cierra
+    
     document.body.style.overflow = "";
-    // Limpiar el contenido después de cerrar con un pequeño retraso
+    
     setTimeout(() => {
       setModalContent(null);
     }, 200);
