@@ -68,7 +68,6 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
-      {/* Cabecera de la lista de chats */}
       <div className="py-3 px-3 sm:py-4 sm:px-4 border-b border-[#1e293b] bg-[#0f172a]/80">
         <h2 className="text-lg font-semibold text-white mb-2 sm:mb-3 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-400" viewBox="0 0 20 20"
@@ -90,7 +89,6 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
         </div>
       </div>
 
-      {/* Lista de chats */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {sortedFriends.length === 0 ? (
           <div className="p-3 sm:p-4 text-center">

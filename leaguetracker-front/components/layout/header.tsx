@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header className="border-b border-blue-900/20 bg-[#0f172a]/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 relative">
-        {/* Desktop Navigation */}
+        
         <div className="w-[250px] hidden md:flex items-center justify-start">
           <SignedIn>
             <nav className="flex items-center space-x-4 whitespace-nowrap">
@@ -57,7 +57,7 @@ const Header = () => {
           </SignedIn>
         </div>
         
-        {/* Mobile Menu Button */}
+        
         <div className="md:hidden flex items-center">
           <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <Dialog.Trigger asChild>
@@ -176,7 +176,7 @@ const Header = () => {
 
         {}
         <div className="flex items-center gap-4 justify-end w-[200px]">
-          {/* Desktop Auth Buttons */}
+          
           <div className="hidden md:flex items-center gap-2">
             <SignedOut>
               <SignInButton mode="modal">

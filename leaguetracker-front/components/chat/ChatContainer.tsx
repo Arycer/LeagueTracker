@@ -13,16 +13,16 @@ const ChatContainerContent: React.FC<{
   const searchParams = useSearchParams();
   const [isMobileView, setIsMobileView] = useState(false);
 
-  // Detectar si estamos en vista móvil al cargar y cuando cambia el tamaño de la ventana
+  
   useEffect(() => {
     const checkMobileView = () => {
-      setIsMobileView(window.innerWidth < 768); // md breakpoint en Tailwind
+      setIsMobileView(window.innerWidth < 768); 
     };
     
-    // Comprobar al inicio
+    
     checkMobileView();
     
-    // Comprobar cuando cambia el tamaño de la ventana
+    
     window.addEventListener('resize', checkMobileView);
     return () => window.removeEventListener('resize', checkMobileView);
   }, []);
@@ -34,23 +34,23 @@ const ChatContainerContent: React.FC<{
     }
   }, [searchParams, setSelectedChat]);
 
-  // Función para volver a la lista de chats en móvil
+  
   const handleBackToList = () => {
     setSelectedChat(null);
   };
 
   return (
     <div className="flex h-full w-full overflow-hidden">
-      {/* Lista de chats - visible en desktop o en móvil cuando no hay chat seleccionado */}
+      
       <div className={`${isMobileView ? 'w-full' : 'w-72'} h-full border-r border-[#1e293b] ${isMobileView && selectedChat ? 'hidden' : 'block'}`}>
         <ChatList onSelectChat={setSelectedChat}/>
       </div>
 
-      {/* Interfaz de chat - visible en desktop o en móvil cuando hay chat seleccionado */}
+      
       <div className={`flex-1 h-full overflow-hidden ${isMobileView && !selectedChat ? 'hidden' : 'block'}`}>
         {selectedChat ? (
           <div className="flex flex-col h-full">
-            {/* Botón de regreso en móvil */}
+            
             {isMobileView && (
               <div className="py-2 px-3 bg-[#0f172a]/90 border-b border-[#1e293b]">
                 <Button 

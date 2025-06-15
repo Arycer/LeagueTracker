@@ -69,7 +69,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
-      {/* Cabecera del chat */}
+      
       <div className="py-3 px-4 border-b border-[#1e293b] bg-[#0f172a]/80 flex items-center">
         <Avatar className="h-10 w-10 mr-3 border border-[#1e293b]">
           <AvatarImage src={`https://avatar.vercel.sh/${recipientUsername}`}/>
@@ -85,7 +85,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
         </div>
       </div>
 
-      {/* Área de mensajes */}
+      
       <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-2 sm:p-3">
         {loadingHistory ? (
           <div className="flex justify-center items-center h-full">
@@ -143,7 +143,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({recipientUsername}) => {
         )}
       </div>
 
-      {/* Área de entrada de mensaje */}
+      
       <div className="p-2 sm:p-3 border-t border-[#1e293b]">
         <form onSubmit={handleSendMessage} className="flex items-center w-full gap-2">
           <Input
