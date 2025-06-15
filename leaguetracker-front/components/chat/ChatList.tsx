@@ -68,9 +68,9 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a]">
-      {}
-      <div className="py-4 px-4 border-b border-[#1e293b] bg-[#0f172a]/80">
-        <h2 className="text-lg font-semibold text-white mb-3 flex items-center">
+      {/* Cabecera de la lista de chats */}
+      <div className="py-3 px-3 sm:py-4 sm:px-4 border-b border-[#1e293b] bg-[#0f172a]/80">
+        <h2 className="text-lg font-semibold text-white mb-2 sm:mb-3 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-400" viewBox="0 0 20 20"
                fill="currentColor">
             <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
@@ -84,17 +84,17 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
             placeholder="Buscar chat..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 py-2 bg-[#1e293b]/50 border-[#1e293b] text-white rounded-full text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="pl-9 py-1.5 sm:py-2 bg-[#1e293b]/50 border-[#1e293b] text-white rounded-full text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-400"/>
         </div>
       </div>
 
-      {}
+      {/* Lista de chats */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {sortedFriends.length === 0 ? (
-          <div className="p-4 text-center">
-            <div className="bg-[#1e293b]/30 rounded-lg p-4">
+          <div className="p-3 sm:p-4 text-center">
+            <div className="bg-[#1e293b]/30 rounded-lg p-3 sm:p-4">
               <p className="text-gray-300 text-sm mb-1">No hay conversaciones</p>
               <p className="text-gray-400 text-xs">Tus amigos aparecerán aquí</p>
             </div>
@@ -109,34 +109,31 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
               return (
                 <div
                   key={friend}
-                  className={`w-full px-3 py-3 cursor-pointer ${isActive
+                  className={`w-full px-3 py-2.5 sm:py-3 cursor-pointer ${isActive
                     ? 'bg-blue-600/20 border-l-4 border-l-blue-500'
                     : 'hover:bg-[#1e293b]/50 border-l-4 border-l-transparent hover:border-l-blue-400/50'
                   }`}
                   onClick={() => {
-                    
                     onSelectChat(friend);
                     setActiveChat(friend);
                   }}
                 >
                   <div className="flex items-center w-full">
                     <div className="relative flex-shrink-0">
-                      <Avatar className="h-10 w-10 mr-3 border border-[#1e293b]">
+                      <Avatar className="h-9 w-9 sm:h-10 sm:w-10 mr-2 sm:mr-3 border border-[#1e293b]">
                         <AvatarImage src={`https://avatar.vercel.sh/${friend}`}/>
                         <AvatarFallback
                           className="bg-[#1e293b] text-blue-400">{friend.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                       {isOnline && (
                         <span
-                          className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-[#0f172a]"></span>
+                          className="absolute bottom-0 right-0 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-green-500 border-2 border-[#0f172a]"></span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0 overflow-hidden">
                       <div className="flex justify-between items-center w-full">
                         <div className="flex items-center">
-                                                    <span
-                                                      className={`font-medium truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>{friend}</span>
-                          {}
+                          <span className={`font-medium truncate text-sm sm:text-base ${isActive ? 'text-white' : 'text-gray-300'}`}>{friend}</span>
                           {unreadMessages[friend] > 0 && (
                             <span
                               className="ml-2 bg-blue-500 text-white text-xs font-medium rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
@@ -154,11 +151,11 @@ const ChatList: React.FC<ChatListProps> = ({onSelectChat}) => {
                         )}
                       </div>
                       {lastMessage ? (
-                        <p className="text-xs text-gray-400 truncate mt-1 line-clamp-1">
+                        <p className="text-xs text-gray-400 truncate mt-0.5 sm:mt-1 line-clamp-1">
                           {lastMessage.content}
                         </p>
                       ) : (
-                        <p className="text-xs text-gray-500 italic truncate mt-1">
+                        <p className="text-xs text-gray-500 italic truncate mt-0.5 sm:mt-1">
                           No hay mensajes aún
                         </p>
                       )}
